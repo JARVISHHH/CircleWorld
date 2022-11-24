@@ -24,6 +24,10 @@ public class System {
 
     }
 
+    public void onLateTick(long nanosSincePreviousTick) {
+
+    }
+
     public void onDraw(GraphicsContext g) {
 
     }

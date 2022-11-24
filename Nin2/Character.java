@@ -263,7 +263,7 @@ public class Character {
         jumpComponent.setJumpKey(KeyCode.SHIFT);
         characterObject.addComponent(jumpComponent);
 
-        CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(0, characterSize.y), new Vec2d(characterSize.x, 1)), false, false, false, false, false, true);
+        CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(groundDetect);
 
         GravityComponent gravityComponent = new GravityComponent();

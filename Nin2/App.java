@@ -67,7 +67,6 @@ public class App extends Application {
         XMLProcessor.tag2component.put("CollisionComponent", CollisionComponent.class);
         XMLProcessor.tag2component.put("FireComponent", FireComponent.class);
         XMLProcessor.tag2component.put("FireRayComponent", FireRayComponent.class);
-        XMLProcessor.tag2component.put("FrictionComponent", FrictionComponent.class);
         XMLProcessor.tag2component.put("GravityComponent", GravityComponent.class);
         XMLProcessor.tag2component.put("HealthComponent", HealthComponent.class);
         XMLProcessor.tag2component.put("JumpComponent", JumpComponent.class);

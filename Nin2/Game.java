@@ -63,11 +63,11 @@ public class Game {
         gameWorld.addGameObject(plainTile8);
 
         for(int i = 0; i < 5; i++) {
-            GameObject rock = createRock(new Vec2d(150 + i * 40, 365), spriteSize, 1.2, new Vec2i(0, i % 2), 0);
+            GameObject rock = createRock(new Vec2d(150 + i * 40, 365), spriteSize, 1, new Vec2i(0, i % 2), 0);
             gameWorld.addGameObject(rock);
         }
 
-        GameObject rock = createRock(new Vec2d(630, 365), spriteSize, 1.2, new Vec2i(0, 1), 0);
+        GameObject rock = createRock(new Vec2d(630, 365), spriteSize, 1, new Vec2i(0, 1), 0);
         gameWorld.addGameObject(rock);
 
         for(double x = 370; x < 605; x += 30) {
@@ -107,9 +107,6 @@ public class Game {
         CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(factor, 2 * factor), spriteSize.smult(factor).minus(2 * factor, 3 * factor)), true);
         tileObject.addComponent(collisionComponent);
 
-        FrictionComponent frictionComponent = new FrictionComponent(0.3, 0.1);
-        tileObject.addComponent(frictionComponent);
-
         PhysicsComponent physicsComponent = new PhysicsComponent(1000, 0);
         tileObject.addComponent(physicsComponent);
 
@@ -135,9 +132,6 @@ public class Game {
                 new Vec2d(28.0 / 64 * spriteSize.x, 5.0 / 36 * spriteSize.y).smult(factor), new Vec2d(0, 25.0 / 36 * spriteSize.y).smult(factor), new Vec2d(0, spriteSize.y).smult(factor)};
         CollisionComponent collisionComponent = new CollisionComponent(new PolygonShape(points), true);
         tileObject.addComponent(collisionComponent);
-
-        FrictionComponent frictionComponent = new FrictionComponent(0.07, 0.1);
-        tileObject.addComponent(frictionComponent);
 
         PhysicsComponent physicsComponent = new PhysicsComponent(1000, 0);
         tileObject.addComponent(physicsComponent);
@@ -174,17 +168,14 @@ public class Game {
         CollisionComponent collisionComponent = new CollisionComponent(new PolygonShape(points), false, false, true);
         rockObject.addComponent(collisionComponent);
 
-        CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(0, spriteSize.y * factor), new Vec2d(spriteSize.x * factor, 1)), false, false, false, false, false, true);
+        CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(spriteSize.x * factor / 4, spriteSize.y * factor), new Vec2d(spriteSize.x * factor / 2, 1)), false, false, false, false, false, true);
         rockObject.addComponent(groundDetect);
 
         GravityComponent gravityComponent = new GravityComponent();
         gravityComponent.setGroundDetect(groundDetect);
         rockObject.addComponent(gravityComponent);
 
-        FrictionComponent frictionComponent = new FrictionComponent(0.27, 0.1);
-        rockObject.addComponent(frictionComponent);
-
-        PhysicsComponent physicsComponent = new PhysicsComponent(300, restitution);
+        PhysicsComponent physicsComponent = new PhysicsComponent(50, restitution);
         rockObject.addComponent(physicsComponent);
 
         return rockObject;
@@ -218,6 +209,9 @@ public class Game {
 
         AttackComponent attackComponent = new AttackComponent(60);
         spikeObject.addComponent(attackComponent);
+
+        PhysicsComponent physicsComponent = new PhysicsComponent(50, 0);
+        spikeObject.addComponent(physicsComponent);
 
         return spikeObject;
     }

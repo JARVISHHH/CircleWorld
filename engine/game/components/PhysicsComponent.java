@@ -60,7 +60,12 @@ public class PhysicsComponent extends Component{
         Vec2d forceVel = force.smult(t).smult(1 / mass);
         Vec2d impulseVel = impulse.smult(1 / mass);
         Vec2d accVel = acc.smult(t);
+//        System.out.println("forceVel " + forceVel.x + " " + forceVel.y);
+//        if(impulseVel.y != 0)
+//            System.out.println("impulseVel " + impulseVel.x + " " + impulseVel.y);
+//        System.out.println("accVel " + accVel.x + " " + accVel.y);
         vel = vel.plus(forceVel).plus(impulseVel).plus(accVel);
+//        System.out.println("vel " + vel.x + " " + vel.y);
         Vec2d oldPos = getGameObject().getTransformComponent().getPosition();
         getGameObject().getTransformComponent().setPosition(oldPos.plus(vel.smult(t * 10)));
         acc = new Vec2d(0, 0);

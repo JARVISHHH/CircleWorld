@@ -203,22 +203,6 @@ public class CollisionComponent extends Component{
             if(jumpComponent != null) jumpComponent.setJumpable(true);
         }
 
-        // Apply friction to the game object
-        FrictionComponent frictionComponent = (FrictionComponent) newCollision.other.getGameObject().getComponent("Friction");
-        if (frictionComponent != null && physicsComponent != null && !outImpulse.isZero()) {
-            // Get the direction of friction, which is perpendicular to force and opposite to velocity
-            Vec2d frictionDirection = outImpulse.normalize().perpendicular().normalize();
-            if (frictionDirection.dot(physicsComponent.vel) > 0) frictionDirection = frictionDirection.smult(-1);
-            Vec2d frictionImpulse = frictionDirection.smult(Math.abs(frictionDirection.perpendicular().dot(outImpulse))).smult(frictionComponent.cofk);
-            // If the velocity is too small, set it sub velocity to zero directly for now
-            if (Math.abs(frictionDirection.dot(physicsComponent.vel)) < frictionImpulse.mag() / physicsComponent.mass) {
-                physicsComponent.vel = physicsComponent.vel.minus(frictionDirection.smult(frictionDirection.dot(physicsComponent.vel)));
-            } else {
-                // Apply friction
-                physicsComponent.applyImpulse(frictionImpulse);
-            }
-        }
-
         // Damage
         AttackComponent attackComponent = (AttackComponent)this.gameObject.getComponent("Attack");
         if(attackComponent != null)
