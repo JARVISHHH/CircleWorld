@@ -2,11 +2,14 @@ package engine.game.collision;
 
 import Nin2.XMLProcessor;
 import engine.support.Vec2d;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 public class PolygonShape implements Shape {
@@ -184,6 +187,20 @@ public class PolygonShape implements Shape {
     @Override
     public float rayCast(Ray ray) {
         return ray.rayCast(this);
+    }
+
+    @Override
+    public void onDraw(GraphicsContext g) {
+        g.setLineWidth(3);
+        g.setStroke(Color.rgb(255, 0, 0));
+        double[] x = new double[points.length];
+        double[] y = new double[points.length];
+        for(int i = 0; i < points.length; i++) {
+            x[i] = points[i].x;
+            y[i] = points[i].y;
+        }
+        g.strokePolygon(x, y, points.length);
+        g.setLineWidth(1);
     }
 
     @Override

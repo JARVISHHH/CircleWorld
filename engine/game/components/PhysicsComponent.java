@@ -10,9 +10,8 @@ public class PhysicsComponent extends Component{
     Vec2d acc;
     Vec2d vel;
     Vec2d impulse, force;
+    double resistance = 30;
     double restitution;
-
-    double maxVel = 10;
 
     public PhysicsComponent() {
         tag = "Physics";
@@ -35,6 +34,10 @@ public class PhysicsComponent extends Component{
         return mass;
     }
 
+    public Vec2d getVel() {
+        return vel;
+    }
+
     public void applyForce(Vec2d f) {
         force = force.plus(f);
     }
@@ -50,10 +53,14 @@ public class PhysicsComponent extends Component{
     @Override
     public void onTick(long nanosSincePreviousTick) {
         double t = nanosSincePreviousTick / 1000000000.0;
-        vel = vel.plus(force.smult(t).smult(1 / mass).plus(impulse.smult(1 / mass))).plus(acc.smult(t));
-        if(vel.mag() > maxVel) {
-            vel = vel.normalize().smult(maxVel);
-        }
+        Vec2d resistanceVel = new Vec2d(1, 0).smult(resistance * t);
+        if(Math.abs(vel.x) < resistanceVel.x) vel = new Vec2d(0, vel.y);
+        else if(vel.x * resistanceVel.x > 0) vel = vel.minus(resistanceVel);
+        else vel = vel.plus(resistanceVel);
+        Vec2d forceVel = force.smult(t).smult(1 / mass);
+        Vec2d impulseVel = impulse.smult(1 / mass);
+        Vec2d accVel = acc.smult(t);
+        vel = vel.plus(forceVel).plus(impulseVel).plus(accVel);
         Vec2d oldPos = getGameObject().getTransformComponent().getPosition();
         getGameObject().getTransformComponent().setPosition(oldPos.plus(vel.smult(t * 10)));
         acc = new Vec2d(0, 0);
@@ -71,7 +78,6 @@ public class PhysicsComponent extends Component{
         physicsComponent.setAttribute("impulse", String.valueOf(impulse));
         physicsComponent.setAttribute("force", String.valueOf(force));
         physicsComponent.setAttribute("restitution", String.valueOf(restitution));
-        physicsComponent.setAttribute("maxVel", String.valueOf(maxVel));
 
         return physicsComponent;
     }
@@ -84,6 +90,5 @@ public class PhysicsComponent extends Component{
         impulse = Vec2d.toVec2d(e.getAttribute("impulse"));
         force = Vec2d.toVec2d(e.getAttribute("force"));
         restitution = Double.parseDouble(e.getAttribute("restitution"));
-        maxVel = Double.parseDouble(e.getAttribute("maxVel"));
     }
 }

@@ -37,26 +37,24 @@ public class CollisionSystem extends System{
     }
 
     private void doCollision() {
-        Iterator<GameObject> iterate1 = collisionOrder.iterator();
-        while(iterate1.hasNext()) {
-            GameObject gameObject1 = iterate1.next();
+        for (GameObject gameObject1 : collisionOrder) {
             ArrayList<Component> rayComponents = gameObject1.getComponentList("Ray");
-            for(Component rayComponent: rayComponents) {
-                ((RayComponent)rayComponent).update();
+            for (Component rayComponent : rayComponents) {
+                ((RayComponent) rayComponent).update();
             }
             Iterator<GameObject> iterate2 = collisionOrder.iterator();
             GameObject gameObject2;
-            while((gameObject2 = iterate2.next()) != gameObject1) {
+            while ((gameObject2 = iterate2.next()) != gameObject1) {
                 gameObject1.collide(gameObject2);
                 gameObject1.rayCast(gameObject2);
             }
             gameObject1.rayCast(gameObject2);
-            while(iterate2.hasNext()) {
+            while (iterate2.hasNext()) {
                 gameObject2 = iterate2.next();
                 gameObject1.rayCast(gameObject2);
             }
-            for(Component rayComponent: rayComponents) {
-                ((RayComponent)rayComponent).apply();
+            for (Component rayComponent : rayComponents) {
+                ((RayComponent) rayComponent).apply();
             }
         }
     }

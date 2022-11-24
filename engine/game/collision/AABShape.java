@@ -2,6 +2,8 @@ package engine.game.collision;
 
 import Nin2.XMLProcessor;
 import engine.support.Vec2d;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -131,6 +133,14 @@ public class AABShape implements Shape{
     @Override
     public float rayCast(Ray ray) {
         return ray.rayCast(this);
+    }
+
+    @Override
+    public void onDraw(GraphicsContext g) {
+        g.setLineWidth(3);
+        g.setStroke(Color.rgb(255, 0, 0));
+        g.strokeRect(topLeft.x, topLeft.y, size.x, size.y);
+        g.setLineWidth(1);
     }
 
     @Override

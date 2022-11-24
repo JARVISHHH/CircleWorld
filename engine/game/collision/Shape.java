@@ -3,6 +3,7 @@ package engine.game.collision;
 import engine.game.components.CollisionComponent;
 import engine.game.components.Component;
 import engine.support.Vec2d;
+import javafx.scene.canvas.GraphicsContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -16,4 +17,6 @@ public interface Shape {
     Shape getScreenPosition(Vec2d position);
     Element writeXML(Document doc);
     void readXML(Element e);
+
+    void onDraw(GraphicsContext g);
 }

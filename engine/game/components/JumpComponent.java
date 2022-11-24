@@ -9,13 +9,14 @@ import org.w3c.dom.Element;
 public class JumpComponent extends Component{
 
     protected boolean jumpable = true;  // Can jump or not
-    protected boolean finishedJump = false;  // If current jump has been executed
+    protected boolean finishedJump = true;  // If current jump has been executed
+    protected boolean getHighest = false;
 
-    protected double firstJumpImpulseFactor = 0.8;
+    protected double firstJumpImpulseFactor = 1.6;
 
-    protected double maxImpulseFactor = 0.3;
+    protected double maxImpulseFactor = 0.6;
 
-    protected double oneTimeImpulseFactor = 0.6;
+    protected double oneTimeImpulseFactor = 1.2;
 
     protected double currentImpulseFactor = 0;
 
@@ -42,26 +43,27 @@ public class JumpComponent extends Component{
         double forceFactor = physicsComponent.mass * 9.8;
         // If the jump button is pressed, the game object is currently jumpable and the jump has not been executed,
         // then jump
-        if((!finishedJump || jumpable) && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey)) {
+        if((!getHighest || (finishedJump && jumpable)) && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey)) {
             Vec2d force = new Vec2d(0, -1);
             double addImpulseFactor;
-            if(jumpable) {
+            if(finishedJump && jumpable) {
                 physicsComponent.applyImpulse(force.smult(forceFactor * firstJumpImpulseFactor));
             } else {
                 addImpulseFactor = Math.max(Math.min(maxImpulseFactor - currentImpulseFactor, t * oneTimeImpulseFactor), 0);
                 physicsComponent.applyImpulse(force.smult(forceFactor * addImpulseFactor));
                 currentImpulseFactor += addImpulseFactor;
             }
+            finishedJump = false;
             jumpable = false;
+            getHighest = false;
             if(currentImpulseFactor >= maxImpulseFactor) {
-                finishedJump = true;
+                getHighest = true;
             }
         }
         if(!gameObject.keyPressing.containsKey(jumpKey) || !gameObject.keyPressing.get(jumpKey)) {
             currentImpulseFactor = 0;
-            finishedJump = false;
+            finishedJump = true;
         }
-        jumpable = false;  // Set jumpable to false everytime.
     }
 
     @Override

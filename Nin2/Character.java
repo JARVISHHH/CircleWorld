@@ -194,7 +194,7 @@ public class Character {
         @Override
         public void onTick(long nanosSincePreviousTick) {
             double t = nanosSincePreviousTick / 1000000000.0;
-            double acceleration = 10;
+            double acceleration = 75;
             double dx[] = {-1, 1}, dy[] = {0, 0};
             KeyCode direction[] = {KeyCode.LEFT, KeyCode.RIGHT};
             for(int k = 0; k < direction.length; k++) {
@@ -202,7 +202,15 @@ public class Character {
                     PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
                     moveDirection = new Vec2d(dx[k], dy[k]);
                     Vec2d force = moveDirection;
-                    physicsComponent.applyImpulse(force.smult(physicsComponent.getMass() * acceleration * t));
+                    Vec2d impulse = force.smult(physicsComponent.getMass() * acceleration * t);
+                    if(physicsComponent.getVel().x * impulse.x > 0) {
+                        if(physicsComponent.getVel().x + impulse.x / physicsComponent.getMass() > maxVel)
+                            impulse = new Vec2d((maxVel - physicsComponent.getVel().x) * physicsComponent.getMass(), 0);
+                        else if(physicsComponent.getVel().x + impulse.x / physicsComponent.getMass() < -maxVel) {
+                            impulse = new Vec2d((-maxVel - physicsComponent.getVel().x) * physicsComponent.getMass(), 0);
+                        }
+                    }
+                    physicsComponent.applyImpulse(impulse);
                 }
             }
         }
@@ -255,7 +263,11 @@ public class Character {
         jumpComponent.setJumpKey(KeyCode.SHIFT);
         characterObject.addComponent(jumpComponent);
 
+        CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(0, characterSize.y), new Vec2d(characterSize.x, 1)), false, false, false, false, false, true);
+        characterObject.addComponent(groundDetect);
+
         GravityComponent gravityComponent = new GravityComponent();
+        gravityComponent.setGroundDetect(groundDetect);
         characterObject.addComponent(gravityComponent);
 
         CharacterMoveComponent characterMoveComponent = new CharacterMoveComponent();

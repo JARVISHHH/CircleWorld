@@ -5,6 +5,7 @@ import Nin2.XMLProcessor;
 import engine.game.collision.Collision;
 import engine.game.collision.Shape;
 import engine.support.Vec2d;
+import javafx.scene.canvas.GraphicsContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -24,10 +25,15 @@ public class CollisionComponent extends Component{
 
     protected boolean isGoal = false;
 
+    protected boolean isDetect = false;
+
+    protected Vec2d movePosition = new Vec2d(0, 0);
+
     public CollisionComponent() {
         tag = "Collision";
         isStatic = false;
         setCollide(true);
+        setDrawable(true);
     }
 
     public CollisionComponent(Shape shape) {
@@ -35,6 +41,7 @@ public class CollisionComponent extends Component{
         this.shape = shape;
         isStatic = false;
         setCollide(true);
+        setDrawable(true);
     }
 
     public CollisionComponent(Shape shape, boolean isStatic) {
@@ -42,6 +49,7 @@ public class CollisionComponent extends Component{
         this.shape = shape;
         this.isStatic = isStatic;
         setCollide(true);
+        setDrawable(true);
     }
 
     public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable) {
@@ -50,6 +58,7 @@ public class CollisionComponent extends Component{
         this.isStatic = isStatic;
         this.isPassable = isPassable;
         setCollide(true);
+        setDrawable(true);
     }
 
     public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible) {
@@ -59,6 +68,7 @@ public class CollisionComponent extends Component{
         this.isPassable = isPassable;
         this.isDestructible = isDestructible;
         setCollide(true);
+        setDrawable(true);
     }
 
     public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean destructAfterFirstCollision) {
@@ -69,6 +79,7 @@ public class CollisionComponent extends Component{
         this.isDestructible = isDestructible;
         this.destructAfterFirstCollision = destructAfterFirstCollision;
         setCollide(true);
+        setDrawable(true);
     }
 
     public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean destructAfterFirstCollision, boolean isGoal) {
@@ -80,10 +91,36 @@ public class CollisionComponent extends Component{
         this.destructAfterFirstCollision = destructAfterFirstCollision;
         this.isGoal = isGoal;
         setCollide(true);
+        setDrawable(true);
+    }
+
+    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean destructAfterFirstCollision, boolean isGoal, boolean isDetect) {
+        tag = "Collision";
+        this.shape = shape;
+        this.isStatic = isStatic;
+        this.isPassable = isPassable;
+        this.isDestructible = isDestructible;
+        this.destructAfterFirstCollision = destructAfterFirstCollision;
+        this.isGoal = isGoal;
+        this.isDetect = isDetect;
+        setCollide(true);
+        setDrawable(true);
     }
 
     public void setShape(Shape shape) {
         this.shape = shape;
+    }
+
+    public Vec2d getMovePosition() {
+        return movePosition;
+    }
+
+    public void setMovePosition(Vec2d movePosition) {
+        this.movePosition = movePosition;
+    }
+
+    public boolean isPassable() {
+        return isPassable;
     }
 
     @Override
@@ -122,29 +159,40 @@ public class CollisionComponent extends Component{
 
             return;
         }
-        if(newCollision.other.isPassable) return;
+        if(newCollision.other.isPassable || isPassable || newCollision.other.isDetect) return;
+        if(isDetect) {
+            if(newCollision.other.isStatic) {
+                movePosition = movePosition.plus(newCollision.mtv);
+            } else {
+                movePosition = movePosition.plus(newCollision.mtv.smult(1 / 2.0));
+            }
+            return;
+        }
+
         Vec2d outImpulse = new Vec2d(0, 0);
         PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
         PhysicsComponent otherPhysicsComponent = (PhysicsComponent)newCollision.other.getGameObject().getComponent("Physics");
         if(newCollision.other.isStatic) {
+//            movePosition = movePosition.plus(newCollision.mtv);
             setTransformComponentPosition(oldPosition.plus(newCollision.mtv));
             // Apply impulse
             if(physicsComponent != null && otherPhysicsComponent != null) {
                 double mass1 = physicsComponent.mass;
                 Vec2d normalizedMtv = newCollision.mtv.normalize();
                 Vec2d vel1 = normalizedMtv.smult(normalizedMtv.dot(physicsComponent.vel)), vel2 = normalizedMtv.smult(normalizedMtv.dot(otherPhysicsComponent.vel));
-                double cor = Math.sqrt(physicsComponent.restitution) * otherPhysicsComponent.restitution;
+                double cor = Math.sqrt(physicsComponent.restitution * otherPhysicsComponent.restitution);
                 outImpulse = vel2.minus(vel1).smult(mass1).smult(1 + cor);
                 physicsComponent.applyImpulse(outImpulse);
             }
         } else {
+//            movePosition = movePosition.plus(newCollision.mtv.smult(1 / 2.0));
             setTransformComponentPosition(oldPosition.plus(newCollision.mtv.smult(1 / 2.0)));
             // Apply impulse
             if(physicsComponent != null && otherPhysicsComponent != null) {
                 double mass1 = physicsComponent.mass, mass2 = otherPhysicsComponent.mass;
                 Vec2d normalizedMtv = newCollision.mtv.normalize();
                 Vec2d vel1 = normalizedMtv.smult(normalizedMtv.dot(physicsComponent.vel)), vel2 = normalizedMtv.smult(normalizedMtv.dot(otherPhysicsComponent.vel));
-                double cor = Math.sqrt(physicsComponent.restitution) * otherPhysicsComponent.restitution;
+                double cor = Math.sqrt(physicsComponent.restitution * otherPhysicsComponent.restitution);
                 outImpulse = vel2.minus(vel1).smult(mass1).smult(mass2).smult(1 + cor).smult(1 / (mass1 + mass2));
                 physicsComponent.applyImpulse(outImpulse);
             }
@@ -182,6 +230,12 @@ public class CollisionComponent extends Component{
 
         if(destructAfterFirstCollision)
             this.gameObject.getGameWorld().removeGameObject(this.gameObject);
+    }
+
+    @Override
+    public void onDraw(GraphicsContext g) {
+        Shape screenShape = shape.getScreenPosition(getGameObject().getTransformComponent().position);
+        screenShape.onDraw(g);
     }
 
     @Override

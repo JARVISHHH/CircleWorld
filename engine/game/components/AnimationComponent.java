@@ -11,7 +11,7 @@ import java.util.LinkedList;
 public class AnimationComponent extends SpriteComponent{
     protected LinkedList<Vec2i> sprites = new LinkedList<>();
 
-    protected double changeTime = 0.27;
+    protected double changeTime = 0.15;
     protected double sumTime = 0;
 
     protected int startIndex = 0;

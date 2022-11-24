@@ -6,6 +6,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class MoveComponent extends Component{
+
+    protected double maxVel = 15;
     protected double moveRate = 100;
 
     protected Vec2d moveDirection = new Vec2d(1, 0);
