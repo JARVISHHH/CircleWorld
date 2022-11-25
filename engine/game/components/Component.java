@@ -128,4 +128,8 @@ public class Component {
     public void onMouseReleased(MouseEvent e) {
 
     }
+
+    public void onShutdown() {
+
+    }
 }

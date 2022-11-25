@@ -12,6 +12,7 @@ import javafx.scene.transform.Affine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.sound.sampled.Clip;
 import java.util.*;
 
 public class GameWorld {
@@ -39,8 +40,11 @@ public class GameWorld {
     protected boolean hasResult = false;
     protected boolean win = false;
 
+    protected Clip audioClip = null;
+
     public GameWorld(Vec2d size) {
         this.size = size;
+        onStartUp();
     }
 
     public void setViewPort(ViewPort viewPort) {
@@ -100,6 +104,12 @@ public class GameWorld {
             }
         }
         return gameWorld;
+    }
+
+    public void onStartUp() {
+        audioClip = Resource.getAudio("BackGround");
+        if(audioClip != null)
+            audioClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     public void onDraw(GraphicsContext g) {
@@ -200,5 +210,14 @@ public class GameWorld {
     public void onMouseReleased(MouseEvent e) {
         mouseEventsSystem.onMouseReleased(e);
         collisionSystem.onMouseReleased(e);
+    }
+
+    public void onShutdown() {
+        if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
+        }
+        for(GameObject gameObject: gameObjects)
+            gameObject.onShutdown();
     }
 }

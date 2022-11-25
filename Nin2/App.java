@@ -17,6 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 
+import javax.sound.sampled.*;
+import java.io.*;
+
 
 /**
  * This is your Wiz top-level, App class.
@@ -82,10 +85,17 @@ public class App extends Application {
         XMLProcessor.tag2component.put("CharacterMoveComponent", Character.CharacterMoveComponent.class);
     }
 
+    private void loadAudios() {
+        Resource.loadAudio("Nin2/audios/BGM.wav", "BackGround");
+        Resource.loadAudio("Nin2/audios/jump.wav", "Jump");
+        Resource.loadAudio("Nin2/audios/projectile.wav", "projectile");
+    }
+
     @Override
     protected void onStartup() {
         loadImage();
         loadMap();
+        loadAudios();
         addScreen(createTitleScreen());
         addScreen(createInstructionScreen());
         activateScreen("title");
@@ -110,7 +120,6 @@ public class App extends Application {
             public void onMouseClicked(MouseEvent e) {
                 if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
                 restart();
-                activateScreen("game");  // Jump to instruction screen
                 super.onMouseClicked(e);
             }
         };
@@ -232,7 +241,7 @@ public class App extends Application {
      * Create a game screen with a view port, multiple buttons and texts.
      * @return return the game screen.
      */
-    protected Screen createGameScreen(boolean createNew) {
+    protected Screen createGameScreen(boolean createNewWorld) {
         // Create all UIElement and game related objects
         Screen gameScreen = new Screen("game",
                 DEFAULT_STAGE_SIZE,
@@ -240,9 +249,11 @@ public class App extends Application {
         viewPort = new ViewPort(new Vec2d(0, 0), DEFAULT_STAGE_SIZE, new Vec2d(0, 0), new Scale(1, 1));
 
         Vec2d worldSize = new Vec2d(960, 540);
+
         // Create a new game world
-        if(createNew)
+        if(createNewWorld) {
             game.createGameWorld(worldSize);
+        }
 
         viewPort.setGameWorld(game.getGameWorld());
         gameScreen.addUIElement(viewPort);

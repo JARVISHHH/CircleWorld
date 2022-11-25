@@ -179,10 +179,12 @@ public class Application extends FXFrontEnd {
 
   // Activate the screen named name
   protected void activateScreen(String name) {
+    if(activeScreen != null) activeScreen.onShutdown();
     Screen newScreen = screens.get(screensName2Index.get(name));
     if(newScreen.getSize() != currentStageSize)
       newScreen.onResize(currentStageSize);
     activeScreen = screens.get(screensName2Index.get(name));
+    activeScreen.onStartup();
   }
 
 }

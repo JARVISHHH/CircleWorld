@@ -78,6 +78,17 @@ public class ViewPort extends UIElement{
     }
 
     @Override
+    public void onShutdown() {
+        if(gameWorld != null) gameWorld.onShutdown();
+    }
+
+    @Override
+    public void onStartup() {
+        System.out.println("start up");
+        if(gameWorld != null) gameWorld.onStartUp();
+    }
+
+    @Override
     public void onDraw(GraphicsContext g) {
         g.setTransform(affine);
         gameWorld.onDraw(g);

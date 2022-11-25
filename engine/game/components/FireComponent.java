@@ -1,6 +1,7 @@
 package engine.game.components;
 
 import engine.game.GameObject;
+import engine.game.Resource;
 import engine.game.collision.CircleShape;
 import engine.game.collision.Collision;
 import engine.support.Vec2d;
@@ -9,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.sound.sampled.Clip;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -21,6 +23,8 @@ public class FireComponent extends Component{
     public LinkedList<Vec2i> spriteIndex = new LinkedList<>();
 
     protected KeyCode fireKey = null;
+    protected String audioTag = "projectile";
+    protected Clip audioClip = null;
 
     public FireComponent() {
         tag = "Fire";
@@ -90,6 +94,12 @@ public class FireComponent extends Component{
             return;
         }
         hasProjected = true;
+        if(audioClip == null) audioClip = Resource.getAudio(audioTag);
+        if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
+        }
+
         CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(new Vec2d(projectileSize.x / 2, projectileSize.y / 2), Math.min(projectileSize.x / 2, projectileSize.y / 2)));
         collisionComponent.destructAfterFirstCollision = true;
 
@@ -107,6 +117,9 @@ public class FireComponent extends Component{
         projectile.addComponent(physicsComponent);
         projectile.addComponent(attackComponent);
         gameObject.getGameWorld().addGameObject(projectile);
+        if(audioClip != null) {
+            audioClip.start();
+        }
     }
 
     @Override

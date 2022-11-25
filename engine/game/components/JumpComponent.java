@@ -1,10 +1,13 @@
 package engine.game.components;
 
 import Nin2.XMLProcessor;
+import engine.game.Resource;
 import engine.support.Vec2d;
 import javafx.scene.input.KeyCode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.sound.sampled.Clip;
 
 public class JumpComponent extends Component{
 
@@ -21,6 +24,9 @@ public class JumpComponent extends Component{
     protected double currentImpulseFactor = 0;
 
     KeyCode jumpKey = KeyCode.SPACE;
+
+    protected String audioTag = "Jump";
+    protected Clip audioClip = null;
 
     public JumpComponent() {
         tag = "Jump";
@@ -48,21 +54,36 @@ public class JumpComponent extends Component{
             double addImpulseFactor;
             if(finishedJump && jumpable) {
                 physicsComponent.applyImpulse(force.smult(forceFactor * firstJumpImpulseFactor));
+                if(audioClip == null) audioClip = Resource.getAudio(audioTag);
+                if(audioClip != null) {
+                    audioClip.stop();
+                    audioClip.setFramePosition(0);
+                    audioClip.start();
+                }
+                finishedJump = false;
+                jumpable = false;
             } else {
                 addImpulseFactor = Math.max(Math.min(maxImpulseFactor - currentImpulseFactor, t * oneTimeImpulseFactor), 0);
                 physicsComponent.applyImpulse(force.smult(forceFactor * addImpulseFactor));
                 currentImpulseFactor += addImpulseFactor;
             }
-            finishedJump = false;
-            jumpable = false;
-            getHighest = false;
             if(currentImpulseFactor >= maxImpulseFactor) {
+                currentImpulseFactor = 0;
                 getHighest = true;
+                if(audioClip != null) {
+                    audioClip.stop();
+                    audioClip.setFramePosition(0);
+                }
             }
         }
         if(!gameObject.keyPressing.containsKey(jumpKey) || !gameObject.keyPressing.get(jumpKey)) {
             currentImpulseFactor = 0;
+            if(audioClip != null) {
+                audioClip.stop();
+                audioClip.setFramePosition(0);
+            }
             finishedJump = true;
+            getHighest = false;
         }
     }
 
@@ -89,5 +110,11 @@ public class JumpComponent extends Component{
         oneTimeImpulseFactor = Double.parseDouble(e.getAttribute("oneTimeImpulseFactor"));
         currentImpulseFactor = Double.parseDouble(e.getAttribute("currentImpulseFactor"));
         jumpKey = KeyCode.valueOf(e.getAttribute("jumpKey"));
+    }
+
+    @Override
+    public void onShutdown() {
+        if(audioClip != null && audioClip.isRunning())
+            audioClip.close();
     }
 }

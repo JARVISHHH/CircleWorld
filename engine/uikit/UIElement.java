@@ -43,6 +43,14 @@ public abstract class UIElement {
         children.clear();
     }
 
+    public void onShutdown() {
+
+    }
+
+    public void onStartup() {
+
+    }
+
     public void onTick(long nanosSincePreviousTick) {
         if(!active) return;
         for(UIElement child:children) {

@@ -50,6 +50,16 @@ public class Screen {
         return size;
     }
 
+    public void onShutdown() {
+        for(UIElement child: children)
+            child.onShutdown();
+    }
+
+    public void onStartup() {
+        for(UIElement child: children)
+            child.onStartup();
+    }
+
     public void onDraw(GraphicsContext g) {
         g.setFill(color);
         g.fillRect(0, 0, size.x, size.y);

@@ -292,4 +292,9 @@ public class GameObject {
             if(component.doResponseMouseEvents())
                 component.onMouseReleased(e);
     }
+
+    public void onShutdown() {
+        for(Component component: components)
+            component.onShutdown();
+    }
 }
