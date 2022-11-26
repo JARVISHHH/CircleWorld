@@ -12,14 +12,20 @@ import engine.support.Vec2d;
 import engine.support.Vec2i;
 import engine.uikit.RectangleButton;
 import engine.uikit.Text;
+import engine.uikit.Video;
 import engine.uikit.ViewPort;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
+import javafx.stage.Stage;
 
-import javax.sound.sampled.*;
-import java.io.*;
+import java.io.File;
 
 
 /**
@@ -87,9 +93,9 @@ public class App extends Application {
     }
 
     private void loadAudios() {
-        Sound.loadAudio("Nin2/audios/BGM.wav", "BackGround");
-        Sound.loadAudio("Nin2/audios/jump.wav", "Jump");
-        Sound.loadAudio("Nin2/audios/projectile.wav", "projectile");
+        Sound.loadAudio("Nin2/resources/BGM.wav", "BackGround");
+        Sound.loadAudio("Nin2/resources/jump.wav", "Jump");
+        Sound.loadAudio("Nin2/resources/projectile.wav", "projectile");
     }
 
     @Override
@@ -156,7 +162,6 @@ public class App extends Application {
             @Override
             public void onMouseClicked(MouseEvent e) {
                 if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                restart();
                 activateScreen("instruction");  // Jump to instruction screen
                 super.onMouseClicked(e);
             }
@@ -181,6 +186,8 @@ public class App extends Application {
         titleScreen.addUIElement(titleText);  // Add text to the screen
 
         titleScreen.onResize(currentStageSize);
+
+        titleScreen.setActive(false);
 
         return titleScreen;
     }
@@ -234,6 +241,14 @@ public class App extends Application {
         instructionScreen.addUIElement(characterText);
         backButton.addUIElement(backText);
         instructionScreen.addUIElement(backButton);
+
+        Video video = new Video("Nin2/resources/re.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
+        video.setApp(this);
+        instructionScreen.addUIElement(video);
+
+        instructionScreen.onResize(currentStageSize);
+
+        instructionScreen.setActive(false);
 
         return instructionScreen;
     }
@@ -334,6 +349,8 @@ public class App extends Application {
         gameScreen.addUIElement(resultText);
 
         gameScreen.onResize(currentStageSize);
+
+        gameScreen.setActive(false);
 
         return gameScreen;
     }

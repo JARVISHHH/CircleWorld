@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.MediaView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -93,6 +94,16 @@ public abstract class FXFrontEnd extends CS1971FrontEnd {
 		timer.setCycleCount(1);
 		timer.play();
 		
+	}
+
+	public void addMediaView(MediaView mediaView) {
+		if(canvas.root.getChildren().contains(mediaView)) return;
+		canvas.root.getChildren().add(mediaView);
+	}
+
+	public void removeMediaView(MediaView mediaView) {
+		if(!canvas.root.getChildren().contains(mediaView)) return;
+		canvas.root.getChildren().remove(mediaView);
 	}
 	
 	@Override

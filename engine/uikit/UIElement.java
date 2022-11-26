@@ -2,6 +2,7 @@ package engine.uikit;
 
 import java.util.ArrayList;
 
+import engine.Screen;
 import engine.support.Vec2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -25,6 +26,9 @@ public abstract class UIElement {
 
     public void setActive(boolean active) {
         this.active = active;
+        for(UIElement child:children) {
+            child.setActive(active);
+        }
     }
 
     public Vec2d getPosition() {

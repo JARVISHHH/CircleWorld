@@ -17,6 +17,8 @@ public class Screen {
     protected Vec2d size;
     protected Color color;
 
+    protected boolean active = false;
+
     public String name;
 
     public Screen(Vec2d size) {
@@ -40,6 +42,10 @@ public class Screen {
         this.color = color;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void addUIElement(UIElement element) {
         children.add(element);
     }
@@ -51,16 +57,19 @@ public class Screen {
     }
 
     public void onShutdown() {
+        setActive(false);
         for(UIElement child: children)
             child.onShutdown();
     }
 
     public void onStartup() {
+        setActive(true);
         for(UIElement child: children)
             child.onStartup();
     }
 
     public void onDraw(GraphicsContext g) {
+        if(!active) return;
         g.setFill(color);
         g.fillRect(0, 0, size.x, size.y);
         for(UIElement child: children)
@@ -68,6 +77,7 @@ public class Screen {
     }
 
     public void onResize(Vec2d newSize) {
+        if(!active) return;
         double ratio = Math.min(newSize.x / size.x, newSize.y / size.y);
         for(UIElement child: children)
             child.onResize(child.getSize().smult(ratio));  // Pass correct aspect ratio size here
@@ -75,66 +85,77 @@ public class Screen {
     }
 
     public void onTick(long nanosSincePreviousTick) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onTick(nanosSincePreviousTick);
         }
     }
 
     public void onKeyTyped(KeyEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onKeyTyped(e);
         }
     }
 
     public void onKeyPressed(KeyEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onKeyPressed(e);
         }
     }
 
     public void onKeyReleased(KeyEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onKeyReleased(e);
         }
     }
 
     public void onMouseClicked(MouseEvent e) {
+        if(!active) return;
         for(UIElement child: children) {
             child.onMouseClicked(e);
         }
     }
 
     public void onMousePressed(MouseEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onMousePressed(e);
         }
     }
 
     public void onMouseReleased(MouseEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onMouseReleased(e);
         }
     }
 
     public void onMouseDragged(MouseEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onMouseDragged(e);
         }
     }
 
     public void onMouseMoved(MouseEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onMouseMoved(e);
         }
     }
 
     public void onMouseWheelMoved(ScrollEvent e) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onMouseWheelMoved(e);
         }
     }
 
     public void onFocusChanged(boolean newVal) {
+        if(!active) return;
         for(UIElement child:children) {
             child.onFocusChanged(newVal);
         }

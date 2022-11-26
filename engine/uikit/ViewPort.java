@@ -84,7 +84,6 @@ public class ViewPort extends UIElement{
 
     @Override
     public void onStartup() {
-        System.out.println("start up");
         if(gameWorld != null) gameWorld.onStartUp();
     }
 
