@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 
 public class MovingComponent extends Component{
 
-    protected double moveRate = 150;
+    protected double moveRate = 300;
     public Vec2d direction;
 
     public MovingComponent() {

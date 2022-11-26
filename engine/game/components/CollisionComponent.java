@@ -21,11 +21,13 @@ public class CollisionComponent extends Component{
 
     protected boolean isDestructible = false;
 
-    protected boolean destructAfterFirstCollision = false;
+    protected boolean isProjectile = false;
 
     protected boolean isGoal = false;
 
     protected boolean isDetect = false;
+
+    protected int group = 0;
 
     protected Vec2d movePosition = new Vec2d(0, 0);
 
@@ -71,36 +73,36 @@ public class CollisionComponent extends Component{
         setDrawable(true);
     }
 
-    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean destructAfterFirstCollision) {
+    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean isProjectile) {
         tag = "Collision";
         this.shape = shape;
         this.isStatic = isStatic;
         this.isPassable = isPassable;
         this.isDestructible = isDestructible;
-        this.destructAfterFirstCollision = destructAfterFirstCollision;
+        this.isProjectile = isProjectile;
         setCollide(true);
         setDrawable(true);
     }
 
-    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean destructAfterFirstCollision, boolean isGoal) {
+    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean isProjectile, boolean isGoal) {
         tag = "Collision";
         this.shape = shape;
         this.isStatic = isStatic;
         this.isPassable = isPassable;
         this.isDestructible = isDestructible;
-        this.destructAfterFirstCollision = destructAfterFirstCollision;
+        this.isProjectile = isProjectile;
         this.isGoal = isGoal;
         setCollide(true);
         setDrawable(true);
     }
 
-    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean destructAfterFirstCollision, boolean isGoal, boolean isDetect) {
+    public CollisionComponent(Shape shape, boolean isStatic, boolean isPassable, boolean isDestructible, boolean isProjectile, boolean isGoal, boolean isDetect) {
         tag = "Collision";
         this.shape = shape;
         this.isStatic = isStatic;
         this.isPassable = isPassable;
         this.isDestructible = isDestructible;
-        this.destructAfterFirstCollision = destructAfterFirstCollision;
+        this.isProjectile = isProjectile;
         this.isGoal = isGoal;
         this.isDetect = isDetect;
         setCollide(true);
@@ -121,6 +123,10 @@ public class CollisionComponent extends Component{
 
     public boolean isPassable() {
         return isPassable;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
     }
 
     @Override
@@ -144,6 +150,7 @@ public class CollisionComponent extends Component{
 
     public void collide(Collision newCollision) {
         if(newCollision.mtv == null) return;
+        if((isProjectile || newCollision.other.isProjectile) && group == newCollision.other.group) return;
         Vec2d oldPosition = gameObject.getTransformComponent().position;
         if(isStatic) {
             // Damage
@@ -154,7 +161,7 @@ public class CollisionComponent extends Component{
             if(isGoal)
                 newCollision.other.gameObject.getGoal();
 
-            if(destructAfterFirstCollision)
+            if(isProjectile)
                 this.gameObject.getGameWorld().removeGameObject(this.gameObject);
 
             return;
@@ -212,7 +219,7 @@ public class CollisionComponent extends Component{
         if(isGoal)
             newCollision.other.gameObject.getGoal();
 
-        if(destructAfterFirstCollision)
+        if(isProjectile)
             this.gameObject.getGameWorld().removeGameObject(this.gameObject);
     }
 
@@ -228,7 +235,7 @@ public class CollisionComponent extends Component{
         collisionComponent.setAttribute("isStatic", String.valueOf(isStatic));
         collisionComponent.setAttribute("isPassable", String.valueOf(isPassable));
         collisionComponent.setAttribute("isDestructible", String.valueOf(isDestructible));
-        collisionComponent.setAttribute("destructAfterFirstCollision", String.valueOf(destructAfterFirstCollision));
+        collisionComponent.setAttribute("destructAfterFirstCollision", String.valueOf(isProjectile));
         collisionComponent.setAttribute("isGoal", String.valueOf(isGoal));
 
         Element shape = this.shape.writeXML(doc);
@@ -242,7 +249,7 @@ public class CollisionComponent extends Component{
         isStatic = Boolean.parseBoolean(e.getAttribute("isStatic"));
         isPassable = Boolean.parseBoolean(e.getAttribute("isPassable"));
         isDestructible = Boolean.parseBoolean(e.getAttribute("isDestructible"));
-        destructAfterFirstCollision = Boolean.parseBoolean(e.getAttribute("destructAfterFirstCollision"));
+        isProjectile = Boolean.parseBoolean(e.getAttribute("destructAfterFirstCollision"));
         isGoal = Boolean.parseBoolean(e.getAttribute("isGoal"));
 
         NodeList nodeList = e.getChildNodes();

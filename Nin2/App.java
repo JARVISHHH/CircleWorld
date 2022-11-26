@@ -3,6 +3,7 @@ package Nin2;
 import engine.Application;
 import engine.Screen;
 import engine.game.Resource;
+import engine.game.Sound;
 import engine.game.collision.AABShape;
 import engine.game.collision.CircleShape;
 import engine.game.collision.PolygonShape;
@@ -86,9 +87,9 @@ public class App extends Application {
     }
 
     private void loadAudios() {
-        Resource.loadAudio("Nin2/audios/BGM.wav", "BackGround");
-        Resource.loadAudio("Nin2/audios/jump.wav", "Jump");
-        Resource.loadAudio("Nin2/audios/projectile.wav", "projectile");
+        Sound.loadAudio("Nin2/audios/BGM.wav", "BackGround");
+        Sound.loadAudio("Nin2/audios/jump.wav", "Jump");
+        Sound.loadAudio("Nin2/audios/projectile.wav", "projectile");
     }
 
     @Override

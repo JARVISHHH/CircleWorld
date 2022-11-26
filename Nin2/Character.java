@@ -277,6 +277,7 @@ public class Character {
         characterObject.addComponent(physicsComponent);
 
         CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, 0), characterSize));
+        collisionComponent.setGroup(1);
         characterObject.addComponent(collisionComponent);
         KeyEventsComponent keyEventsComponent = new KeyEventsComponent();
         characterObject.addComponent(keyEventsComponent);

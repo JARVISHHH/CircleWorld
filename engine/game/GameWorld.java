@@ -12,7 +12,8 @@ import javafx.scene.transform.Affine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
+import java.lang.System;
 import java.util.*;
 
 public class GameWorld {
@@ -107,9 +108,13 @@ public class GameWorld {
     }
 
     public void onStartUp() {
-        audioClip = Resource.getAudio("BackGround");
-        if(audioClip != null)
+        if(audioClip == null) audioClip = Sound.getAudio("BackGround");
+        if(audioClip != null) {
+            FloatControl gainControl =
+                    (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-15.0f); // Reduce volume by 10 decibels.
             audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
 
     public void onDraw(GraphicsContext g) {

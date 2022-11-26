@@ -2,12 +2,14 @@ package engine.game.components;
 
 import Nin2.XMLProcessor;
 import engine.game.Resource;
+import engine.game.Sound;
 import engine.support.Vec2d;
 import javafx.scene.input.KeyCode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
+import java.util.Objects;
 
 public class JumpComponent extends Component{
 
@@ -47,6 +49,7 @@ public class JumpComponent extends Component{
         PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
         if(physicsComponent == null) return;
         double forceFactor = physicsComponent.mass * 9.8;
+        if(jumpable) stopSound();
         // If the jump button is pressed, the game object is currently jumpable and the jump has not been executed,
         // then jump
         if((!getHighest || (finishedJump && jumpable)) && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey)) {
@@ -54,12 +57,7 @@ public class JumpComponent extends Component{
             double addImpulseFactor;
             if(finishedJump && jumpable) {
                 physicsComponent.applyImpulse(force.smult(forceFactor * firstJumpImpulseFactor));
-                if(audioClip == null) audioClip = Resource.getAudio(audioTag);
-                if(audioClip != null) {
-                    audioClip.stop();
-                    audioClip.setFramePosition(0);
-                    audioClip.start();
-                }
+                playSound();
                 finishedJump = false;
                 jumpable = false;
             } else {
@@ -70,20 +68,29 @@ public class JumpComponent extends Component{
             if(currentImpulseFactor >= maxImpulseFactor) {
                 currentImpulseFactor = 0;
                 getHighest = true;
-                if(audioClip != null) {
-                    audioClip.stop();
-                    audioClip.setFramePosition(0);
-                }
             }
         }
         if(!gameObject.keyPressing.containsKey(jumpKey) || !gameObject.keyPressing.get(jumpKey)) {
             currentImpulseFactor = 0;
-            if(audioClip != null) {
-                audioClip.stop();
-                audioClip.setFramePosition(0);
-            }
             finishedJump = true;
             getHighest = false;
+        }
+    }
+
+    private void playSound() {
+        if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);;
+        if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
+            audioClip.start();
+        }
+    }
+
+    private void stopSound() {
+        if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);;
+        if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
         }
     }
 

@@ -2,8 +2,8 @@ package engine.game.components;
 
 import engine.game.GameObject;
 import engine.game.Resource;
+import engine.game.Sound;
 import engine.game.collision.CircleShape;
-import engine.game.collision.Collision;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
 import javafx.scene.input.KeyCode;
@@ -94,14 +94,11 @@ public class FireComponent extends Component{
             return;
         }
         hasProjected = true;
-        if(audioClip == null) audioClip = Resource.getAudio(audioTag);
-        if(audioClip != null) {
-            audioClip.stop();
-            audioClip.setFramePosition(0);
-        }
+        stopSound();
 
         CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(new Vec2d(projectileSize.x / 2, projectileSize.y / 2), Math.min(projectileSize.x / 2, projectileSize.y / 2)));
-        collisionComponent.destructAfterFirstCollision = true;
+        collisionComponent.isProjectile = true;
+        collisionComponent.group = 1;
 
         PhysicsComponent physicsComponent = new PhysicsComponent(200, 0);
         if(spriteIndex.size() != 0) {
@@ -117,8 +114,23 @@ public class FireComponent extends Component{
         projectile.addComponent(physicsComponent);
         projectile.addComponent(attackComponent);
         gameObject.getGameWorld().addGameObject(projectile);
+        playSound();
+    }
+
+    private void playSound() {
+        if(audioClip == null) audioClip = audioClip = Sound.getEchoClip(audioTag, 50, 0.4F, 3);
         if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
             audioClip.start();
+        }
+    }
+
+    private void stopSound() {
+        if(audioClip == null) audioClip = Sound.getEchoClip(audioTag, 50, 0.4F, 3);
+        if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
         }
     }
 
