@@ -143,6 +143,12 @@ public class Sound {
         return floats2clip(combinedAudioSamples, audioFormat);
     }
 
+    /**
+     * Decay the samples with decayFactor
+     * @param samples Original sound
+     * @param decayFactor decayFactor
+     * @return new samples after decaying
+     */
     public static float[] decayFilter(float[] samples, float decayFactor) {
         float[] filteredSamples = new float[samples.length];
 
@@ -152,11 +158,17 @@ public class Sound {
         return filteredSamples;
     }
 
+    /**
+     * Transfer the float-represented samples to clip
+     * @param combinedAudioSamples float-represented samples
+     * @param audioFormat format of the original audio
+     * @return the clip
+     */
     private static Clip floats2clip(float[] combinedAudioSamples, AudioFormat audioFormat) {
         byte[] finalAudioSamples = floats2bytes(combinedAudioSamples, audioFormat);
 
         ByteArrayInputStream stream = new ByteArrayInputStream(finalAudioSamples);
-        AudioInputStream outputAis = new AudioInputStream(stream, audioFormat,finalAudioSamples.length);
+        AudioInputStream outputAis = new AudioInputStream(stream, audioFormat, finalAudioSamples.length);
 
         Clip clip;
         try {
@@ -169,6 +181,11 @@ public class Sound {
         return clip;
     }
 
+    /**
+     * Transfer the stream to bytes
+     * @param stream the original stream
+     * @return a bytes array
+     */
     private static byte[] stream2bytes(AudioInputStream stream) {
         ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
 
@@ -181,6 +198,14 @@ public class Sound {
         return byteArrayOutputStream.toByteArray();
     }
 
+    /**
+     * Transfer the bytes-represented samples to float-represented
+     * For we need to manipulate the sound and samples are actually represented by multiple bytes
+     * We need to transfer the bytes array to float arrays, to make sure that each float represent a single sample
+     * @param bytes original bytes-represented samples
+     * @param audioFormat format of the audio
+     * @return a float array
+     */
     public static float[] bytes2floats(byte[] bytes, AudioFormat audioFormat) {
         int bitsPerSample = audioFormat.getSampleSizeInBits();
         int bytesPerSample = bitsPerSample / 8;
@@ -193,6 +218,12 @@ public class Sound {
         return samples;
     }
 
+    /**
+     * Transfer the float-represented samples to bytes-represented
+     * @param samples float-represented samples
+     * @param audioFormat format of the audio
+     * @return a bytes array
+     */
     public static byte[] floats2bytes(float[] samples, AudioFormat audioFormat) {
         int bitsPerSample = audioFormat.getSampleSizeInBits();
         int bytesPerSample = bitsPerSample / 8;
@@ -205,6 +236,13 @@ public class Sound {
         return bytes;
     }
 
+    /**
+     * Transfer a sample to float
+     * @param bytes the original bytes array
+     * @param i where the sample start
+     * @param bytesPerSample bytesPerSample
+     * @return
+     */
     private static float bytes2float(byte[] bytes, int i, int bytesPerSample) {
         if(bytesPerSample == 1) {
             return bytes[i];
@@ -221,6 +259,13 @@ public class Sound {
         return 1;
     }
 
+    /**
+     * Transfer a sample to bytes
+     * @param bytes the original bytes array
+     * @param i where the sample start
+     * @param sample the sample in float
+     * @param bytesPerSample bytesPerSample
+     */
     private static void float2bytes(byte[] bytes, int i, float sample, int bytesPerSample) {
         long temp = (long) sample;
         if(bytesPerSample == 1) {

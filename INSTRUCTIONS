@@ -1,0 +1,8 @@
+Move: arrow keys
+Jump: shift
+Fire: z
+Ray: x
+
+After clicking the video button, players can click at the lower center of the screen to go back to the title screen. There, actually, is a button under the video, but it can't be seen. I will fix this problem later.
+
+Please do not use the save and load button for now, cause I have implemented some new features and haven't updated the loading/saving feature.
