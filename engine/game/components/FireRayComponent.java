@@ -1,7 +1,6 @@
 package engine.game.components;
 
 import engine.game.GameObject;
-import Nin2.XMLProcessor;
 import engine.game.collision.Ray;
 import engine.support.Vec2d;
 import javafx.scene.input.KeyCode;

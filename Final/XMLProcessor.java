@@ -1,4 +1,4 @@
-package Nin2;
+package Final;
 
 import engine.game.GameObject;
 import engine.game.GameWorld;
@@ -57,7 +57,7 @@ public class XMLProcessor {
             StringWriter writer = new StringWriter();
             transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
-            transformer.transform(new DOMSource(doc), new StreamResult((new File("Nin2/savings/saving.xml"))));
+            transformer.transform(new DOMSource(doc), new StreamResult((new File("Final/savings/saving.xml"))));
         } catch (TransformerConfigurationException e) {
             throw new RuntimeException(e);
         } catch (TransformerException e) {
@@ -81,7 +81,7 @@ public class XMLProcessor {
         Document doc = null;
         try {
             docBuilder = factory.newDocumentBuilder();
-            doc = docBuilder.parse("Nin2/savings/saving.xml");
+            doc = docBuilder.parse("Final/savings/saving.xml");
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

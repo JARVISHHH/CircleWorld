@@ -1,4 +1,4 @@
-package Nin2;
+package Final;
 
 import engine.game.GameObject;
 import engine.game.collision.AABShape;

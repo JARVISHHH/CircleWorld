@@ -1,6 +1,5 @@
 package engine.game.components;
 
-import Nin2.XMLProcessor;
 import engine.support.Vec2d;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

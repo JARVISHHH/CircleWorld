@@ -2,7 +2,6 @@ package engine.game.components;
 
 import engine.game.Resource;
 import engine.game.Wrapper;
-import Nin2.XMLProcessor;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
 import javafx.scene.canvas.GraphicsContext;

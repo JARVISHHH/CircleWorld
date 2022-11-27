@@ -1,7 +1,5 @@
 package engine.game.components;
 
-import Nin2.XMLProcessor;
-import engine.game.Resource;
 import engine.game.Sound;
 import engine.support.Vec2d;
 import javafx.scene.input.KeyCode;
@@ -9,7 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.sound.sampled.*;
-import java.util.Objects;
 
 public class JumpComponent extends Component{
 

@@ -1,6 +1,5 @@
 package engine.game.components;
 
-import Nin2.XMLProcessor;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.w3c.dom.Document;

@@ -118,7 +118,7 @@ public class FireComponent extends Component{
     }
 
     private void playSound() {
-        if(audioClip == null) audioClip = audioClip = Sound.getEchoClip(audioTag, 50, 0.4F, 3);
+        if(audioClip == null) audioClip = Sound.getEchoClip(audioTag, 150, 0.4F, 3);
         if(audioClip != null) {
             audioClip.stop();
             audioClip.setFramePosition(0);
@@ -127,7 +127,7 @@ public class FireComponent extends Component{
     }
 
     private void stopSound() {
-        if(audioClip == null) audioClip = Sound.getEchoClip(audioTag, 50, 0.4F, 3);
+        if(audioClip == null) audioClip = Sound.getEchoClip(audioTag, 150, 0.4F, 3);
         if(audioClip != null) {
             audioClip.stop();
             audioClip.setFramePosition(0);

@@ -1,6 +1,5 @@
 package engine.game;
 
-import Nin2.Game;
 import engine.game.systems.*;
 import engine.support.Vec2d;
 import engine.uikit.ViewPort;
@@ -13,7 +12,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.sound.sampled.*;
-import java.lang.System;
 import java.util.*;
 
 public class GameWorld {

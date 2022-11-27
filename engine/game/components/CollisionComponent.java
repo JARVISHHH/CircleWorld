@@ -1,7 +1,7 @@
 package engine.game.components;
 
 
-import Nin2.XMLProcessor;
+import Final.XMLProcessor;
 import engine.game.collision.Collision;
 import engine.game.collision.Shape;
 import engine.support.Vec2d;

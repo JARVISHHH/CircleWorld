@@ -1,4 +1,4 @@
-package Nin2;
+package Final;
 
 import engine.support.FXApplication;
 import engine.support.FXFrontEnd;

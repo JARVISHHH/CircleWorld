@@ -1,4 +1,4 @@
-package Nin2;
+package Final;
 
 import engine.Application;
 import engine.Screen;
@@ -14,18 +14,10 @@ import engine.uikit.RectangleButton;
 import engine.uikit.Text;
 import engine.uikit.Video;
 import engine.uikit.ViewPort;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
-import javafx.stage.Stage;
-
-import java.io.File;
 
 
 /**
@@ -50,19 +42,19 @@ public class App extends Application {
     Text resultText;
 
     private void loadImage() {
-        Resource.loadImage("Nin2/sprites/characterStand.png", "characterStand", new Vec2d(80, 36), new Vec2i(4, 1));
-        Resource.loadImage("Nin2/sprites/characterRunX.png", "characterRunX", new Vec2d(150, 36), new Vec2i(6, 1));
-        Resource.loadImage("Nin2/sprites/characterRun-X.png", "characterRun-X", new Vec2d(150, 36), new Vec2i(6, 1));
-        Resource.loadImage("Nin2/sprites/characterRunY.png", "characterRunY", new Vec2d(227, 36), new Vec2i(12, 1));
-        Resource.loadImage("Nin2/sprites/Tiles1.png", "tile1", new Vec2d(78, 70), new Vec2i(1, 1));
-        Resource.loadImage("Nin2/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
-        Resource.loadImage("Nin2/sprites/rocks.png", "rocks", new Vec2d(55, 160), new Vec2i(1, 2));
-        Resource.loadImage("Nin2/sprites/Projectiles.png", "Projectiles", new Vec2d(64, 193), new Vec2i(4, 12));
-        Resource.loadImage("Nin2/sprites/spike.png", "spike", new Vec2d(32, 32), new Vec2i(1, 1));
-        Resource.loadImage("Nin2/sprites/wall2.png", "wall2", new Vec2d(16, 16), new Vec2i(1, 1));
-        Resource.loadImage("Nin2/sprites/wall1.png", "wall1", new Vec2d(16, 16), new Vec2i(1, 1));
-        Resource.loadImage("Nin2/sprites/wall3.png", "wall3", new Vec2d(16, 16), new Vec2i(1, 1));
-        Resource.loadImage("Nin2/sprites/flag.png", "flag", new Vec2d(181, 281), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/characterStand.png", "characterStand", new Vec2d(80, 36), new Vec2i(4, 1));
+        Resource.loadImage("Final/sprites/characterRunX.png", "characterRunX", new Vec2d(150, 36), new Vec2i(6, 1));
+        Resource.loadImage("Final/sprites/characterRun-X.png", "characterRun-X", new Vec2d(150, 36), new Vec2i(6, 1));
+        Resource.loadImage("Final/sprites/characterRunY.png", "characterRunY", new Vec2d(227, 36), new Vec2i(12, 1));
+        Resource.loadImage("Final/sprites/Tiles1.png", "tile1", new Vec2d(78, 70), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/rocks.png", "rocks", new Vec2d(55, 160), new Vec2i(1, 2));
+        Resource.loadImage("Final/sprites/Projectiles.png", "Projectiles", new Vec2d(64, 193), new Vec2i(4, 12));
+        Resource.loadImage("Final/sprites/spike.png", "spike", new Vec2d(32, 32), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall2.png", "wall2", new Vec2d(16, 16), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall1.png", "wall1", new Vec2d(16, 16), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall3.png", "wall3", new Vec2d(16, 16), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/flag.png", "flag", new Vec2d(181, 281), new Vec2i(1, 1));
     }
 
     /**
@@ -93,9 +85,9 @@ public class App extends Application {
     }
 
     private void loadAudios() {
-        Sound.loadAudio("Nin2/resources/BGM.wav", "BackGround");
-        Sound.loadAudio("Nin2/resources/jump.wav", "Jump");
-        Sound.loadAudio("Nin2/resources/projectile.wav", "projectile");
+        Sound.loadAudio("Final/resources/BGM.wav", "BackGround");
+        Sound.loadAudio("Final/resources/jump.wav", "Jump");
+        Sound.loadAudio("Final/resources/projectile.wav", "projectile");
     }
 
     @Override
@@ -167,14 +159,14 @@ public class App extends Application {
             }
         };
 
-        Text instructionText = new Text("Intro",
+        Text instructionText = new Text("Video",
                 Font.font(28),
                 new Vec2d(445, 475),
                 Color.rgb(0, 0, 0));
 
-        Text titleText = new Text("Nin",
+        Text titleText = new Text("Final",
                 Font.font(96),
-                new Vec2d(395, 200),
+                new Vec2d(365, 200),
                 Color.rgb(255, 255, 255));
 
         startButton.addUIElement(startText);  // Add text to the button
@@ -242,7 +234,7 @@ public class App extends Application {
         backButton.addUIElement(backText);
         instructionScreen.addUIElement(backButton);
 
-        Video video = new Video("Nin2/resources/re.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
+        Video video = new Video("Final/resources/re.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
         video.setApp(this);
         instructionScreen.addUIElement(video);
 

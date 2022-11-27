@@ -1,6 +1,6 @@
 package engine.game.collision;
 
-import Nin2.XMLProcessor;
+import Final.XMLProcessor;
 import engine.support.Vec2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

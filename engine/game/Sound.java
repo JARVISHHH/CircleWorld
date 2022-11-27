@@ -2,11 +2,9 @@ package engine.game;
 
 import javax.sound.sampled.*;
 import java.io.*;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioFormat.Encoding;
 
 public class Sound {
     private static HashMap<String, File> tag2Audio = new HashMap<>();
@@ -50,42 +48,41 @@ public class Sound {
         return clip;
     }
 
+    /**
+     * Get a clip with echo effect
+     * @param tag Original sound tag
+     * @param delayInMilliSeconds delay between each echo
+     * @param decayFactor how much the echo will decay each time it hits any objects
+     * @param echoTime how many echos there will be
+     * @return the clip with echo effect
+     */
     public static Clip getEchoClip(String tag, int delayInMilliSeconds, float decayFactor, int echoTime) {
         AudioInputStream stream = getAudioInputStream(tag);
-
         AudioFormat audioFormat = stream.getFormat();
-        float sampleRate = audioFormat.getSampleRate();
-        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
 
-        try {
-            AudioSystem.write(stream, AudioFileFormat.Type.WAVE, byteArrayOutputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        // Transfer sound samples to floats
+        byte[] byteArray = stream2bytes(stream);
+        float[] samples = bytes2floats(byteArray, audioFormat);
 
-        byte[] byteArray = byteArrayOutputStream.toByteArray();  // byte 乘了个4
-        int bufferSize = byteArray.length;
+        // Delay samples for each echo
+        int delaySamples = (int) (delayInMilliSeconds * (audioFormat.getSampleRate() / 1000));
 
-        float[] samples = new float[bufferSize];
-        unpack(byteArray, samples, byteArray.length, audioFormat);
-
-        int delaySamples = (int) (delayInMilliSeconds * (sampleRate / 1000));
-
+        // Get each echo
         float[][] echoSamples = new float[echoTime][];
-
         float[] lastSample = samples;
         int finalFloatLength = samples.length;
         for(int i = 0; i < echoTime; i++) {
-            float[] echoSample = echoFilter(lastSample, bufferSize, decayFactor);
+            float[] echoSample = decayFilter(lastSample, decayFactor);
             lastSample = echoSample;
             echoSamples[i] = echoSample;
             finalFloatLength += echoSample.length;
         }
 
+        // Combine(concatenate) each sound
         float[] combinedAudioSamples = new float[finalFloatLength + delaySamples * echoTime];
         int pos = 0;
-        for(int i = 0; i < samples.length; i++) {
-            combinedAudioSamples[pos] = samples[i];
+        for (float sample : samples) {
+            combinedAudioSamples[pos] = sample;
             pos++;
         }
         for(int i = 0; i < echoTime; i++) {
@@ -96,10 +93,70 @@ public class Sound {
             }
         }
 
-        byte[] finalAudioSamples = pack(combinedAudioSamples, combinedAudioSamples.length, audioFormat);
+        return floats2clip(combinedAudioSamples, audioFormat);
+    }
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(finalAudioSamples);
-        AudioInputStream outputAis = new AudioInputStream(bais, audioFormat,finalAudioSamples.length);
+    /**
+     * Get a clip with reverb effect
+     * @param tag Original sound tag
+     * @param delayInMilliSeconds delay of the reverb from the start time
+     * @param decayFactor how much the reverb will decay
+     * @return the clip with reverb effect
+     */
+    public static Clip getReverbClip(String tag, int delayInMilliSeconds, float decayFactor) {
+        int reverbTime = 4;
+
+        AudioInputStream stream = getAudioInputStream(tag);
+        AudioFormat audioFormat = stream.getFormat();
+
+        // Transfer sound samples to floats
+        byte[] byteArray = stream2bytes(stream);
+        float[] samples = bytes2floats(byteArray, audioFormat);
+
+        // Delay samples for each echo
+        int delaySamples = (int) (delayInMilliSeconds * (audioFormat.getSampleRate() / 1000));
+
+        // Calculate reverb samples for each reverb
+        float[][] reverbSamples = new float[reverbTime][];
+        float[] decayFactors = {decayFactor, decayFactor - 0.1313f, decayFactor - 0.2743f, decayFactor - 0.31f};
+        for(int i = 0; i < reverbTime; i++) {
+            float[] reverbSample = decayFilter(samples, decayFactors[i]);
+            reverbSamples[i] = reverbSample;
+        }
+
+        // Calculate final length of the sound
+        float[] delayTimes = {delayInMilliSeconds, delayInMilliSeconds - 11.73f, delayInMilliSeconds + 19.31f, delayInMilliSeconds + 7.97f};
+        int maxLength = samples.length;
+        for(int i = 0; i < delayTimes.length; i++) {
+            maxLength = Math.max(maxLength, (int)(reverbSamples[i].length + delayTimes[i] * delaySamples) + 1);
+        }
+
+        // Combine all samples into one
+        float[] combinedAudioSamples = new float[maxLength];
+        System.arraycopy(samples, 0, combinedAudioSamples, 0, samples.length);
+        for(int i = 0; i < reverbTime; i++) {
+            for(int j = 0; j < reverbSamples[i].length; j++) {
+                combinedAudioSamples[(int)(j + delayTimes[i] * delaySamples)] += reverbSamples[i][j];
+            }
+        }
+
+        return floats2clip(combinedAudioSamples, audioFormat);
+    }
+
+    public static float[] decayFilter(float[] samples, float decayFactor) {
+        float[] filteredSamples = new float[samples.length];
+
+        for (int i = 0; i < samples.length; i++)
+            filteredSamples[i] = (samples[i] * decayFactor);  // Lower down the volume
+
+        return filteredSamples;
+    }
+
+    private static Clip floats2clip(float[] combinedAudioSamples, AudioFormat audioFormat) {
+        byte[] finalAudioSamples = floats2bytes(combinedAudioSamples, audioFormat);
+
+        ByteArrayInputStream stream = new ByteArrayInputStream(finalAudioSamples);
+        AudioInputStream outputAis = new AudioInputStream(stream, audioFormat,finalAudioSamples.length);
 
         Clip clip;
         try {
@@ -108,26 +165,11 @@ public class Sound {
         } catch (LineUnavailableException | IOException e) {
             throw new RuntimeException(e);
         }
+
         return clip;
     }
 
-    public static float[] echoFilter(float[] samples, int samplesLength, float decayFactor) {
-        float[] echoFilterSamples = new float[samplesLength];
-
-        for (int i = 0; i < samplesLength; i++)
-        {
-            echoFilterSamples[i] = (samples[i] * decayFactor);
-        }
-        return echoFilterSamples;
-    }
-
-    public static Clip getReverbClip(String tag, int delayInMilliSeconds, float decayFactor) {
-        int reverbTime = 4;
-
-        AudioInputStream stream = getAudioInputStream(tag);
-
-        AudioFormat audioFormat = stream.getFormat();
-        float sampleRate = audioFormat.getSampleRate();
+    private static byte[] stream2bytes(AudioInputStream stream) {
         ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
 
         try {
@@ -136,200 +178,60 @@ public class Sound {
             throw new RuntimeException(e);
         }
 
-        byte[] byteArray = byteArrayOutputStream.toByteArray();  // byte 乘了个4
-        int bufferSize = byteArray.length;
-
-        float[] samples = new float[bufferSize];
-        unpack(byteArray, samples, byteArray.length, audioFormat);
-
-        int delaySamples = (int) (delayInMilliSeconds * (sampleRate / 1000));
-
-        float[][] reverbSample = new float[reverbTime][];
-
-        float[] decayFactors = {decayFactor, decayFactor - 0.1313f, decayFactor - 0.2743f, decayFactor - 0.31f};
-        for(int i = 0; i < reverbTime; i++) {
-            float[] echoSample = echoFilter(samples, bufferSize, decayFactors[i]);
-            reverbSample[i] = echoSample;
-        }
-
-
-        float[] delayTimes = {delayInMilliSeconds, delayInMilliSeconds - 11.73f, delayInMilliSeconds + 19.31f, delayInMilliSeconds + 7.97f};
-        int maxLength = samples.length;
-        for(int i = 0; i < delayTimes.length; i++) {
-            maxLength = Math.max(maxLength, (int)(reverbSample[i].length + delayTimes[i] * delaySamples) + 1);
-        }
-        float[] combinedAudioSamples = new float[maxLength];
-        for(int i = 0; i < samples.length; i++) {
-            combinedAudioSamples[i] = samples[i];
-        }
-        for(int i = 0; i < reverbTime; i++) {
-            for(int j = 0; j < reverbSample[i].length; j++) {
-                combinedAudioSamples[(int)(j + delayTimes[i] * delaySamples)] += reverbSample[i][j];
-            }
-        }
-
-        byte[] finalAudioSamples = pack(combinedAudioSamples, combinedAudioSamples.length, audioFormat);
-
-        ByteArrayInputStream bais = new ByteArrayInputStream(finalAudioSamples);
-        AudioInputStream outputAis = new AudioInputStream(bais, audioFormat,finalAudioSamples.length);
-
-        Clip clip;
-        try {
-            clip = AudioSystem.getClip();
-            clip.open(outputAis);
-        } catch (LineUnavailableException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        return clip;
+        return byteArrayOutputStream.toByteArray();
     }
 
-    public static int unpack(byte[] bytes, float[] samples, int byteLength, AudioFormat audioFormat) {
+    public static float[] bytes2floats(byte[] bytes, AudioFormat audioFormat) {
         int bitsPerSample = audioFormat.getSampleSizeInBits();
         int bytesPerSample = bitsPerSample / 8;
-        Encoding encoding = audioFormat.getEncoding();
-        double fullScale = fullScale(bitsPerSample);
 
-        int i = 0;
-        int s = 0;
-        while (i < byteLength)
-        {
-            long temp = unpackBits(bytes, i, bytesPerSample);
-            float sample = 0f;
+        float[] samples = new float[bytes.length / bytesPerSample];
 
-            if (encoding == Encoding.PCM_SIGNED) {
-                temp = extendSign(temp, bitsPerSample);
-                sample = (float) (temp / fullScale);
+        for(int startIndex = 0; startIndex < bytes.length; startIndex += bytesPerSample)
+            samples[startIndex / bytesPerSample] = bytes2float(bytes, startIndex, bytesPerSample);
 
-            } else if (encoding == Encoding.PCM_UNSIGNED) {
-                temp = signUnsigned(temp, bitsPerSample);
-                sample = (float) (temp / fullScale);
-            }
-            samples[s] = sample;
-
-            i += bytesPerSample;
-            s++;
-        }
-        return s;
+        return samples;
     }
 
-    public static byte[] pack(float[] samples, int floatLength, AudioFormat audioFormat) {
-        int   bitsPerSample = audioFormat.getSampleSizeInBits();
-        int  bytesPerSample = bytesPerSample(bitsPerSample);
-        Encoding   encoding = audioFormat.getEncoding();
-        double    fullScale = fullScale(bitsPerSample);
+    public static byte[] floats2bytes(float[] samples, AudioFormat audioFormat) {
+        int bitsPerSample = audioFormat.getSampleSizeInBits();
+        int bytesPerSample = bitsPerSample / 8;
 
-        byte[] bytes = new byte[bytesPerSample * floatLength];
+        byte[] bytes = new byte[bytesPerSample * samples.length];
 
-        int i = 0;
-        int s = 0;
-        while (s < floatLength) {
-            float sample = samples[s];
-            long temp = 0L;
+        for(int startIndex = 0; startIndex < samples.length; startIndex++)
+            float2bytes(bytes, startIndex * bytesPerSample, samples[startIndex], bytesPerSample);
 
-            if (encoding == Encoding.PCM_SIGNED) {
-                temp = (long) (sample * fullScale);
-
-            } else if (encoding == Encoding.PCM_UNSIGNED) {
-                temp = (long) (sample * fullScale);
-                temp = unsignSigned(temp, bitsPerSample);
-            }
-
-            packBits(bytes, i, temp, bytesPerSample);
-
-            i += bytesPerSample;
-            s++;
-        }
         return bytes;
     }
 
-    private static long unpackBits(byte[] bytes, int i, int bytesPerSample) {
-        long res;
-        switch (bytesPerSample) {
-            case 1:
-                res = unpack8Bit(bytes, i);
-                break;
-            case 2:
-                res = unpack16Bit(bytes, i);
-                break;
-            case 3:
-                res = unpack24Bit(bytes, i);
-                break;
-            default:
-                res = 1;
-        };
-        return res;
+    private static float bytes2float(byte[] bytes, int i, int bytesPerSample) {
+        if(bytesPerSample == 1) {
+            return bytes[i];
+        } else if(bytesPerSample == 2) {
+            long res = bytes[i];
+            if(i + 1 < bytes.length) res |= (bytes[i + 1] << 8);
+            return res;
+        } else if(bytesPerSample == 3) {
+            long res = bytes[i];
+            if(i + 1 < bytes.length) res |= (bytes[i + 1] << 8);
+            if(i + 2 < bytes.length) res |= (bytes[i + 2] << 16);
+            return res;
+        }
+        return 1;
     }
 
-    public static int bytesPerSample(int bitsPerSample) {
-        return (int) Math.ceil(bitsPerSample / 8.0);
-    }
-
-    public static double fullScale(int bitsPerSample) {
-        return Math.pow(2.0, bitsPerSample - 1);
-    }
-
-    private static long unpack8Bit(byte[] bytes, int i) {
-        return bytes[i];
-    }
-
-    private static long unpack16Bit(byte[] bytes, int i) {
-        long res = bytes[i];
-        if(i + 1 < bytes.length) res |= (bytes[i + 1] << 8);
-        return res;
-    }
-
-    private static long unpack24Bit(byte[] bytes, int i) {
-        long res = bytes[i];
-        if(i + 1 < bytes.length) res |= (bytes[i + 1] << 8);
-        if(i + 2 < bytes.length) res |= (bytes[i + 2] << 16);
-        return res;
-    }
-
-    public static long extendSign(long temp, int bitsPerSample) {
-        int extensionBits = 64 - bitsPerSample;
-        return (temp << extensionBits) >> extensionBits;
-    }
-
-    private static long signUnsigned(long temp, int bitsPerSample) {
-        return temp - (long) fullScale(bitsPerSample);
-    }
-
-    private static long unsignSigned(long temp, int bitsPerSample) {
-        return temp + (long) fullScale(bitsPerSample);
-    }
-
-    private static void packBits(byte[]  bytes,
-                                 int     i,
-                                 long    temp,
-                                 int     bytesPerSample) {
-        switch (bytesPerSample) {
-            case 1:
-                pack8Bit(bytes, i, temp);
-                break;
-            case 2:
-                pack16Bit(bytes, i, temp);
-                break;
-            case 3:
-                pack24Bit(bytes, i, temp);
-                break;
-            default: ;
-                break;
+    private static void float2bytes(byte[] bytes, int i, float sample, int bytesPerSample) {
+        long temp = (long) sample;
+        if(bytesPerSample == 1) {
+            bytes[i] = (byte)temp;
+        } else if(bytesPerSample == 2) {
+            bytes[i] = (byte) temp;
+            if(i + 1 < bytes.length) bytes[i + 1] = (byte) (temp >>> 8L);
+        } else if(bytesPerSample == 3) {
+            bytes[i] = (byte) temp;
+            if(i + 1 < bytes.length) bytes[i + 1] = (byte) (temp >>> 8L);
+            if(i + 2 < bytes.length) bytes[i + 2] = (byte) (temp >>> 16L);
         }
     }
-
-    private static void pack8Bit(byte[] bytes, int i, long temp) {
-        bytes[i] = (byte)temp;
-    }
-
-    private static void pack16Bit(byte[] bytes, int i, long temp)  {
-        bytes[i] = (byte) temp;
-        if(i + 1 < bytes.length) bytes[i + 1] = (byte) (temp >>> 8L);
-    }
-
-    private static void pack24Bit(byte[] bytes, int i, long temp)  {
-        bytes[i] = (byte) temp;
-        if(i + 1 < bytes.length) bytes[i + 1] = (byte) (temp >>> 8L);
-        if(i + 2 < bytes.length) bytes[i + 2] = (byte) (temp >>> 16L);
-    }
-
 }

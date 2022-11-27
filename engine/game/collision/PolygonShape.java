@@ -1,6 +1,6 @@
 package engine.game.collision;
 
-import Nin2.XMLProcessor;
+import Final.XMLProcessor;
 import engine.support.Vec2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -9,7 +9,6 @@ import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 
 public class PolygonShape implements Shape {
