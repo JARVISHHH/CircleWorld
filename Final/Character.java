@@ -255,25 +255,27 @@ public class Character {
             fireComponent.addSpriteIndex(new Vec2i(i, 0));
         characterObject.addComponent(fireComponent);
 
+        CollisionComponent jumpGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y * 7 / 8), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
+        characterObject.addComponent(jumpGroundDetect);
         JumpComponent jumpComponent = new JumpComponent();
         jumpComponent.setJumpKey(KeyCode.SHIFT);
         jumpComponent.setMaxJumpTime(2);
+        jumpComponent.setGroundDetect(jumpGroundDetect);
         characterObject.addComponent(jumpComponent);
 
-        CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
-        characterObject.addComponent(groundDetect);
-
+        CollisionComponent gravityGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y * 7 / 8), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
+        characterObject.addComponent(gravityGroundDetect);
         GravityComponent gravityComponent = new GravityComponent();
-        gravityComponent.setGroundDetect(groundDetect);
+        gravityComponent.setGroundDetect(gravityGroundDetect);
         characterObject.addComponent(gravityComponent);
 
         CharacterMoveComponent characterMoveComponent = new CharacterMoveComponent();
         characterObject.addComponent(characterMoveComponent);
 
-        PhysicsComponent physicsComponent = new PhysicsComponent(45, 0);
+        PhysicsComponent physicsComponent = new PhysicsComponent(70, 0);
         characterObject.addComponent(physicsComponent);
 
-        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, 0), characterSize));
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 6, characterSize.y / 8), new Vec2d(characterSize.x * 4 / 6, characterSize.y * 6 / 8)));
         collisionComponent.setGroup(1);
         characterObject.addComponent(collisionComponent);
         KeyEventsComponent keyEventsComponent = new KeyEventsComponent();

@@ -1,8 +1,10 @@
 package engine.game.systems;
 
 import engine.game.GameObject;
+import engine.game.components.CollisionComponent;
 import engine.game.components.Component;
 import engine.game.components.RayComponent;
+import engine.support.Vec2d;
 import javafx.scene.input.MouseEvent;
 import org.ietf.jgss.GSSManager;
 
@@ -38,6 +40,10 @@ public class CollisionSystem extends System{
 
     private void doCollision() {
         for (GameObject gameObject1 : collisionOrder) {
+            ArrayList<Component> collisionComponents = gameObject1.getComponentList("Collision");
+            for (Component rayComponent : collisionComponents) {
+                ((CollisionComponent) rayComponent).setMovePosition(new Vec2d(0, 0));
+            }
             ArrayList<Component> rayComponents = gameObject1.getComponentList("Ray");
             for (Component rayComponent : rayComponents) {
                 ((RayComponent) rayComponent).update();

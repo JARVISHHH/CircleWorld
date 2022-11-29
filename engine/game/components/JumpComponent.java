@@ -16,11 +16,11 @@ public class JumpComponent extends Component{
     protected boolean finishedJump = true;  // If current jump has been executed
     protected boolean getHighest = false;
 
-    protected double firstJumpImpulseFactor = 1.6;
+    protected double firstJumpImpulseFactor = 2.4;
 
-    protected double maxImpulseFactor = 0.6;
+    protected double maxImpulseFactor = 0.8;
 
-    protected double oneTimeImpulseFactor = 1.2;
+    protected double impulseFactorPerSecond = 2.4;
 
     protected double currentImpulseFactor = 0;
 
@@ -28,6 +28,8 @@ public class JumpComponent extends Component{
 
     protected String audioTag = "Jump";
     protected Clip audioClip = null;
+
+    protected CollisionComponent groundDetect;
 
     public JumpComponent() {
         tag = "Jump";
@@ -43,16 +45,29 @@ public class JumpComponent extends Component{
         this.leftJumpTime = maxJumpTime;
     }
 
-    public void resetLeftJumpTime() {
-        leftJumpTime = maxJumpTime;
+    public void setLeftJumpTime(int leftJumpTime) {
+        this.leftJumpTime = leftJumpTime;
     }
 
     public void setJumpKey(KeyCode jumpKey) {
         this.jumpKey = jumpKey;
     }
 
+    public void setGroundDetect(CollisionComponent groundDetect) {
+        this.groundDetect = groundDetect;
+
+    }
+
     @Override
     public void onTick(long nanosSincePreviousTick) {
+        if(groundDetect == null || groundDetect.movePosition.y == 0) {
+            if(leftJumpTime - maxJumpTime == 0) {
+                setLeftJumpTime(maxJumpTime - 1);
+            }
+        } else {
+            setLeftJumpTime(maxJumpTime);
+        }
+
         double t = nanosSincePreviousTick / 1000000000.0;
         PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
         if(physicsComponent == null) return;
@@ -69,7 +84,7 @@ public class JumpComponent extends Component{
                 finishedJump = false;
                 leftJumpTime -= 1;
             } else {
-                addImpulseFactor = Math.max(Math.min(maxImpulseFactor - currentImpulseFactor, t * oneTimeImpulseFactor), 0);
+                addImpulseFactor = Math.max(Math.min(maxImpulseFactor - currentImpulseFactor, t * impulseFactorPerSecond), 0);
                 physicsComponent.applyImpulse(force.smult(forceFactor * addImpulseFactor));
                 currentImpulseFactor += addImpulseFactor;
             }
@@ -109,7 +124,7 @@ public class JumpComponent extends Component{
         jumpComponent.setAttribute("finishedJump", Boolean.toString(finishedJump));
         jumpComponent.setAttribute("firstJumpImpulseFactor", String.valueOf(firstJumpImpulseFactor));
         jumpComponent.setAttribute("maxImpulseFactor", String.valueOf(maxImpulseFactor));
-        jumpComponent.setAttribute("oneTimeImpulseFactor", String.valueOf(oneTimeImpulseFactor));
+        jumpComponent.setAttribute("oneTimeImpulseFactor", String.valueOf(impulseFactorPerSecond));
         jumpComponent.setAttribute("currentImpulseFactor", String.valueOf(currentImpulseFactor));
         jumpComponent.setAttribute("jumpKey", String.valueOf(jumpKey));
 
@@ -122,7 +137,7 @@ public class JumpComponent extends Component{
         finishedJump = Boolean.parseBoolean(e.getAttribute("finishedJump"));
         firstJumpImpulseFactor = Double.parseDouble(e.getAttribute("firstJumpImpulseFactor"));
         maxImpulseFactor = Double.parseDouble(e.getAttribute("maxImpulseFactor"));
-        oneTimeImpulseFactor = Double.parseDouble(e.getAttribute("oneTimeImpulseFactor"));
+        impulseFactorPerSecond = Double.parseDouble(e.getAttribute("oneTimeImpulseFactor"));
         currentImpulseFactor = Double.parseDouble(e.getAttribute("currentImpulseFactor"));
         jumpKey = KeyCode.valueOf(e.getAttribute("jumpKey"));
     }

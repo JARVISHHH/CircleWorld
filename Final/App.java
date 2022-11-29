@@ -50,7 +50,8 @@ public class App extends Application {
         Resource.loadImage("Final/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/rocks.png", "rocks", new Vec2d(55, 160), new Vec2i(1, 2));
         Resource.loadImage("Final/sprites/Projectiles.png", "Projectiles", new Vec2d(64, 193), new Vec2i(4, 12));
-        Resource.loadImage("Final/sprites/spike.png", "spike", new Vec2d(32, 32), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/upwardSpike.png", "upwardSpike", new Vec2d(32, 32), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/downwardSpike.png", "downwardSpike", new Vec2d(32, 32), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/wall2.png", "wall2", new Vec2d(16, 16), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/wall1.png", "wall1", new Vec2d(16, 16), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/wall3.png", "wall3", new Vec2d(16, 16), new Vec2i(1, 1));

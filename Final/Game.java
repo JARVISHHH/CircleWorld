@@ -37,16 +37,23 @@ public class Game {
         Vec2i mapGridNum = new Vec2i(32, 18);  // Total grids number
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
 
-        for(double y = 20; y <= 390; y += 30) {
-            if(y == 290 || y == 320) continue;
+        for(double y = 20; y < 260; y += 30) {
             GameObject wall = createIndestructibleWall(new Vec2d(700, y), spriteSize, 1);
             gameWorld.addGameObject(wall);
         }
+
+        GameObject wall = createIndestructibleWall(new Vec2d(700, 380), spriteSize, 1);
+        gameWorld.addGameObject(wall);
 
         GameObject wall1 = createDestructibleWall(new Vec2d(700, 290), spriteSize, 1);
         gameWorld.addGameObject(wall1);
         GameObject wall2 = createDestructibleWall(new Vec2d(700, 320), spriteSize, 1);
         gameWorld.addGameObject(wall2);
+
+        GameObject wallSpike1 = createDownWardSpike(new Vec2d(700, 260), spriteSize, 1);
+        gameWorld.addGameObject(wallSpike1);
+        GameObject wallSpike2 = createUpwardSpike(new Vec2d(700, 350), spriteSize, 1);
+        gameWorld.addGameObject(wallSpike2);
 
         GameObject plainTile1 = createPlainTile(new Vec2d(30, 390), spriteSize, 4);
         GameObject plainTile2 = createPlainTile(new Vec2d(145, 390), spriteSize, 4);
@@ -71,7 +78,7 @@ public class Game {
         gameWorld.addGameObject(rock);
 
         for(double x = 370; x < 605; x += 30) {
-            GameObject spike = createSpike(new Vec2d(x, 480), spriteSize, 1);
+            GameObject spike = createUpwardSpike(new Vec2d(x, 480), spriteSize, 1);
             gameWorld.addGameObject(spike);
         }
 
@@ -182,22 +189,57 @@ public class Game {
     }
 
     /**
-     * Create a spike object.
+     * Create an upward spike object.
      * @param position the position of the spike
      * @param spriteSize the size of the spike
      * @param factor how much should the spike be scaled up/down
      * @return the spike game object
      */
-    public GameObject createSpike(Vec2d position, Vec2d spriteSize, double factor) {
+    public GameObject createUpwardSpike(Vec2d position, Vec2d spriteSize, double factor) {
         GameObject spikeObject = new GameObject();
 
         spikeObject.setTransformComponent(new TransformComponent(position, spriteSize.smult(factor)));
 
-        SpriteComponent spriteComponent = new SpriteComponent("spike", new Vec2d(0, 0), spriteSize.smult(factor), new Vec2i(0, 0));
+        SpriteComponent spriteComponent = new SpriteComponent("upwardSpike", new Vec2d(0, 0), spriteSize.smult(factor), new Vec2i(0, 0));
         spikeObject.addComponent(spriteComponent);
 
         Vec2d[] originalPoints = {
                 new Vec2d(32, 32), new Vec2d(16, 0), new Vec2d(0, 32)
+        };
+
+        Vec2d[] points = new Vec2d[3];
+        for(int i = 0; i < 3; i++) {
+            points[i] = new Vec2d(originalPoints[i].x / 32.0 * spriteSize.x * factor, originalPoints[i].y / 32.0 * spriteSize.y * factor);
+        }
+        CollisionComponent collisionComponent = new CollisionComponent(new PolygonShape(points), true, false, false);
+        spikeObject.addComponent(collisionComponent);
+
+        AttackComponent attackComponent = new AttackComponent(60);
+        spikeObject.addComponent(attackComponent);
+
+        PhysicsComponent physicsComponent = new PhysicsComponent(50, 0);
+        spikeObject.addComponent(physicsComponent);
+
+        return spikeObject;
+    }
+
+    /**
+     * Create a downward spike object.
+     * @param position the position of the spike
+     * @param spriteSize the size of the spike
+     * @param factor how much should the spike be scaled up/down
+     * @return the spike game object
+     */
+    public GameObject createDownWardSpike(Vec2d position, Vec2d spriteSize, double factor) {
+        GameObject spikeObject = new GameObject();
+
+        spikeObject.setTransformComponent(new TransformComponent(position, spriteSize.smult(factor)));
+
+        SpriteComponent spriteComponent = new SpriteComponent("downwardSpike", new Vec2d(0, 0), spriteSize.smult(factor), new Vec2i(0, 0));
+        spikeObject.addComponent(spriteComponent);
+
+        Vec2d[] originalPoints = {
+                new Vec2d(32, 0), new Vec2d(0, 0), new Vec2d(16, 32)
         };
 
         Vec2d[] points = new Vec2d[3];
