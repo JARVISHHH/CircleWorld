@@ -159,9 +159,9 @@ public class App extends Application {
             }
         };
 
-        Text instructionText = new Text("Video",
+        Text instructionText = new Text("instruction",
                 Font.font(28),
-                new Vec2d(445, 475),
+                new Vec2d(405, 475),
                 Color.rgb(0, 0, 0));
 
         Text titleText = new Text("Final",
@@ -200,8 +200,7 @@ public class App extends Application {
 
         Text instructionText = new Text("Move: arrow keys\n" +
                 "Jump: shift\n" +
-                "Fire: z\n" +
-                "Ray: x\n",
+                "Fire: z\n",
                 new Font(24),
                 new Vec2d(230, 150),
                 Color.rgb(255, 255, 255));
@@ -234,9 +233,9 @@ public class App extends Application {
         backButton.addUIElement(backText);
         instructionScreen.addUIElement(backButton);
 
-        Video video = new Video("Final/resources/re.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
-        video.setApp(this);
-        instructionScreen.addUIElement(video);
+//        Video video = new Video("Final/resources/re.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
+//        video.setApp(this);
+//        instructionScreen.addUIElement(video);
 
         instructionScreen.onResize(currentStageSize);
 

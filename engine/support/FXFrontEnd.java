@@ -98,7 +98,7 @@ public abstract class FXFrontEnd extends CS1971FrontEnd {
 
 	public void addMediaView(MediaView mediaView) {
 		if(canvas.root.getChildren().contains(mediaView)) return;
-		canvas.root.getChildren().add(mediaView);
+		canvas.root.getChildren().add(0, mediaView);
 	}
 
 	public void removeMediaView(MediaView mediaView) {

@@ -11,6 +11,8 @@ import javax.sound.sampled.*;
 public class JumpComponent extends Component{
 
     protected boolean jumpable = true;  // Can jump or not
+    protected int maxJumpTime = 1;
+    protected int leftJumpTime = maxJumpTime;
     protected boolean finishedJump = true;  // If current jump has been executed
     protected boolean getHighest = false;
 
@@ -36,6 +38,15 @@ public class JumpComponent extends Component{
         this.jumpable = jumpable;
     }
 
+    public void setMaxJumpTime(int maxJumpTime) {
+        this.maxJumpTime = maxJumpTime;
+        this.leftJumpTime = maxJumpTime;
+    }
+
+    public void resetLeftJumpTime() {
+        leftJumpTime = maxJumpTime;
+    }
+
     public void setJumpKey(KeyCode jumpKey) {
         this.jumpKey = jumpKey;
     }
@@ -46,17 +57,17 @@ public class JumpComponent extends Component{
         PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
         if(physicsComponent == null) return;
         double forceFactor = physicsComponent.mass * 9.8;
-        if(jumpable) stopSound();
         // If the jump button is pressed, the game object is currently jumpable and the jump has not been executed,
         // then jump
-        if((!getHighest || (finishedJump && jumpable)) && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey)) {
+        if((!getHighest || (finishedJump && leftJumpTime > 0)) && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey)) {
             Vec2d force = new Vec2d(0, -1);
             double addImpulseFactor;
-            if(finishedJump && jumpable) {
+            if(finishedJump && leftJumpTime > 0) {
+                physicsComponent.vel = new Vec2d(physicsComponent.vel.x, 0);
                 physicsComponent.applyImpulse(force.smult(forceFactor * firstJumpImpulseFactor));
                 playSound();
                 finishedJump = false;
-                jumpable = false;
+                leftJumpTime -= 1;
             } else {
                 addImpulseFactor = Math.max(Math.min(maxImpulseFactor - currentImpulseFactor, t * oneTimeImpulseFactor), 0);
                 physicsComponent.applyImpulse(force.smult(forceFactor * addImpulseFactor));
@@ -77,8 +88,8 @@ public class JumpComponent extends Component{
     private void playSound() {
         if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);;
         if(audioClip != null) {
-            audioClip.stop();
-            audioClip.setFramePosition(0);
+            if(audioClip.isRunning()) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);
+            else audioClip.setFramePosition(0);
             audioClip.start();
         }
     }

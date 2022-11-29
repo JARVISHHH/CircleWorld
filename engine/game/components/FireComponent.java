@@ -120,8 +120,8 @@ public class FireComponent extends Component{
     private void playSound() {
         if(audioClip == null) audioClip = Sound.getEchoClip(audioTag, 150, 0.4F, 3);
         if(audioClip != null) {
-            audioClip.stop();
-            audioClip.setFramePosition(0);
+            if(audioClip.isRunning()) audioClip = Sound.getEchoClip(audioTag, 150, 0.4F, 3);
+            else audioClip.setFramePosition(0);
             audioClip.start();
         }
     }

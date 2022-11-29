@@ -249,10 +249,6 @@ public class Character {
         characterObject.addComponent(runRightAnimationComponent);
         characterObject.addComponent(runLeftAnimationComponent);
 
-        FireRayComponent fireRayComponent = new FireRayComponent();
-        fireRayComponent.setFireKey(KeyCode.X);
-        characterObject.addComponent(fireRayComponent);
-
         FireComponent fireComponent = new FireComponent(60);
         fireComponent.setFireKey(KeyCode.Z);
         for(int i = 0; i < 4; i++)
@@ -261,6 +257,7 @@ public class Character {
 
         JumpComponent jumpComponent = new JumpComponent();
         jumpComponent.setJumpKey(KeyCode.SHIFT);
+        jumpComponent.setMaxJumpTime(2);
         characterObject.addComponent(jumpComponent);
 
         CollisionComponent groundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);

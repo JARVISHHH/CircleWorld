@@ -207,7 +207,7 @@ public class CollisionComponent extends Component{
         // Update jump component
         if(newCollision.mtv.y < 0) {
             JumpComponent jumpComponent = (JumpComponent)getGameObject().getComponent("Jump");
-            if(jumpComponent != null) jumpComponent.setJumpable(true);
+            if(jumpComponent != null) jumpComponent.resetLeftJumpTime();
         }
 
         // Damage
