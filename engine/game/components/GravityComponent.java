@@ -1,13 +1,16 @@
 package engine.game.components;
 
+import Final.XMLProcessor;
 import engine.support.Vec2d;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class GravityComponent extends Component{
 
     protected double gravity = 60;
-    protected CollisionComponent groundDetect;
+    protected CollisionComponent groundDetect = null;
 
     public GravityComponent() {
         tag = "Gravity";
@@ -21,7 +24,7 @@ public class GravityComponent extends Component{
 
     @Override
     public void onTick(long nanosSincePreviousTick) {
-        if(groundDetect == null || groundDetect.movePosition.y == 0) {
+        if(groundDetect == null || groundDetect.movePosition.y >= 0) {
             PhysicsComponent physicsComponent = (PhysicsComponent) getGameObject().getComponent("Physics");
             if (physicsComponent != null) {
                 Vec2d g = new Vec2d(0, gravity);
@@ -42,7 +45,17 @@ public class GravityComponent extends Component{
     @Override
     public void readXML(Element e) {
         gravity = Double.parseDouble(e.getAttribute("gravity"));
-//        groundDetect = new CollisionComponent();
-//        groundDetect.readXML();
+
+        NodeList nodeList = e.getChildNodes();
+        for(int i = 0; i < nodeList.getLength(); i++) {
+            if(e.getChildNodes().item(i).getNodeType() != Node.ELEMENT_NODE) continue;
+            Element element = (Element) e.getChildNodes().item(i);
+            if(element.getTagName().equals("CollisionComponent")) {
+                groundDetect = new CollisionComponent();
+                groundDetect.readXML(element);
+            }
+        }
+
+        if(groundDetect != null) gameObject.addComponent(groundDetect);
     }
 }

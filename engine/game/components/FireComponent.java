@@ -96,7 +96,7 @@ public class FireComponent extends Component{
         hasProjected = true;
         stopSound();
 
-        CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(new Vec2d(projectileSize.x / 2, projectileSize.y / 2), Math.min(projectileSize.x / 2, projectileSize.y / 2)));
+        CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(new Vec2d(projectileSize.x / 2, projectileSize.y / 2), Math.min(projectileSize.x / 3, projectileSize.y / 3)));
         collisionComponent.isProjectile = true;
         collisionComponent.group = 1;
 

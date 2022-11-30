@@ -15,6 +15,7 @@ import javax.sound.sampled.*;
 import java.util.*;
 
 public class GameWorld {
+    protected boolean debugMode = false;
     protected ViewPort viewPort;  // Which viewport it belongs to
     protected Vec2d size;  // Size of the game world
 
@@ -44,6 +45,10 @@ public class GameWorld {
     public GameWorld(Vec2d size) {
         this.size = size;
         onStartUp();
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
     }
 
     public void setViewPort(ViewPort viewPort) {

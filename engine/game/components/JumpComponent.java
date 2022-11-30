@@ -5,12 +5,13 @@ import engine.support.Vec2d;
 import javafx.scene.input.KeyCode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.sound.sampled.*;
 
 public class JumpComponent extends Component{
 
-    protected boolean jumpable = true;  // Can jump or not
     protected int maxJumpTime = 1;
     protected int leftJumpTime = maxJumpTime;
     protected boolean finishedJump = true;  // If current jump has been executed
@@ -29,15 +30,11 @@ public class JumpComponent extends Component{
     protected String audioTag = "Jump";
     protected Clip audioClip = null;
 
-    protected CollisionComponent groundDetect;
+    protected CollisionComponent groundDetect = null;
 
     public JumpComponent() {
         tag = "Jump";
         setTickable(true);
-    }
-
-    public void setJumpable(boolean jumpable) {
-        this.jumpable = jumpable;
     }
 
     public void setMaxJumpTime(int maxJumpTime) {
@@ -60,7 +57,7 @@ public class JumpComponent extends Component{
 
     @Override
     public void onTick(long nanosSincePreviousTick) {
-        if(groundDetect == null || groundDetect.movePosition.y == 0) {
+        if(groundDetect == null || groundDetect.movePosition.y >= 0) {
             if(leftJumpTime - maxJumpTime == 0) {
                 setLeftJumpTime(maxJumpTime - 1);
             }
@@ -120,7 +117,8 @@ public class JumpComponent extends Component{
     @Override
     public Element writeXML(Document doc) {
         Element jumpComponent = doc.createElement("JumpComponent");
-        jumpComponent.setAttribute("jumpable", Boolean.toString(jumpable));
+        jumpComponent.setAttribute("maxJumpTime", String.valueOf(maxJumpTime));
+        jumpComponent.setAttribute("leftJumpTime", String.valueOf(leftJumpTime));
         jumpComponent.setAttribute("finishedJump", Boolean.toString(finishedJump));
         jumpComponent.setAttribute("firstJumpImpulseFactor", String.valueOf(firstJumpImpulseFactor));
         jumpComponent.setAttribute("maxImpulseFactor", String.valueOf(maxImpulseFactor));
@@ -128,18 +126,33 @@ public class JumpComponent extends Component{
         jumpComponent.setAttribute("currentImpulseFactor", String.valueOf(currentImpulseFactor));
         jumpComponent.setAttribute("jumpKey", String.valueOf(jumpKey));
 
+        jumpComponent.appendChild(groundDetect.writeXML(doc));
+
         return jumpComponent;
     }
 
     @Override
     public void readXML(Element e) {
-        jumpable = Boolean.parseBoolean(e.getAttribute("jumpable"));
+        maxJumpTime = Integer.parseInt(e.getAttribute("maxJumpTime"));
+        leftJumpTime = Integer.parseInt(e.getAttribute("leftJumpTime"));
         finishedJump = Boolean.parseBoolean(e.getAttribute("finishedJump"));
         firstJumpImpulseFactor = Double.parseDouble(e.getAttribute("firstJumpImpulseFactor"));
         maxImpulseFactor = Double.parseDouble(e.getAttribute("maxImpulseFactor"));
         impulseFactorPerSecond = Double.parseDouble(e.getAttribute("oneTimeImpulseFactor"));
         currentImpulseFactor = Double.parseDouble(e.getAttribute("currentImpulseFactor"));
         jumpKey = KeyCode.valueOf(e.getAttribute("jumpKey"));
+
+        NodeList nodeList = e.getChildNodes();
+        for(int i = 0; i < nodeList.getLength(); i++) {
+            if(e.getChildNodes().item(i).getNodeType() != Node.ELEMENT_NODE) continue;
+            Element element = (Element) e.getChildNodes().item(i);
+            if(element.getTagName().equals("CollisionComponent")) {
+                this.groundDetect = new CollisionComponent();
+                this.groundDetect.readXML(element);
+            }
+        }
+
+        if(groundDetect != null) gameObject.addComponent(groundDetect);
     }
 
     @Override

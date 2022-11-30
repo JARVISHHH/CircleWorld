@@ -1,12 +1,11 @@
 Interviewer: Yingtong Yu
 
 Interviewee 1: Xinqian Zhou
-	- Advice 1: 有意思的关卡 
-	- Advice 2: 血量
-	- Advice 3: 复活点
+	- Advice 1: Can add some interesting traps or harder levels.
+	- Advice 2: Can give the character multiple lives.
+	- Advice 3: Can add some saving points. Once the character died, it will be transfered to the saving point and restart the current level.
 
 
 Interviewee 2: Yaxin Liu
-可以直接看出攻击方向
-石头的作用不明显
-跳跃和攻击的键
+	- Advice 1: It's hard to recognise the direction the character is shooting.
+	- Advice 2: May consider changing buttons players use to jump and shoot. It's a little weird to use Shift for jumping.

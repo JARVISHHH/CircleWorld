@@ -180,7 +180,6 @@ public class CollisionComponent extends Component{
         PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
         PhysicsComponent otherPhysicsComponent = (PhysicsComponent)newCollision.other.getGameObject().getComponent("Physics");
         if(newCollision.other.isStatic) {
-//            movePosition = movePosition.plus(newCollision.mtv);
             setTransformComponentPosition(oldPosition.plus(newCollision.mtv));
             // Apply impulse
             if(physicsComponent != null && otherPhysicsComponent != null) {
@@ -192,7 +191,6 @@ public class CollisionComponent extends Component{
                 physicsComponent.applyImpulse(outImpulse);
             }
         } else {
-//            movePosition = movePosition.plus(newCollision.mtv.smult(1 / 2.0));
             setTransformComponentPosition(oldPosition.plus(newCollision.mtv.smult(1 / 2.0)));
             // Apply impulse
             if(physicsComponent != null && otherPhysicsComponent != null) {
@@ -220,8 +218,10 @@ public class CollisionComponent extends Component{
 
     @Override
     public void onDraw(GraphicsContext g) {
-        Shape screenShape = shape.getScreenPosition(getGameObject().getTransformComponent().position);
-        screenShape.onDraw(g);
+        if(gameObject.getGameWorld().isDebugMode()) {
+            Shape screenShape = shape.getScreenPosition(getGameObject().getTransformComponent().position);
+            screenShape.onDraw(g);
+        }
     }
 
     @Override
@@ -232,6 +232,9 @@ public class CollisionComponent extends Component{
         collisionComponent.setAttribute("isDestructible", String.valueOf(isDestructible));
         collisionComponent.setAttribute("destructAfterFirstCollision", String.valueOf(isProjectile));
         collisionComponent.setAttribute("isGoal", String.valueOf(isGoal));
+        collisionComponent.setAttribute("isDetect", String.valueOf(isDetect));
+        collisionComponent.setAttribute("group", String.valueOf(group));
+        collisionComponent.setAttribute("movePosition", String.valueOf(movePosition));
 
         Element shape = this.shape.writeXML(doc);
         collisionComponent.appendChild(shape);
@@ -246,6 +249,9 @@ public class CollisionComponent extends Component{
         isDestructible = Boolean.parseBoolean(e.getAttribute("isDestructible"));
         isProjectile = Boolean.parseBoolean(e.getAttribute("destructAfterFirstCollision"));
         isGoal = Boolean.parseBoolean(e.getAttribute("isGoal"));
+        isDetect = Boolean.parseBoolean(e.getAttribute("isDetect"));
+        group = Integer.parseInt(e.getAttribute("group"));
+        movePosition = Vec2d.toVec2d(e.getAttribute("movePosition"));
 
         NodeList nodeList = e.getChildNodes();
         for(int i = 0; i < nodeList.getLength(); i++) {

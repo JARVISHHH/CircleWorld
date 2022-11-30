@@ -113,6 +113,7 @@ public class XMLProcessor {
                         continue;
                     }
                     Component component = tag2component.get(componentElement.getTagName()).newInstance();
+                    component.setGameObject(gameObject);
                     component.readXML(componentElement);
                     if(componentElement.getTagName().equals("TransformComponent"))
                         gameObject.setTransformComponent((TransformComponent)component);
