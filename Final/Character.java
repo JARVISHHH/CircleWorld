@@ -2,6 +2,7 @@ package Final;
 
 import engine.game.GameObject;
 import engine.game.collision.AABShape;
+import engine.game.collision.CircleShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
@@ -49,7 +50,7 @@ public class Character {
             // Check the direction and if the character is moving
             for(int i = 0; i < direction.length; i++) {
                 if(gameObject.keyPressing.containsKey(direction[i]) && gameObject.keyPressing.get(direction[i])) {
-                    if(!moving) index = sprites.get(indices[i]);
+//                    if(!moving) index = sprites.get(indices[i]);
                     moving = true;
                 }
             }
@@ -236,15 +237,15 @@ public class Character {
 
         characterObject.setTransformComponent(new TransformComponent(position, characterSize));
         StandAnimationComponent standAnimationComponent = new StandAnimationComponent("characterStand", new Vec2d(0, 0), characterSize);
-        for(int i = 0; i <= 3; i++)
+        for(int i = 0; i <= 0; i++)
             standAnimationComponent.addSprite(new Vec2i(i, 0));
         characterObject.addComponent(standAnimationComponent);
 
         RunRightAnimationComponent runRightAnimationComponent = new RunRightAnimationComponent("characterRunX", new Vec2d(0, 0), characterSize);
-        for(int i = 0; i <= 5; i++)
+        for(int i = 0; i <= 0; i++)
             runRightAnimationComponent.addSprite(new Vec2i(i, 0));
         RunLeftAnimationComponent runLeftAnimationComponent = new RunLeftAnimationComponent("characterRun-X", new Vec2d(0, 0), characterSize);
-        for(int i = 0; i <= 5; i++)
+        for(int i = 0; i <= 0; i++)
             runLeftAnimationComponent.addSprite(new Vec2i(i, 0));
         characterObject.addComponent(runRightAnimationComponent);
         characterObject.addComponent(runLeftAnimationComponent);
@@ -255,7 +256,7 @@ public class Character {
             fireComponent.addSpriteIndex(new Vec2i(i, 0));
         characterObject.addComponent(fireComponent);
 
-        CollisionComponent jumpGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y * 7 / 8), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
+        CollisionComponent jumpGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(jumpGroundDetect);
         JumpComponent jumpComponent = new JumpComponent();
         jumpComponent.setJumpKey(KeyCode.SHIFT);
@@ -263,7 +264,7 @@ public class Character {
         jumpComponent.setGroundDetect(jumpGroundDetect);
         characterObject.addComponent(jumpComponent);
 
-        CollisionComponent gravityGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y * 7 / 8), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
+        CollisionComponent gravityGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(gravityGroundDetect);
         GravityComponent gravityComponent = new GravityComponent();
         gravityComponent.setGroundDetect(gravityGroundDetect);
@@ -275,7 +276,7 @@ public class Character {
         PhysicsComponent physicsComponent = new PhysicsComponent(70, 0);
         characterObject.addComponent(physicsComponent);
 
-        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 6, characterSize.y / 8), new Vec2d(characterSize.x * 4 / 6, characterSize.y * 6 / 8)));
+        CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(characterSize.smult(1.0 / 2.0), characterSize.x / 2 - 2));
         collisionComponent.setGroup(1);
         characterObject.addComponent(collisionComponent);
         KeyEventsComponent keyEventsComponent = new KeyEventsComponent();

@@ -20,7 +20,7 @@ public class GameWorld {
 
     protected GameObject centerGameObject;
 
-    protected long maxTickTime = 10000000;
+    protected long maxTickTime = 5000000;
     public int currentZIndex = 1;
     protected Affine affine;  // Transform coordinates from screen space to game space
     protected ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();  // All gameObjects the game world has

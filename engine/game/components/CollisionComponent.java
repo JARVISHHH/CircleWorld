@@ -204,11 +204,6 @@ public class CollisionComponent extends Component{
                 physicsComponent.applyImpulse(outImpulse);
             }
         }
-//        // Update jump component
-//        if(newCollision.mtv.y < 0) {
-//            JumpComponent jumpComponent = (JumpComponent)getGameObject().getComponent("Jump");
-//            if(jumpComponent != null) jumpComponent.resetLeftJumpTime();
-//        }
 
         // Damage
         AttackComponent attackComponent = (AttackComponent)this.gameObject.getComponent("Attack");

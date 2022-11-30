@@ -182,7 +182,7 @@ public class Game {
         gravityComponent.setGroundDetect(groundDetect);
         rockObject.addComponent(gravityComponent);
 
-        PhysicsComponent physicsComponent = new PhysicsComponent(50, restitution);
+        PhysicsComponent physicsComponent = new PhysicsComponent(100, restitution);
         rockObject.addComponent(physicsComponent);
 
         return rockObject;

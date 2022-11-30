@@ -105,7 +105,7 @@ public class PolygonShape implements Shape {
         circlePoints = new Vec2d[]{circleShape.center.plus(axis.smult(circleShape.radius)), circleShape.center.minus(axis.smult(circleShape.radius))};
         tmp = isColliding(points, circlePoints, axis);
         if(tmp == null) return null;
-        else if(mtv == null || mtv.mag2() > tmp.mag2()) mtv = tmp;
+        else if(mtv == null || mtv.mag2() > tmp.mag2()) mtv = tmp.smult(-1);
 
         for(int i = 0; i < getNumPoints(); i++) {
             edge = getPoint((i + 1) % getNumPoints()).minus(getPoint(i));

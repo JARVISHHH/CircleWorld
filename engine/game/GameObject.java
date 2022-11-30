@@ -192,10 +192,11 @@ public class GameObject {
         if(component == null) return false;
         component.minus(value);
         if(component.getHealth() > 0) return false;
-        gameWorld.removeGameObject(this);
         if(this == gameWorld.centerGameObject) {
             gameWorld.win = false;
             gameWorld.hasResult = true;
+        } else {
+            gameWorld.removeGameObject(this);
         }
         return true;
     }

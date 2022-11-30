@@ -26,6 +26,16 @@ public class Video extends UIElement{
         this.app = app;
     }
 
+    public void dispose() {
+        if(mediaPlayer != null) mediaPlayer.dispose();
+    }
+
+    public boolean isFinished() {
+        if(mediaPlayer != null && mediaPlayer.getStopTime().equals(mediaPlayer.getCurrentTime()))
+            return true;
+        return false;
+    }
+
     @Override
     public void onStartup() {
         if(mediaPlayer != null) mediaPlayer.play();
@@ -76,4 +86,5 @@ public class Video extends UIElement{
             mediaView.setY(position.y);
         }
     }
+
 }

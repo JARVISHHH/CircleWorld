@@ -4,6 +4,7 @@ import Final.XMLProcessor;
 import engine.support.Vec2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -87,7 +88,7 @@ public class CircleShape implements Shape{
     public void onDraw(GraphicsContext g) {
         g.setLineWidth(3);
         g.setStroke(Color.rgb(255, 0, 0));
-        g.strokeOval(center.x, center.y - radius, radius, radius);
+        g.strokeArc(center.x - radius, center.y - radius, radius * 2, radius * 2, 0, 360, ArcType.ROUND);
         g.setLineWidth(1);
     }
 

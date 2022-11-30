@@ -10,10 +10,8 @@ import engine.game.collision.PolygonShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
-import engine.uikit.RectangleButton;
-import engine.uikit.Text;
-import engine.uikit.Video;
-import engine.uikit.ViewPort;
+import engine.uikit.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -42,10 +40,11 @@ public class App extends Application {
     Text resultText;
 
     private void loadImage() {
-        Resource.loadImage("Final/sprites/characterStand.png", "characterStand", new Vec2d(80, 36), new Vec2i(4, 1));
-        Resource.loadImage("Final/sprites/characterRunX.png", "characterRunX", new Vec2d(150, 36), new Vec2i(6, 1));
-        Resource.loadImage("Final/sprites/characterRun-X.png", "characterRun-X", new Vec2d(150, 36), new Vec2i(6, 1));
-        Resource.loadImage("Final/sprites/characterRunY.png", "characterRunY", new Vec2d(227, 36), new Vec2i(12, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(849, 892), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterRunX", new Vec2d(849, 892), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterRun-X", new Vec2d(849, 892), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterRunY", new Vec2d(849, 892), new Vec2i(1, 1));
+
         Resource.loadImage("Final/sprites/Tiles1.png", "tile1", new Vec2d(78, 70), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/rocks.png", "rocks", new Vec2d(55, 160), new Vec2i(1, 2));
@@ -103,7 +102,7 @@ public class App extends Application {
     }
 
     /**
-     * Create a title screen with a title and a instruction button
+     * Create a title screen with a title and an instruction button
      * @return return the title screen
      */
     protected Screen createTitleScreen() {
@@ -119,7 +118,7 @@ public class App extends Application {
             @Override
             public void onMouseClicked(MouseEvent e) {
                 if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                restart();
+                restartVideo("Final/resources/re.mp4");
                 super.onMouseClicked(e);
             }
         };
@@ -200,15 +199,10 @@ public class App extends Application {
                 Color.rgb(255, 255, 255));
 
         Text instructionText = new Text("Move: arrow keys\n" +
-                "Jump: shift\n" +
+                "Jump: shift (the character can double jump)\n" +
                 "Fire: z\n",
                 new Font(24),
                 new Vec2d(230, 150),
-                Color.rgb(255, 255, 255));
-
-        Text characterText = new Text("The character is from Octopath Traveler :)",
-                new Font(15),
-                new Vec2d(10, 525),
                 Color.rgb(255, 255, 255));
 
         RectangleButton backButton = new RectangleButton(new Vec2d(400, 370),
@@ -230,19 +224,61 @@ public class App extends Application {
 
         instructionScreen.addUIElement(titleText);
         instructionScreen.addUIElement(instructionText);
-        instructionScreen.addUIElement(characterText);
         backButton.addUIElement(backText);
         instructionScreen.addUIElement(backButton);
-
-//        Video video = new Video("Final/resources/re.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
-//        video.setApp(this);
-//        instructionScreen.addUIElement(video);
 
         instructionScreen.onResize(currentStageSize);
 
         instructionScreen.setActive(false);
 
         return instructionScreen;
+    }
+
+    protected Screen createVideoScreen(String videoPath) {
+
+        class VideoScreen extends Screen {
+            protected Video video;
+
+            public void setVideo(Video video) {
+                this.video = video;
+            }
+
+            public VideoScreen(String name, Vec2d size, Color color) {
+                super(name, size, color);
+            }
+
+            @Override
+            public void onKeyPressed(KeyEvent e) {
+                super.onKeyPressed(e);
+                restartGame();
+            }
+
+            @Override
+            public void onTick(long nanosSincePreviousTick) {
+                super.onTick(nanosSincePreviousTick);
+                if(video != null && video.isFinished()) {
+                    video.dispose();
+                    restartGame();
+                }
+            }
+        }
+        VideoScreen videoScreen = new VideoScreen("video",
+                DEFAULT_STAGE_SIZE,
+                Color.rgb(0, 0, 0, 0));
+
+        Text text = new Text("Press any key to continue...",
+                Font.font(28),
+                new Vec2d(10, 30),
+                Color.rgb(128, 209, 200, 0.75));
+
+        videoScreen.addUIElement(text);
+
+        Video video = new Video(videoPath, new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
+        video.setApp(this);
+        videoScreen.addUIElement(video);
+        videoScreen.setVideo(video);
+
+        return videoScreen;
     }
 
     /**
@@ -306,7 +342,7 @@ public class App extends Application {
             public void onMouseClicked(MouseEvent e) {
                 if(!active) return;
                 if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                restart();  // If the button is clicked, restart.
+                restartGame();  // If the button is clicked, restart.
                 super.onMouseClicked(e);
             }
 
@@ -350,11 +386,18 @@ public class App extends Application {
     /**
      * Restart the game.
      */
-    protected void restart() {
+    protected void restartGame() {
         if(screensName2Index.containsKey("game"))
             screens.set(screensName2Index.get("game"), createGameScreen(true));  // Create new game screen to reset everything
         else addScreen(createGameScreen(true));
         activateScreen("game");
+    }
+
+    protected void restartVideo(String videoPath) {
+        if(screensName2Index.containsKey("video"))
+            screens.set(screensName2Index.get("video"), createVideoScreen(videoPath));  // Create new game screen to reset everything
+        else addScreen(createVideoScreen(videoPath));
+        activateScreen("video");
     }
 
     /**
