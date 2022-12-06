@@ -11,6 +11,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
+
 public class CollisionComponent extends Component{
 
     protected Shape shape;
@@ -27,7 +29,7 @@ public class CollisionComponent extends Component{
 
     protected boolean isDetect = false;
 
-    protected int group = 0;
+    protected int group = 1;
 
     protected Vec2d movePosition = new Vec2d(0, 0);
 
@@ -129,6 +131,10 @@ public class CollisionComponent extends Component{
         this.group = group;
     }
 
+    public int getGroup() {
+        return group;
+    }
+
     @Override
     public Component copy() {
         CollisionComponent component = new CollisionComponent(this.shape);
@@ -143,6 +149,9 @@ public class CollisionComponent extends Component{
 
     // Check if components collided
     public Vec2d getCollide(CollisionComponent component) {
+        // Group with number will collide with everything
+        // Otherwise, only components with the same group number will collide with each other
+        if(group != 0 && component.group != 0 && group != component.group) return null;
         Shape newShape1 = shape.getScreenPosition(getGameObject().getTransformComponent().position);
         Shape newShape2 = component.shape.getScreenPosition(component.getGameObject().getTransformComponent().getPosition());
         return newShape1.getCollision(newShape2);
@@ -150,7 +159,6 @@ public class CollisionComponent extends Component{
 
     public void collide(Collision newCollision) {
         if(newCollision.mtv == null) return;
-        if((isProjectile || newCollision.other.isProjectile) && group == newCollision.other.group) return;
         Vec2d oldPosition = gameObject.getTransformComponent().position;
         if(isStatic) {
             // Damage
@@ -204,9 +212,12 @@ public class CollisionComponent extends Component{
         }
 
         // Damage
-        AttackComponent attackComponent = (AttackComponent)this.gameObject.getComponent("Attack");
-        if(attackComponent != null)
-            newCollision.other.gameObject.getAttack(attackComponent.damage);
+        ArrayList<Component> attackComponents = this.gameObject.getComponentList("Attack");
+        for(Component component: attackComponents) {
+            AttackComponent attackComponent = (AttackComponent) component;
+            if(attackComponent.detect.equals(this))
+                newCollision.other.gameObject.getAttack(attackComponent.damage);
+        }
 
         // Check if the game is over
         if(isGoal)

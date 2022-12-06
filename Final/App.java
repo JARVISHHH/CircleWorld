@@ -1,5 +1,6 @@
 package Final;
 
+import Final.levels.LevelController;
 import engine.Application;
 import engine.Screen;
 import engine.game.Resource;
@@ -11,6 +12,7 @@ import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
 import engine.uikit.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -33,11 +35,18 @@ public class App extends Application {
 
     protected Game game = new Game();
 
+    Vec2d worldSize = new Vec2d(960, 540);
+    Vec2i mapGridNum = new Vec2i(32, 18);  // Total grids number
+
+    int currentLevel = 0;
+    int maxLevel = 1;
+
     // Ui elements in the game screen
     ViewPort viewPort;
     RectangleButton restartButton;
     Text restartText;
     Text resultText;
+    Text pressRestartText;
 
     private void loadImage() {
         Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(849, 892), new Vec2i(1, 1));
@@ -95,6 +104,7 @@ public class App extends Application {
         loadImage();
         loadMap();
         loadAudios();
+        LevelController.load();
         addScreen(createTitleScreen());
         addScreen(createInstructionScreen());
         activateScreen("title");
@@ -118,6 +128,7 @@ public class App extends Application {
             @Override
             public void onMouseClicked(MouseEvent e) {
                 if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
+                currentLevel = 0;
                 restartVideo("Final/resources/re.mp4");
                 super.onMouseClicked(e);
             }
@@ -250,7 +261,7 @@ public class App extends Application {
             @Override
             public void onKeyPressed(KeyEvent e) {
                 super.onKeyPressed(e);
-                restartGame();
+                restartGameScreen();
             }
 
             @Override
@@ -258,7 +269,7 @@ public class App extends Application {
                 super.onTick(nanosSincePreviousTick);
                 if(video != null && video.isFinished()) {
                     video.dispose();
-                    restartGame();
+                    restartGameScreen();
                 }
             }
         }
@@ -290,13 +301,17 @@ public class App extends Application {
         Screen gameScreen = new Screen("game",
                 DEFAULT_STAGE_SIZE,
                 Color.rgb(0, 0, 0));
-        viewPort = new ViewPort(new Vec2d(0, 0), DEFAULT_STAGE_SIZE, new Vec2d(0, 0), new Scale(1, 1));
-
-        Vec2d worldSize = new Vec2d(960, 540);
+        viewPort = new ViewPort(new Vec2d(0, 0), DEFAULT_STAGE_SIZE, new Vec2d(0, 0), new Scale(1, 1)) {
+            @Override
+            public void onKeyPressed(KeyEvent e) {
+                if(e.getCode() == KeyCode.R) restartGame();
+                super.onKeyPressed(e);
+            }
+        };
 
         // Create a new game world
         if(createNewWorld) {
-            game.createGameWorld(worldSize);
+            game.createGameWorld(currentLevel, worldSize, mapGridNum);
         }
 
         viewPort.setGameWorld(game.getGameWorld());
@@ -350,8 +365,12 @@ public class App extends Application {
             public void onTick(long nanosSincePreviousTick) {
                 if(game.gameWorld == null) return;
                 if(game.gameWorld.isHasResult()) {
-                    if(game.gameWorld.isWin()) restartShow("YOU WIN!");
-                    else restartShow("YOU LOSE!");
+                    if(!game.gameWorld.isWin()) restartShow("YOU DIED!");
+                    else if(currentLevel >= maxLevel) restartShow("YOU WIN!");
+                    else {
+                        currentLevel++;
+                        restartGame();
+                    }
                 }
             }
         };
@@ -359,12 +378,17 @@ public class App extends Application {
                 Font.font(28),
                 new Vec2d(415, 360),
                 Color.rgb(0, 0, 0));
+        pressRestartText = new Text("Press 'R' to restart",
+                Font.font(20),
+                new Vec2d(390, 400),
+                Color.rgb(255, 255, 255));
         resultText = new Text("YOU WIN!",
                 Font.font(96),
                 new Vec2d(200, 200),
                 Color.rgb(255, 255, 255));
         restartButton.setActive(false);
         restartText.setActive(false);
+        pressRestartText.setActive(false);
         resultText.setActive(false);
 
         gameScreen.addUIElement(backButton);
@@ -374,6 +398,7 @@ public class App extends Application {
 
         gameScreen.addUIElement(restartButton);
         gameScreen.addUIElement(restartText);
+        gameScreen.addUIElement(pressRestartText);
         gameScreen.addUIElement(resultText);
 
         gameScreen.onResize(currentStageSize);
@@ -383,10 +408,24 @@ public class App extends Application {
         return gameScreen;
     }
 
+    protected void restartGame() {
+        game.disposeCurrentGameWorld();
+
+        game.createGameWorld(currentLevel, worldSize, mapGridNum);
+        game.getGameWorld().setViewPort(viewPort);
+        viewPort.setGameWorld(game.getGameWorld());
+
+        restartButton.setActive(false);
+        restartText.setActive(false);
+        pressRestartText.setActive(false);
+        resultText.setActive(false);
+        viewPort.setActive(true);
+    }
+
     /**
      * Restart the game.
      */
-    protected void restartGame() {
+    protected void restartGameScreen() {
         if(screensName2Index.containsKey("game"))
             screens.set(screensName2Index.get("game"), createGameScreen(true));  // Create new game screen to reset everything
         else addScreen(createGameScreen(true));
@@ -417,6 +456,7 @@ public class App extends Application {
     protected void restartShow(String result) {
         restartButton.setActive(true);
         restartText.setActive(true);
+        pressRestartText.setActive(true);
         resultText.setContent(result);
         resultText.setActive(true);
         viewPort.setActive(false);

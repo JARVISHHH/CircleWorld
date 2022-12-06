@@ -39,7 +39,7 @@ public class JumpComponent extends Component{
 
     public void setMaxJumpTime(int maxJumpTime) {
         this.maxJumpTime = maxJumpTime;
-        this.leftJumpTime = maxJumpTime;
+        if(leftJumpTime > maxJumpTime) leftJumpTime = maxJumpTime;
     }
 
     public void setLeftJumpTime(int leftJumpTime) {

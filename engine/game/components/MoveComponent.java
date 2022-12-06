@@ -12,6 +12,9 @@ public class MoveComponent extends Component{
 
     protected Vec2d moveDirection = new Vec2d(1, 0);
 
+    protected double dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
+    protected KeyCode direction[] = {KeyCode.LEFT, KeyCode.RIGHT,KeyCode.UP,KeyCode.DOWN};
+
     public MoveComponent() {
         tag = "Move";
         setTickable(true);
@@ -24,8 +27,6 @@ public class MoveComponent extends Component{
     @Override
     public void onTick(long nanosSincePreviousTick) {
         // Move
-        double dx[] = {0, 0, -1, 1}, dy[] = {-1, 1, 0, 0};
-        KeyCode direction[] = {KeyCode.UP, KeyCode.DOWN,KeyCode.LEFT,KeyCode.RIGHT};
         double distance = moveRate * nanosSincePreviousTick / 1000000000;
         for(int k = 0; k < 4; k++) {
             if(gameObject.keyPressing.containsKey(direction[k]) && gameObject.keyPressing.get(direction[k])) {

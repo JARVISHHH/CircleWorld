@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GameObject {
 
@@ -19,6 +21,10 @@ public class GameObject {
     protected boolean active = false;
     protected ArrayList<Component> components = new ArrayList<Component>();
     protected TransformComponent transformComponent = new TransformComponent();
+
+    protected Queue<Component> addQueue = new LinkedList<Component>();
+    protected Queue<Component> removeQueue = new LinkedList<Component>();
+
     protected int zIndex;
     protected boolean tickable = false;
     protected boolean drawable = false;
@@ -103,28 +109,54 @@ public class GameObject {
         this.collide = collide;
     }
 
+    public void addComponentQueue(Component component) {
+        addQueue.offer(component);
+    }
+
     public void addComponent(Component component) {
         components.add(component);
         component.setGameObject(this);
-        if(component.isTickable())
+        if (component.isTickable())
             setTickable(true);
-        if(component.isDrawable())
+        if (component.isDrawable())
             setDrawable(true);
-        if(component.doResponseMouseEvents())
+        if (component.doResponseMouseEvents())
             setResponseMouseEvents(true);
-        if(component.checkCollide())
+        if (component.checkCollide())
             setCollide(true);
-        if(component.doResponseKeyEvents())
+        if (component.doResponseKeyEvents())
             setResponseKeyEvents(true);
     }
 
-    public void removeComponent(Component c) {
-        if(c == null) return;
-        components.remove(c);
+    public void removeComponentQueue(Component c) {
+        removeQueue.offer(c);
+    }
+
+    public void removeComponent(Component component) {
+        if(component != null) components.remove(component);
     }
 
     public void removeComponent(ArrayList<Component> c) {
-        for(Component component: c) components.remove(component);
+        for(Component component: c) removeQueue.offer(component);
+    }
+
+    protected void addComponents() {
+        while(!addQueue.isEmpty()) {
+            Component component = addQueue.poll();
+            addComponent(component);
+        }
+    }
+
+    protected void removeComponents() {
+        while(!removeQueue.isEmpty()) {
+            Component component = removeQueue.poll();
+            removeComponent(component);
+        }
+    }
+
+    protected void updateComponents() {
+        addComponents();
+        removeComponents();
     }
 
     public ArrayList<Component> getComponentList(String tag) {
@@ -236,6 +268,7 @@ public class GameObject {
 
     public void onTick(long nanosSincePreviousTick) {
         if(!active) return;
+        updateComponents();
         for(Component component: components)
             if(component.isTickable())
                 component.onTick(nanosSincePreviousTick);

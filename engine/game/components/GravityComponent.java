@@ -10,11 +10,17 @@ import org.w3c.dom.NodeList;
 public class GravityComponent extends Component{
 
     protected double gravity = 60;
+
+    protected double noGravityTime = 0;
     protected CollisionComponent groundDetect = null;
 
     public GravityComponent() {
         tag = "Gravity";
         setTickable(true);
+    }
+
+    public void setNoGravityTime(double noGravityTime) {
+        this.noGravityTime = noGravityTime;
     }
 
     public void setGroundDetect(CollisionComponent groundDetect) {
@@ -24,13 +30,13 @@ public class GravityComponent extends Component{
 
     @Override
     public void onTick(long nanosSincePreviousTick) {
-        if(groundDetect == null || groundDetect.movePosition.y >= 0) {
+        if((groundDetect == null || groundDetect.movePosition.y >= 0) && noGravityTime <= 0) {
             PhysicsComponent physicsComponent = (PhysicsComponent) getGameObject().getComponent("Physics");
             if (physicsComponent != null) {
                 Vec2d g = new Vec2d(0, gravity);
                 physicsComponent.applyAcceleration(g);
             }
-        }
+        } else if(noGravityTime > 0) noGravityTime -= nanosSincePreviousTick / 1000000000.0;
     }
 
     @Override

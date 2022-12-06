@@ -98,7 +98,6 @@ public class FireComponent extends Component{
 
         CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(new Vec2d(projectileSize.x / 2, projectileSize.y / 2), Math.min(projectileSize.x / 3, projectileSize.y / 3)));
         collisionComponent.isProjectile = true;
-        collisionComponent.group = 1;
 
         PhysicsComponent physicsComponent = new PhysicsComponent(200, 0);
         if(spriteIndex.size() != 0) {
@@ -109,6 +108,7 @@ public class FireComponent extends Component{
             projectile.addComponent(animationComponent);
         }
         AttackComponent attackComponent = new AttackComponent(damage);
+        attackComponent.setDetect(collisionComponent);
 
         projectile.addComponent(collisionComponent);
         projectile.addComponent(physicsComponent);

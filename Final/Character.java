@@ -196,20 +196,20 @@ public class Character {
         public void onTick(long nanosSincePreviousTick) {
             double t = nanosSincePreviousTick / 1000000000.0;
             double acceleration = 75;
-            double dx[] = {-1, 1}, dy[] = {0, 0};
-            KeyCode direction[] = {KeyCode.LEFT, KeyCode.RIGHT};
-            for(int k = 0; k < direction.length; k++) {
+            for(int k = 0; k < 2; k++) {
                 if(gameObject.keyPressing.containsKey(direction[k]) && gameObject.keyPressing.get(direction[k])) {
                     PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
                     moveDirection = new Vec2d(dx[k], dy[k]);
                     Vec2d force = moveDirection;
                     Vec2d impulse = force.smult(physicsComponent.getMass() * acceleration * t);
                     if(physicsComponent.getVel().x * impulse.x > 0) {
-                        if(physicsComponent.getVel().x + impulse.x / physicsComponent.getMass() > maxVel)
+                        if(physicsComponent.getVel().x + impulse.x / physicsComponent.getMass() > maxVel) {
                             impulse = new Vec2d((maxVel - physicsComponent.getVel().x) * physicsComponent.getMass(), 0);
+                        }
                         else if(physicsComponent.getVel().x + impulse.x / physicsComponent.getMass() < -maxVel) {
                             impulse = new Vec2d((-maxVel - physicsComponent.getVel().x) * physicsComponent.getMass(), 0);
                         }
+                        if(physicsComponent.getVel().x * impulse.x < 0) impulse = new Vec2d(0, 0);
                     }
                     physicsComponent.applyImpulse(impulse);
                 }
@@ -260,9 +260,15 @@ public class Character {
         characterObject.addComponent(jumpGroundDetect);
         JumpComponent jumpComponent = new JumpComponent();
         jumpComponent.setJumpKey(KeyCode.SHIFT);
-        jumpComponent.setMaxJumpTime(2);
         jumpComponent.setGroundDetect(jumpGroundDetect);
         characterObject.addComponent(jumpComponent);
+
+        CollisionComponent dashGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
+        characterObject.addComponent(dashGroundDetect);
+        DashComponent dashComponent = new DashComponent();
+        dashComponent.setDashKey(KeyCode.X);
+        dashComponent.setGroundDetect(dashGroundDetect);
+        characterObject.addComponent(dashComponent);
 
         CollisionComponent gravityGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(gravityGroundDetect);
@@ -277,7 +283,7 @@ public class Character {
         characterObject.addComponent(physicsComponent);
 
         CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(characterSize.smult(1.0 / 2.0), characterSize.x / 2 - 2));
-        collisionComponent.setGroup(1);
+        collisionComponent.setGroup(0);
         characterObject.addComponent(collisionComponent);
         KeyEventsComponent keyEventsComponent = new KeyEventsComponent();
         characterObject.addComponent(keyEventsComponent);

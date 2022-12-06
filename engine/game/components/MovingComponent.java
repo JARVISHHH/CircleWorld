@@ -21,6 +21,13 @@ public class MovingComponent extends Component{
         setTickable(true);
     }
 
+    public MovingComponent(Vec2d direction, double moveRate) {
+        tag = "Moving";
+        this.direction = direction;
+        this.moveRate = moveRate;
+        setTickable(true);
+    }
+
     @Override
     public void onTick(long nanosSincePreviousTick) {
         double distance = moveRate * nanosSincePreviousTick / 1000000000;
