@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 
+import javafx.scene.image.Image;
+
 
 /**
  * This is your Wiz top-level, App class.
@@ -43,10 +45,12 @@ public class App extends Application {
 
     // Ui elements in the game screen
     ViewPort viewPort;
-    RectangleButton restartButton;
-    Text restartText;
+
+    Picture restartPicture;
+//    RectangleButton restartButton;
+//    Text restartText;
     Text resultText;
-    Text pressRestartText;
+//    Text pressRestartText;
 
     private void loadImage() {
         Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(849, 892), new Vec2i(1, 1));
@@ -209,11 +213,12 @@ public class App extends Application {
                 new Vec2d(300, 100),
                 Color.rgb(255, 255, 255));
 
-        Text instructionText = new Text("Move: arrow keys\n" +
-                "Jump: shift (the character can double jump)\n" +
-                "Fire: z\n",
+        Text instructionText = new Text("Move: arrow keys\n\n" +
+                "Jump: shift (In the first level, the character can double jump)\n\n" +
+                "Fire: z\n\n" +
+                "Dash: x (In the second level, the character can dash)",
                 new Font(24),
-                new Vec2d(230, 150),
+                new Vec2d(140, 150),
                 Color.rgb(255, 255, 255));
 
         RectangleButton backButton = new RectangleButton(new Vec2d(400, 370),
@@ -349,24 +354,16 @@ public class App extends Application {
                 new Vec2d(868, 125),
                 Color.rgb(0, 0, 0));
 
-        restartButton = new RectangleButton(new Vec2d(400, 325),
-                new Vec2d(150, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
-        {
-            public void onMouseClicked(MouseEvent e) {
-                if(!active) return;
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                restartGame();  // If the button is clicked, restart.
-                super.onMouseClicked(e);
-            }
 
+        Image image = new Image("Final/sprites/gameOver.png", 765, 170, true, true);
+        restartPicture = new Picture(new Vec2d(100, 150), new Vec2d(765, 170),image)
+        {
             @Override
             public void onTick(long nanosSincePreviousTick) {
                 if(game.gameWorld == null) return;
                 if(game.gameWorld.isHasResult()) {
-                    if(!game.gameWorld.isWin()) restartShow("YOU DIED!");
-                    else if(currentLevel >= maxLevel) restartShow("YOU WIN!");
+                    if(!game.gameWorld.isWin()) restartShow("YOU DIED!", false);
+                    else if(currentLevel >= maxLevel) restartShow("YOU WIN!", true);
                     else {
                         currentLevel++;
                         restartGame();
@@ -374,21 +371,48 @@ public class App extends Application {
                 }
             }
         };
-        restartText = new Text("RESTART",
-                Font.font(28),
-                new Vec2d(415, 360),
-                Color.rgb(0, 0, 0));
-        pressRestartText = new Text("Press 'R' to restart",
-                Font.font(20),
-                new Vec2d(390, 400),
-                Color.rgb(255, 255, 255));
+
+//        restartButton = new RectangleButton(new Vec2d(400, 325),
+//                new Vec2d(150, 50),
+//                Color.rgb(196, 189, 145),
+//                Color.rgb(204, 208, 132))
+//        {
+//            public void onMouseClicked(MouseEvent e) {
+//                if(!active) return;
+//                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
+//                restartGame();  // If the button is clicked, restart.
+//                super.onMouseClicked(e);
+//            }
+//
+//            @Override
+//            public void onTick(long nanosSincePreviousTick) {
+//                if(game.gameWorld == null) return;
+//                if(game.gameWorld.isHasResult()) {
+//                    if(!game.gameWorld.isWin()) restartShow("YOU DIED!");
+//                    else if(currentLevel >= maxLevel) restartShow("YOU WIN!");
+//                    else {
+//                        currentLevel++;
+//                        restartGame();
+//                    }
+//                }
+//            }
+//        };
+//        restartText = new Text("RESTART",
+//                Font.font(28),
+//                new Vec2d(415, 360),
+//                Color.rgb(0, 0, 0));
+//        pressRestartText = new Text("Press 'R' to restart",
+//                Font.font(20),
+//                new Vec2d(390, 400),
+//                Color.rgb(255, 255, 255));
         resultText = new Text("YOU WIN!",
                 Font.font(96),
                 new Vec2d(200, 200),
                 Color.rgb(255, 255, 255));
-        restartButton.setActive(false);
-        restartText.setActive(false);
-        pressRestartText.setActive(false);
+        restartPicture.setActive(false);
+//        restartButton.setActive(false);
+//        restartText.setActive(false);
+//        pressRestartText.setActive(false);
         resultText.setActive(false);
 
         gameScreen.addUIElement(backButton);
@@ -396,9 +420,10 @@ public class App extends Application {
         gameScreen.addUIElement(saveButton);
         gameScreen.addUIElement(saveText);
 
-        gameScreen.addUIElement(restartButton);
-        gameScreen.addUIElement(restartText);
-        gameScreen.addUIElement(pressRestartText);
+        gameScreen.addUIElement(restartPicture);
+//        gameScreen.addUIElement(restartButton);
+//        gameScreen.addUIElement(restartText);
+//        gameScreen.addUIElement(pressRestartText);
         gameScreen.addUIElement(resultText);
 
         gameScreen.onResize(currentStageSize);
@@ -415,9 +440,10 @@ public class App extends Application {
         game.getGameWorld().setViewPort(viewPort);
         viewPort.setGameWorld(game.getGameWorld());
 
-        restartButton.setActive(false);
-        restartText.setActive(false);
-        pressRestartText.setActive(false);
+        restartPicture.setActive(false);
+//        restartButton.setActive(false);
+//        restartText.setActive(false);
+//        pressRestartText.setActive(false);
         resultText.setActive(false);
         viewPort.setActive(true);
     }
@@ -453,12 +479,20 @@ public class App extends Application {
      * Game over, show result.
      * @param result result of the game
      */
-    protected void restartShow(String result) {
-        restartButton.setActive(true);
-        restartText.setActive(true);
-        pressRestartText.setActive(true);
-        resultText.setContent(result);
-        resultText.setActive(true);
+    protected void restartShow(String result, boolean win) {
+        if(win) {
+            resultText.setContent(result);
+            resultText.setActive(true);
+        } else restartPicture.setActive(true);
+//        restartButton.setActive(true);
+//        restartText.setActive(true);
+//        pressRestartText.setActive(true);
         viewPort.setActive(false);
+    }
+
+    @Override
+    protected void onKeyPressed(KeyEvent e) {
+        super.onKeyPressed(e);
+        if(e.getCode() == KeyCode.ESCAPE) super.shutdown();
     }
 }

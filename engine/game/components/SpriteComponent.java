@@ -64,10 +64,10 @@ public class SpriteComponent extends Component{
         Vec2d gameObjectPosition = gameObject.getTransformComponent().getPosition();
         Image image = Resource.getImage(spriteTag);
         g.drawImage(image,
-                spritePosition.x, spritePosition.y,
-                spriteSize.x, spriteSize.y,
-                gameObjectPosition.x + position.x, gameObjectPosition.y + position.y,
-                size.x, size.y);
+                    spritePosition.x, spritePosition.y,
+                    spriteSize.x, spriteSize.y,
+                    gameObjectPosition.x + position.x, gameObjectPosition.y + position.y,
+                    size.x, size.y);
     }
 
     @Override

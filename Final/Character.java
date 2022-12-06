@@ -19,7 +19,7 @@ public class Character {
 
     public Character(Vec2d position,  Vec2d characterSize) {
         this.characterSize = characterSize;
-        character = createCharacter(position, characterSize);
+        character = createCharacter(position, characterSize.smult(3.0 / 4.0));
     }
 
     public GameObject getCharacter() {
@@ -192,10 +192,12 @@ public class Character {
             super();
             tag = "Move";
         }
+
+        double acceleration = 100;
+
         @Override
         public void onTick(long nanosSincePreviousTick) {
             double t = nanosSincePreviousTick / 1000000000.0;
-            double acceleration = 75;
             for(int k = 0; k < 2; k++) {
                 if(gameObject.keyPressing.containsKey(direction[k]) && gameObject.keyPressing.get(direction[k])) {
                     PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");

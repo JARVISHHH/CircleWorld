@@ -4,9 +4,6 @@ import engine.support.Vec2d;
 import engine.support.Vec2i;
 import javafx.scene.image.Image;
 
-import javax.sound.sampled.*;
-import java.io.*;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Resource {
