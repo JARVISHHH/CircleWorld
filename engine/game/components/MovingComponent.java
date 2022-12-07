@@ -9,6 +9,8 @@ public class MovingComponent extends Component{
     protected double moveRate = 300;
     public Vec2d direction;
 
+    public double distance = 2000;
+
     public MovingComponent() {
         tag = "Moving";
         this.direction = new Vec2d(0, 0);
@@ -28,9 +30,19 @@ public class MovingComponent extends Component{
         setTickable(true);
     }
 
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
     @Override
     public void onTick(long nanosSincePreviousTick) {
+        if(distance <= 0) {
+            this.gameObject.removeComponentQueue(this);
+            return;
+        }
         double distance = moveRate * nanosSincePreviousTick / 1000000000;
+        if(distance > this.distance) distance = this.distance;
+        this.distance -= distance;
         Vec2d oldPosition = getGameObject().getTransformComponent().position;
         double x = Math.max(0, Math.min(getGameObject().getGameWorld().getSize().x - getGameObject().getTransformComponent().size.x, oldPosition.x + direction.x * distance));
         double y = Math.max(0, Math.min(getGameObject().getGameWorld().getSize().y - getGameObject().getTransformComponent().size.y, oldPosition.y + direction.y * distance));

@@ -124,17 +124,17 @@ public class App extends Application {
                 DEFAULT_STAGE_SIZE,
                 Color.rgb(45, 45, 50));
 
-        RectangleButton startButton = new RectangleButton(new Vec2d(400, 300),
-                new Vec2d(155, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
+        MenuList menuList = new MenuList(new Vec2d(400, 300),
+                                        new Vec2d(155, 200));
+        RectangleKeyButton startButton = new RectangleKeyButton(new Vec2d(400, 300),
+                                                                new Vec2d(155, 50),
+                                                                Color.rgb(196, 189, 145),
+                                                                Color.rgb(204, 208, 132))
         {
             @Override
-            public void onMouseClicked(MouseEvent e) {
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
+            protected void action() {
                 currentLevel = 0;
                 restartVideo("Final/resources/re.mp4");
-                super.onMouseClicked(e);
             }
         };
 
@@ -143,14 +143,13 @@ public class App extends Application {
                 new Vec2d(445, 335),
                 Color.rgb(0, 0, 0));
 
-        RectangleButton loadButton = new RectangleButton(new Vec2d(400, 370),
+        RectangleKeyButton loadButton = new RectangleKeyButton(new Vec2d(400, 370),
                 new Vec2d(155, 50),
                 Color.rgb(196, 189, 145),
                 Color.rgb(204, 208, 132))
         {
             @Override
-            public void onMouseClicked(MouseEvent e) {
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
+            public void action() {
                 game.load();
                 load();
             }
@@ -161,16 +160,14 @@ public class App extends Application {
                 new Vec2d(445, 405),
                 Color.rgb(0, 0, 0));
 
-        RectangleButton instructionButton = new RectangleButton(new Vec2d(400, 440),
+        RectangleKeyButton instructionButton = new RectangleKeyButton(new Vec2d(400, 440),
                 new Vec2d(155, 50),
                 Color.rgb(196, 189, 145),
                 Color.rgb(204, 208, 132))
         {
             @Override
-            public void onMouseClicked(MouseEvent e) {
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
+            public void action() {
                 activateScreen("instruction");  // Jump to instruction screen
-                super.onMouseClicked(e);
             }
         };
 
@@ -185,11 +182,12 @@ public class App extends Application {
                 Color.rgb(255, 255, 255));
 
         startButton.addUIElement(startText);  // Add text to the button
-        titleScreen.addUIElement(startButton);  // Add button to the screen
+        menuList.addButton(startButton);
         loadButton.addUIElement(loadText);
-        titleScreen.addUIElement(loadButton);
+        menuList.addButton(loadButton);
         instructionButton.addUIElement(instructionText);
-        titleScreen.addUIElement(instructionButton);
+        menuList.addButton(instructionButton);
+        titleScreen.addUIElement(menuList);
         titleScreen.addUIElement(titleText);  // Add text to the screen
 
         titleScreen.onResize(currentStageSize);
@@ -206,7 +204,13 @@ public class App extends Application {
     protected Screen createInstructionScreen() {
         Screen instructionScreen = new Screen("instruction",
                 DEFAULT_STAGE_SIZE,
-                Color.rgb(45, 45, 50));
+                Color.rgb(45, 45, 50)) {
+            @Override
+            public void onKeyPressed(KeyEvent e) {
+                if(e.getCode() == KeyCode.B) activateScreen("title");
+                super.onKeyPressed(e);
+            }
+        };
 
         Text titleText = new Text("Instruction",
                 new Font(56),
@@ -221,27 +225,9 @@ public class App extends Application {
                 new Vec2d(140, 150),
                 Color.rgb(255, 255, 255));
 
-        RectangleButton backButton = new RectangleButton(new Vec2d(400, 370),
-                new Vec2d(155, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
-        {
-            public void onMouseClicked(MouseEvent e) {
-                if(!active) return;
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                activateScreen("title");
-            }
-        };
-        Text backText = new Text("Back",
-                Font.font(28),
-                new Vec2d(445, 405),
-                Color.rgb(0, 0, 0));
-
 
         instructionScreen.addUIElement(titleText);
         instructionScreen.addUIElement(instructionText);
-        backButton.addUIElement(backText);
-        instructionScreen.addUIElement(backButton);
 
         instructionScreen.onResize(currentStageSize);
 
@@ -305,7 +291,13 @@ public class App extends Application {
         // Create all UIElement and game related objects
         Screen gameScreen = new Screen("game",
                 DEFAULT_STAGE_SIZE,
-                Color.rgb(0, 0, 0));
+                Color.rgb(0, 0, 0)) {
+            @Override
+            public void onKeyPressed(KeyEvent e) {
+                if(e.getCode() == KeyCode.B) activateScreen("title");
+                super.onKeyPressed(e);
+            }
+        };
         viewPort = new ViewPort(new Vec2d(0, 0), DEFAULT_STAGE_SIZE, new Vec2d(0, 0), new Scale(1, 1)) {
             @Override
             public void onKeyPressed(KeyEvent e) {
@@ -322,7 +314,7 @@ public class App extends Application {
         viewPort.setGameWorld(game.getGameWorld());
         gameScreen.addUIElement(viewPort);
 
-        RectangleButton backButton = new RectangleButton(new Vec2d(850, 20),
+        RectangleMouseButton backButton = new RectangleMouseButton(new Vec2d(850, 20),
                 new Vec2d(100, 50),
                 Color.rgb(196, 189, 145),
                 Color.rgb(204, 208, 132))

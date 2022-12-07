@@ -5,12 +5,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class RectangleButton extends UIElement {
+public class RectangleMouseButton extends UIElement {
 
     protected Color normalColor;  // Normal color
     protected Color hoverColor;  // The color when mouse is hovering
 
-    public RectangleButton(Vec2d position, Vec2d size) {
+    public RectangleMouseButton(Vec2d position, Vec2d size) {
         super();
         this.position = position;
         this.size = size;
@@ -19,7 +19,7 @@ public class RectangleButton extends UIElement {
         this.hoverColor = Color.rgb(0, 0, 0, 0);
     }
 
-    public RectangleButton(Vec2d position, Vec2d size, Color normalColor) {
+    public RectangleMouseButton(Vec2d position, Vec2d size, Color normalColor) {
         super();
         this.position = position;
         this.size = size;
@@ -28,7 +28,7 @@ public class RectangleButton extends UIElement {
         this.hoverColor = Color.rgb(0, 0, 0, 0);
     }
 
-    public RectangleButton(Vec2d position, Vec2d size, Color normalColor, Color hoverColor) {
+    public RectangleMouseButton(Vec2d position, Vec2d size, Color normalColor, Color hoverColor) {
         super();
         this.position = position;
         this.size = size;
@@ -37,12 +37,22 @@ public class RectangleButton extends UIElement {
         this.hoverColor = hoverColor;
     }
 
+    protected void action() {
+
+    }
+
     @Override
     public void onDraw(GraphicsContext g) {
         if(!active) return;
         g.setFill(color);
         g.fillRect(position.x, position.y, size.x, size.y);
         super.onDraw(g);
+    }
+
+    @Override
+    public void onMouseClicked(MouseEvent e) {
+        action();
+        super.onMouseClicked(e);
     }
 
     @Override

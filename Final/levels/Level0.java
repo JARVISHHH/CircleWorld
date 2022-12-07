@@ -34,9 +34,11 @@ public class Level0 extends Level{
 
         GameObject wallSpike1 = createDownWardSpike(new Vec2d(700, 260), spriteSize, 1);
         gameWorld.addGameObject(wallSpike1);
+
+        GameObject wallSpike3 = createUpwardSpike(new Vec2d(700, 400), spriteSize, 1);
+        gameWorld.addGameObject(wallSpike3);
+
         GameObject wallSpike2 = createUpwardSpike(new Vec2d(700, 350), spriteSize, 1);
-        CollisionComponent spikeCollisionComponent = (CollisionComponent) wallSpike2.getComponent("Collision");
-        spikeCollisionComponent.setGroup(2);
         CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 2), new Vec2d(spriteSize.x, 2 * spriteSize.y)), false, false, false, false, false, true);
         collisionComponent.setGroup(2);
         wallSpike2.addComponent(collisionComponent);
@@ -45,6 +47,19 @@ public class Level0 extends Level{
             protected void doTrap() {
                 MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 200);
                 gameObject.addComponentQueue(movingComponent);
+                CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 2), new Vec2d(spriteSize.x, 2 * spriteSize.y)), false, false, false, false, false, true);
+                collisionComponent.setGroup(3);
+                wallSpike3.addComponentQueue(collisionComponent);
+                TrapComponent trapComponent1 = new TrapComponent() {
+                    @Override
+                    protected void doTrap() {
+                        MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 300);
+                        movingComponent.setDistance(50);
+                        gameObject.addComponentQueue(movingComponent);
+                    }
+                };
+                trapComponent1.setDetect(collisionComponent);
+                wallSpike3.addComponentQueue(trapComponent1);
             }
         };
         trapComponent.setDetect(collisionComponent);
