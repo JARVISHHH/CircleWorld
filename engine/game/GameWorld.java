@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,6 +17,8 @@ import java.util.*;
 
 public class GameWorld {
     protected boolean debugMode = false;
+
+    protected Color color = Color.rgb(255, 255, 255);
     protected ViewPort viewPort;  // Which viewport it belongs to
     protected Vec2d size;  // Size of the game world
 
@@ -121,6 +124,11 @@ public class GameWorld {
     }
 
     public void onDraw(GraphicsContext g) {
+        if(viewPort == null) return;
+        Vec2d position = viewPort.getPosition();
+        Vec2d size = viewPort.getSize();
+        g.setFill(color);
+        g.fillRect(position.x, position.y, size.x, size.y);
         graphicsSystem.onDraw(g);
     }
 

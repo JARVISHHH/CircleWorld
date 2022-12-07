@@ -53,6 +53,19 @@ public class Level0 extends Level{
         wallSpike2.addComponent(trapComponent);
         gameWorld.addGameObject(wallSpike2);
 
+//        for(int i = 0; i < 5; i++) {
+//            GameObject rock = createRock(new Vec2d(150 + i * 40, 365), spriteSize, 1, new Vec2i(0, i % 2), 0);
+//            gameWorld.addGameObject(rock);
+//        }
+//
+//        GameObject rock = createRock(new Vec2d(630, 365), spriteSize, 1, new Vec2i(0, 1), 0);
+//        gameWorld.addGameObject(rock);
+
+        for(double x = 370; x < 605; x += 30) {
+            GameObject spike = createUpwardSpike(new Vec2d(x, 480), spriteSize, 1);
+            gameWorld.addGameObject(spike);
+        }
+
         GameObject plainTile1 = createPlainTile(new Vec2d(30, 390), spriteSize, 4);
         GameObject plainTile2 = createPlainTile(new Vec2d(145, 390), spriteSize, 4);
         GameObject plainTile3 = createPlainTile(new Vec2d(260, 390), spriteSize, 4);
@@ -66,19 +79,6 @@ public class Level0 extends Level{
         gameWorld.addGameObject(plainTile6);
         gameWorld.addGameObject(plainTile7);
         gameWorld.addGameObject(plainTile8);
-
-        for(int i = 0; i < 5; i++) {
-            GameObject rock = createRock(new Vec2d(150 + i * 40, 365), spriteSize, 1, new Vec2i(0, i % 2), 0);
-            gameWorld.addGameObject(rock);
-        }
-
-        GameObject rock = createRock(new Vec2d(630, 365), spriteSize, 1, new Vec2i(0, 1), 0);
-        gameWorld.addGameObject(rock);
-
-        for(double x = 370; x < 605; x += 30) {
-            GameObject spike = createUpwardSpike(new Vec2d(x, 480), spriteSize, 1);
-            gameWorld.addGameObject(spike);
-        }
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();

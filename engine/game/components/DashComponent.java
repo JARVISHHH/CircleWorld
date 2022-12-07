@@ -10,7 +10,7 @@ public class DashComponent extends Component{
     protected int maxDashTime = 1;
     protected int leftDashTime = maxDashTime;
     protected boolean finishedDash = true;
-    protected double dashImpulseFactor = 3.6;
+    protected double dashImpulseFactor = 3;
 
     KeyCode dashKey = KeyCode.X;
 

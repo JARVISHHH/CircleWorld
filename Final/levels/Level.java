@@ -33,7 +33,7 @@ public class Level {
         SpriteComponent spriteComponent = new SpriteComponent("tile1", new Vec2d(0, 0), spriteSize.smult(factor), new Vec2i(0, 0));
         tileObject.addComponent(spriteComponent);
 
-        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(factor, 2 * factor), spriteSize.smult(factor).minus(2 * factor, 3 * factor)), true);
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, 0), spriteSize.smult(factor)), true);
         tileObject.addComponent(collisionComponent);
 
         PhysicsComponent physicsComponent = new PhysicsComponent(1000, 0);

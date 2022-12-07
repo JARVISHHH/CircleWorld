@@ -53,20 +53,20 @@ public class App extends Application {
 //    Text pressRestartText;
 
     private void loadImage() {
-        Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(849, 892), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/circle.png", "characterRunX", new Vec2d(849, 892), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/circle.png", "characterRun-X", new Vec2d(849, 892), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/circle.png", "characterRunY", new Vec2d(849, 892), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(1052, 1052), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterRunX", new Vec2d(1052, 1052), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterRun-X", new Vec2d(1052, 1052), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "characterRunY", new Vec2d(1052, 1052), new Vec2i(1, 1));
 
-        Resource.loadImage("Final/sprites/Tiles1.png", "tile1", new Vec2d(78, 70), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/Tiles1.png", "tile1", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/rocks.png", "rocks", new Vec2d(55, 160), new Vec2i(1, 2));
         Resource.loadImage("Final/sprites/Projectiles.png", "Projectiles", new Vec2d(64, 193), new Vec2i(4, 12));
-        Resource.loadImage("Final/sprites/upwardSpike.png", "upwardSpike", new Vec2d(32, 32), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/downwardSpike.png", "downwardSpike", new Vec2d(32, 32), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/wall2.png", "wall2", new Vec2d(16, 16), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/wall1.png", "wall1", new Vec2d(16, 16), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/wall3.png", "wall3", new Vec2d(16, 16), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/upwardSpike.png", "upwardSpike", new Vec2d(915, 1075), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/downwardSpike.png", "downwardSpike", new Vec2d(915, 1075), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall2.png", "wall2", new Vec2d(1080, 1080), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall1.png", "wall1", new Vec2d(1080, 1080), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall3.png", "wall3", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/flag.png", "flag", new Vec2d(181, 281), new Vec2i(1, 1));
     }
 
@@ -338,22 +338,6 @@ public class App extends Application {
                 new Vec2d(868, 55),
                 Color.rgb(0, 0, 0));
 
-        RectangleButton saveButton = new RectangleButton(new Vec2d(850, 90),
-                new Vec2d(100, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
-        {
-            public void onMouseClicked(MouseEvent e) {
-                if(!active) return;
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                game.save();
-            }
-        };
-        Text saveText = new Text("Save",
-                Font.font(28),
-                new Vec2d(868, 125),
-                Color.rgb(0, 0, 0));
-
 
         Image image = new Image("Final/sprites/gameOver.png", 765, 170, true, true);
         restartPicture = new Picture(new Vec2d(100, 150), new Vec2d(765, 170),image)
@@ -372,58 +356,17 @@ public class App extends Application {
             }
         };
 
-//        restartButton = new RectangleButton(new Vec2d(400, 325),
-//                new Vec2d(150, 50),
-//                Color.rgb(196, 189, 145),
-//                Color.rgb(204, 208, 132))
-//        {
-//            public void onMouseClicked(MouseEvent e) {
-//                if(!active) return;
-//                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-//                restartGame();  // If the button is clicked, restart.
-//                super.onMouseClicked(e);
-//            }
-//
-//            @Override
-//            public void onTick(long nanosSincePreviousTick) {
-//                if(game.gameWorld == null) return;
-//                if(game.gameWorld.isHasResult()) {
-//                    if(!game.gameWorld.isWin()) restartShow("YOU DIED!");
-//                    else if(currentLevel >= maxLevel) restartShow("YOU WIN!");
-//                    else {
-//                        currentLevel++;
-//                        restartGame();
-//                    }
-//                }
-//            }
-//        };
-//        restartText = new Text("RESTART",
-//                Font.font(28),
-//                new Vec2d(415, 360),
-//                Color.rgb(0, 0, 0));
-//        pressRestartText = new Text("Press 'R' to restart",
-//                Font.font(20),
-//                new Vec2d(390, 400),
-//                Color.rgb(255, 255, 255));
         resultText = new Text("YOU WIN!",
                 Font.font(96),
                 new Vec2d(200, 200),
                 Color.rgb(255, 255, 255));
         restartPicture.setActive(false);
-//        restartButton.setActive(false);
-//        restartText.setActive(false);
-//        pressRestartText.setActive(false);
         resultText.setActive(false);
 
         gameScreen.addUIElement(backButton);
         gameScreen.addUIElement(backText);
-        gameScreen.addUIElement(saveButton);
-        gameScreen.addUIElement(saveText);
 
         gameScreen.addUIElement(restartPicture);
-//        gameScreen.addUIElement(restartButton);
-//        gameScreen.addUIElement(restartText);
-//        gameScreen.addUIElement(pressRestartText);
         gameScreen.addUIElement(resultText);
 
         gameScreen.onResize(currentStageSize);
