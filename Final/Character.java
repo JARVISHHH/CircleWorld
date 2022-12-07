@@ -261,7 +261,7 @@ public class Character {
         CollisionComponent jumpGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(jumpGroundDetect);
         JumpComponent jumpComponent = new JumpComponent();
-        jumpComponent.setJumpKey(KeyCode.SHIFT);
+        jumpComponent.setJumpKey(KeyCode.C);
         jumpComponent.setGroundDetect(jumpGroundDetect);
         characterObject.addComponent(jumpComponent);
 

@@ -214,7 +214,7 @@ public class App extends Application {
                 Color.rgb(255, 255, 255));
 
         Text instructionText = new Text("Move: arrow keys\n\n" +
-                "Jump: shift (In the first level, the character can double jump)\n\n" +
+                "Jump: c (In the first level, the character can double jump)\n\n" +
                 "Fire: z\n\n" +
                 "Dash: x (In the second level, the character can dash)",
                 new Font(24),
