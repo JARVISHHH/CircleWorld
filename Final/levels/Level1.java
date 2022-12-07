@@ -13,8 +13,6 @@ public class Level1 extends Level{
      */
     @Override
     public GameWorld createGameWorld(Vec2d worldSize, Vec2i mapGridNum) {
-        System.out.println("level 1");
-
         gameWorld = new GameWorld(worldSize);
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid

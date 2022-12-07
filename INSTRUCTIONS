@@ -1,5 +1,6 @@
 Move: arrow keys
-Jump: shift (the character can double jump now)
+Jump: c (In the first level, the character can double jump)
+Dash: x (In the second level, the character can dash towards the direction players are pressing, or towards default directions)
 Fire: z
 
-Please do not use the save and load button for now, cause I have implemented some new features and haven't updated the loading/saving feature.
+Please do not use the save and load button for now.

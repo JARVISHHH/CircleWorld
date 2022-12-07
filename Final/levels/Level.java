@@ -13,7 +13,6 @@ public class Level {
     protected static GameWorld gameWorld;
 
     public GameWorld createGameWorld(Vec2d worldSize, Vec2i mapGridNum) {
-        System.out.println("level");
         gameWorld = null;
         return null;
     }

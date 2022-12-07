@@ -11,8 +11,9 @@
 
 ### deliverables
 
-| deliverables                            | Location in code or steps to view in game                    |
-| --------------------------------------- | ------------------------------------------------------------ |
-| sound feature<br />- reverb<br />- echo | Code: `engine/game/Sound.java`.<br />For normal sound, there is back ground music.<br />For reverb, the jump sound (press SHIFT) is reverbed.<br />For echo, the fire sound (press Z) is echoed. |
-| cutscene: video support                 | Code: `engine/uikit/Video.java`.<br />A video can be watched after clicking the start button on the title screen. |
+| deliverables   | Location in code or steps to view in game                    |
+| -------------- | ------------------------------------------------------------ |
+| level systems  | Code: `Final/levels`.<br />After reaching the goal, the character will be moved to next level automatically. |
+| dash skill     | Code: `engine/game/components/DashComponent.java`.<br />In the second level, players can press x to dash. |
+| trap component | Code: `engine/game/components/TrapComponent.java`<br />      |
 

@@ -15,8 +15,6 @@ public class Level0 extends Level{
      */
     @Override
     public GameWorld createGameWorld(Vec2d worldSize, Vec2i mapGridNum) {
-        System.out.println("level 0");
-
         gameWorld = new GameWorld(worldSize);
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
@@ -39,7 +37,7 @@ public class Level0 extends Level{
         GameObject wallSpike2 = createUpwardSpike(new Vec2d(700, 350), spriteSize, 1);
         CollisionComponent spikeCollisionComponent = (CollisionComponent) wallSpike2.getComponent("Collision");
         spikeCollisionComponent.setGroup(2);
-        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -worldSize.y), new Vec2d(spriteSize.x, 2 * worldSize.y)), false, false, false, false, false, true);
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 2), new Vec2d(spriteSize.x, 2 * spriteSize.y)), false, false, false, false, false, true);
         collisionComponent.setGroup(2);
         wallSpike2.addComponent(collisionComponent);
         TrapComponent trapComponent = new TrapComponent(){
@@ -52,14 +50,6 @@ public class Level0 extends Level{
         trapComponent.setDetect(collisionComponent);
         wallSpike2.addComponent(trapComponent);
         gameWorld.addGameObject(wallSpike2);
-
-//        for(int i = 0; i < 5; i++) {
-//            GameObject rock = createRock(new Vec2d(150 + i * 40, 365), spriteSize, 1, new Vec2i(0, i % 2), 0);
-//            gameWorld.addGameObject(rock);
-//        }
-//
-//        GameObject rock = createRock(new Vec2d(630, 365), spriteSize, 1, new Vec2i(0, 1), 0);
-//        gameWorld.addGameObject(rock);
 
         for(double x = 370; x < 605; x += 30) {
             GameObject spike = createUpwardSpike(new Vec2d(x, 480), spriteSize, 1);
