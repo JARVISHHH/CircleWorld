@@ -325,9 +325,17 @@ public class Level {
                     BufferedWriter out = new BufferedWriter(new FileWriter("Final/savings/saving.txt"));
                     out.write(levelNumber);
                     out.close();
-                    System.out.println("Game saved!");
                 } catch (IOException e) {
                 }
+            }
+
+            @Override
+            public void onTick(long nanosSincePreviousTick) {
+                super.onTick(nanosSincePreviousTick);
+                SpriteComponent saveSpriteComponent = (SpriteComponent)this.gameObject.getComponent("Sprite");
+                if(saveSpriteComponent == null) return;
+                if(inCollision) saveSpriteComponent.setSpriteTag("saved");
+                else saveSpriteComponent.setSpriteTag("save");
             }
         };
         saveComponent.setCollisionDetect(collisionComponent);
