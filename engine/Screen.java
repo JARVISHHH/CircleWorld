@@ -77,7 +77,6 @@ public class Screen {
     }
 
     public void onResize(Vec2d newSize) {
-        if(!active) return;
         double ratio = Math.min(newSize.x / size.x, newSize.y / size.y);
         for(UIElement child: children)
             child.onResize(child.getSize().smult(ratio));  // Pass correct aspect ratio size here

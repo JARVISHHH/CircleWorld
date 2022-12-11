@@ -152,6 +152,7 @@ public class Application extends FXFrontEnd {
    */
   @Override
   protected void onResize(Vec2d newSize) {
+    currentStageSize = newSize;
     if(activeScreen != null) activeScreen.onResize(newSize);
   }
 
@@ -179,10 +180,12 @@ public class Application extends FXFrontEnd {
 
   // Activate the screen named name
   protected void activateScreen(String name) {
+    if(!screensName2Index.containsKey(name) || screens.size() <= screensName2Index.get(name) || screensName2Index.get(name) < 0) {
+      System.out.println("The screen does not exist!");
+      return;
+    }
     if(activeScreen != null) activeScreen.onShutdown();
-    Screen newScreen = screens.get(screensName2Index.get(name));
-    if(newScreen.getSize() != currentStageSize)
-      newScreen.onResize(currentStageSize);
+    screens.get(screensName2Index.get(name)).onResize(currentStageSize);
     activeScreen = screens.get(screensName2Index.get(name));
     activeScreen.onStartup();
   }

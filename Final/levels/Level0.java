@@ -7,6 +7,8 @@ import engine.game.collision.AABShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Level0 extends Level{
 
@@ -24,8 +26,29 @@ public class Level0 extends Level{
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
 
-        GameObject save = createSave(new Vec2d(100, 355), spriteSize, 1);
+        GameObject save = createSave(new Vec2d(50, 360), spriteSize, 1);
         gameWorld.addGameObject(save);
+
+        GameObject jumpGuide = createGuide(new Vec2d(150, 360),
+                                       spriteSize,
+                                       new Vec2d(spriteSize.x * 4.5, spriteSize.y * 2),
+                                       1,
+                                       "Press c to jump\n" +
+                                               "Try double jump",
+                                       Font.font(spriteSize.x / 2),
+                                       new Vec2d(5, 25),
+                                       Color.color(0, 0, 0));
+        gameWorld.addGameObject(jumpGuide);
+
+        GameObject fireGuide = createGuide(new Vec2d(210, 360),
+                spriteSize,
+                new Vec2d(spriteSize.x * 3.5, spriteSize.y),
+                1,
+                "Press z to fire",
+                Font.font(spriteSize.x / 2),
+                new Vec2d(5, 20),
+                Color.color(0, 0, 0));
+        gameWorld.addGameObject(fireGuide);
 
         for(double y = 20; y < 260; y += 30) {
             GameObject wall = createIndestructibleWall(new Vec2d(700, y), spriteSize, 1);

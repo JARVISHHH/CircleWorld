@@ -5,34 +5,42 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class RectangleComponent extends Component{
+public class RectangleTextComponent extends Component{
     protected Color color;
+
+    protected Vec2d position;
+    protected Vec2d size;
     protected String text;
     protected Font textFont;
     protected Vec2d textPosition;
     protected Color textColor;
 
-    public RectangleComponent() {
-        tag = "Rectangle";
+    protected boolean show = false;
+
+    public RectangleTextComponent() {
+        tag = "RectangleText";
         color = Color.rgb(0, 0, 0);
         setDrawable(true);
     }
 
-    public RectangleComponent(Color color) {
-        tag = "Rectangle";
+    public RectangleTextComponent(Vec2d position, Vec2d size, Color color) {
+        tag = "RectangleText";
+        this.position = position;
+        this.size = size;
         this.color = color;
         setDrawable(true);
     }
 
-    public void setText(String text, Font textFont, Vec2d textPosition) {
+    public void setText(String text, Font textFont, Vec2d textPosition, Color textColor) {
         this.text = text;
         this.textFont = textFont;
         this.textPosition = textPosition;
+        this.textColor = textColor;
     }
 
     @Override
     public Component copy() {
-        RectangleComponent component = new RectangleComponent();
+        RectangleTextComponent component = new RectangleTextComponent();
         component.setGameObject(this.gameObject);
         component.setDrawable(this.drawable);
         component.setTransformComponent(this.gameObject.getTransformComponent().getPosition(), this.gameObject.getTransformComponent().getSize());
@@ -45,15 +53,15 @@ public class RectangleComponent extends Component{
 
     @Override
     public void onDraw(GraphicsContext g) {
-        g.setLineWidth(3);
+        if(!show) return;
+        g.setLineWidth(2);
         g.setStroke(color);
-        Vec2d position = gameObject.getTransformComponent().getPosition();
-        Vec2d size = gameObject.getTransformComponent().getSize();
-        g.strokeRect(position.x, position.y, size.x, size.y);
+        Vec2d screenPosition = gameObject.getTransformComponent().getPosition().plus(position);
+        g.strokeRect(screenPosition.x, screenPosition.y, size.x, size.y);
         g.setLineWidth(1);
         g.setFont(textFont);
         g.setFill(textColor);
-        g.fillText(text, textPosition.x, textPosition.y);
+        g.fillText(text, screenPosition.x + textPosition.x, screenPosition.y + textPosition.y);
         super.onDraw(g);
     }
 }

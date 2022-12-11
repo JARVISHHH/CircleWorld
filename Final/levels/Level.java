@@ -7,6 +7,8 @@ import engine.game.collision.PolygonShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 
 import java.io.*;
@@ -333,5 +335,28 @@ public class Level {
         saveObject.addComponent(saveComponent);
 
         return saveObject;
+    }
+
+    public GameObject createGuide(Vec2d position, Vec2d spriteSize, Vec2d rectangleSize, double factor, String guide, Font textFont, Vec2d textPosition, Color textColor) {
+        GameObject guideObject = new GameObject();
+
+        guideObject.setTransformComponent(new TransformComponent(position, spriteSize.smult(factor)));
+
+        SpriteComponent spriteComponent = new SpriteComponent("guide", new Vec2d(0, 0), spriteSize.smult(factor), new Vec2i(0, 0));
+        guideObject.addComponent(spriteComponent);
+
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, 0), spriteSize.smult(factor)), false, false, false, false, false, true);
+        collisionComponent.setGroup(2);
+        guideObject.addComponent(collisionComponent);
+
+        RectangleTextComponent rectangleTextComponent = new RectangleTextComponent(new Vec2d(0, -rectangleSize.y - 5), rectangleSize, Color.color(0, 0, 0));
+        rectangleTextComponent.setText(guide, textFont, textPosition, textColor);
+        guideObject.addComponent(rectangleTextComponent);
+
+        GuideComponent guideComponent = new GuideComponent();
+        guideComponent.setCollisionDetect(collisionComponent);
+        guideObject.addComponent(guideComponent);
+
+        return guideObject;
     }
 }
