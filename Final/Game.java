@@ -5,11 +5,15 @@ import Final.levels.Level0;
 import Final.levels.LevelController;
 import engine.game.GameObject;
 import engine.game.GameWorld;
+import engine.game.Sound;
 import engine.game.collision.AABShape;
 import engine.game.collision.PolygonShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
+
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 public class Game {
 
@@ -17,9 +21,18 @@ public class Game {
     protected GameWorld gameWorld;
     protected int currentLevelNumber;
 
+    protected Clip audioClip = null;
+
     protected XMLProcessor xmlProcessor = new XMLProcessor();
 
-    public Game() {
+    public void onStartup() {
+        if(audioClip == null) audioClip = Sound.getAudio("BackGround");
+        if(audioClip != null) {
+            FloatControl gainControl =
+                    (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-15.0f); // Reduce volume by 10 decibels.
+            audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
 
     public GameWorld getGameWorld() {
@@ -60,5 +73,12 @@ public class Game {
     public void load() {
         gameWorld = xmlProcessor.readXML();
         worldSize = gameWorld.getSize();
+    }
+
+    public void onShutdown() {
+        if(audioClip != null) {
+            audioClip.stop();
+            audioClip.setFramePosition(0);
+        }
     }
 }

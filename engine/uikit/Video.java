@@ -5,6 +5,7 @@ import engine.support.Vec2d;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 
 import java.io.File;
 
@@ -13,6 +14,8 @@ public class Video extends UIElement{
     protected MediaView mediaView;
     protected MediaPlayer mediaPlayer;
     protected FXFrontEnd app;
+
+    protected boolean autoPlay = false;
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
@@ -26,8 +29,19 @@ public class Video extends UIElement{
         this.app = app;
     }
 
+    public void setAutoPlay(boolean autoPlay) {
+        this.autoPlay = autoPlay;
+    }
+
     public void dispose() {
         if(mediaPlayer != null) mediaPlayer.dispose();
+    }
+
+    public void play() {
+        if(mediaPlayer != null) {
+            mediaPlayer.seek(Duration.ZERO);
+            mediaPlayer.play();
+        }
     }
 
     public boolean isFinished() {
@@ -85,6 +99,8 @@ public class Video extends UIElement{
             mediaView.setX(position.x);
             mediaView.setY(position.y);
         }
+        if(autoPlay && isFinished())
+            play();
     }
 
 }

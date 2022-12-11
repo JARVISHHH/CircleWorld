@@ -8,9 +8,14 @@ import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
 
+
+import java.io.*;
+
 public class Level {
 
     protected static GameWorld gameWorld;
+
+    protected String levelNumber = "0";
 
     public GameWorld createGameWorld(Vec2d worldSize, Vec2i mapGridNum) {
         gameWorld = null;
@@ -297,5 +302,36 @@ public class Level {
         flagObject.addComponent(collisionComponent);
 
         return flagObject;
+    }
+
+    public GameObject createSave(Vec2d position, Vec2d spriteSize, double factor) {
+        GameObject saveObject = new GameObject();
+
+        saveObject.setTransformComponent(new TransformComponent(position, spriteSize.smult(factor)));
+
+        SpriteComponent spriteComponent = new SpriteComponent("save", new Vec2d(0, 0), spriteSize.smult(factor), new Vec2i(0, 0));
+        saveObject.addComponent(spriteComponent);
+
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(spriteSize.smult(1.0 /3).smult(factor), spriteSize.smult(1.0 /3).smult(factor)), false, false, false, false, false, true);
+        collisionComponent.setGroup(2);
+        saveObject.addComponent(collisionComponent);
+
+        SaveComponent saveComponent = new SaveComponent() {
+            @Override
+            public void doSave() {
+                try {
+                    BufferedWriter out = new BufferedWriter(new FileWriter("Final/savings/saving.txt"));
+                    out.write(levelNumber);
+                    out.close();
+                    System.out.println("Game saved!");
+                } catch (IOException e) {
+                }
+            }
+        };
+        saveComponent.setCollisionDetect(collisionComponent);
+
+        saveObject.addComponent(saveComponent);
+
+        return saveObject;
     }
 }

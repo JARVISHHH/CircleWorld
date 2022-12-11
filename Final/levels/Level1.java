@@ -7,6 +7,10 @@ import engine.support.Vec2d;
 import engine.support.Vec2i;
 
 public class Level1 extends Level{
+    public Level1() {
+        levelNumber = "1";
+    }
+
     /**
      * Create a game world of size worldSize.
      * @param worldSize worldSize is the size of the game world
@@ -16,6 +20,9 @@ public class Level1 extends Level{
         gameWorld = new GameWorld(worldSize);
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
+
+        GameObject save = createSave(new Vec2d(30, 355), spriteSize, 1);
+        gameWorld.addGameObject(save);
 
         for(double x = 145; x < 940; x += 30) {
             GameObject spike = createUpwardSpike(new Vec2d(x, 480), spriteSize, 1);

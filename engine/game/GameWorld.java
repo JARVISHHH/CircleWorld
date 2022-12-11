@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.sound.sampled.*;
+import java.lang.System;
 import java.util.*;
 
 public class GameWorld {
@@ -43,11 +44,11 @@ public class GameWorld {
     protected boolean hasResult = false;
     protected boolean win = false;
 
-    protected Clip audioClip = null;
+//    protected Clip audioClip = null;
 
     public GameWorld(Vec2d size) {
         this.size = size;
-        onStartUp();
+//        onStartUp();
     }
 
     public boolean isDebugMode() {
@@ -114,13 +115,13 @@ public class GameWorld {
     }
 
     public void onStartUp() {
-        if(audioClip == null) audioClip = Sound.getAudio("BackGround");
-        if(audioClip != null) {
-            FloatControl gainControl =
-                    (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-15.0f); // Reduce volume by 10 decibels.
-            audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
+//        if(audioClip == null) audioClip = Sound.getAudio("BackGround");
+//        if(audioClip != null) {
+//            FloatControl gainControl =
+//                    (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
+//            gainControl.setValue(-15.0f); // Reduce volume by 10 decibels.
+//            audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+//        }
     }
 
     public void onDraw(GraphicsContext g) {
@@ -229,10 +230,10 @@ public class GameWorld {
     }
 
     public void onShutdown() {
-        if(audioClip != null) {
-            audioClip.stop();
-            audioClip.setFramePosition(0);
-        }
+//        if(audioClip != null) {
+//            audioClip.stop();
+//            audioClip.setFramePosition(0);
+//        }
         for(GameObject gameObject: gameObjects)
             gameObject.onShutdown();
     }

@@ -9,6 +9,11 @@ import engine.support.Vec2d;
 import engine.support.Vec2i;
 
 public class Level0 extends Level{
+
+    public Level0() {
+        levelNumber = "0";
+    }
+
     /**
      * Create a game world of size worldSize.
      * @param worldSize worldSize is the size of the game world
@@ -18,6 +23,9 @@ public class Level0 extends Level{
         gameWorld = new GameWorld(worldSize);
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
+
+        GameObject save = createSave(new Vec2d(100, 355), spriteSize, 1);
+        gameWorld.addGameObject(save);
 
         for(double y = 20; y < 260; y += 30) {
             GameObject wall = createIndestructibleWall(new Vec2d(700, y), spriteSize, 1);

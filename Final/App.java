@@ -21,6 +21,11 @@ import javafx.scene.transform.Scale;
 
 import javafx.scene.image.Image;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 /**
  * This is your Wiz top-level, App class.
@@ -45,12 +50,8 @@ public class App extends Application {
 
     // Ui elements in the game screen
     ViewPort viewPort;
-
     Picture restartPicture;
-//    RectangleButton restartButton;
-//    Text restartText;
     Text resultText;
-//    Text pressRestartText;
 
     private void loadImage() {
         Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(1052, 1052), new Vec2i(1, 1));
@@ -68,6 +69,7 @@ public class App extends Application {
         Resource.loadImage("Final/sprites/wall1.png", "wall1", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/wall3.png", "wall3", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/flag.png", "flag", new Vec2d(181, 281), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/save.png", "save", new Vec2d(784, 777), new Vec2i(1, 1));
     }
 
     /**
@@ -110,7 +112,6 @@ public class App extends Application {
         loadAudios();
         LevelController.load();
         addScreen(createTitleScreen());
-        addScreen(createInstructionScreen());
         activateScreen("title");
         super.onStartup();
     }
@@ -120,73 +121,72 @@ public class App extends Application {
      * @return return the title screen
      */
     protected Screen createTitleScreen() {
-        Screen titleScreen = new Screen("title",
+        class VideoScreen extends Screen {
+            protected Video video;
+
+            public void setVideo(Video video) {
+                this.video = video;
+            }
+
+            public VideoScreen(String name, Vec2d size, Color color) {
+                super(name, size, color);
+            }
+        }
+
+        VideoScreen titleScreen = new VideoScreen("title",
                 DEFAULT_STAGE_SIZE,
-                Color.rgb(45, 45, 50));
+                Color.rgb(45, 45, 50, 0));
+
+        Video video = new Video("Final/resources/start.mp4", new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
+        video.setApp(this);
+        video.setAutoPlay(true);
+        titleScreen.addUIElement(video);
+        titleScreen.setVideo(video);
 
         MenuList menuList = new MenuList(new Vec2d(400, 300),
                                         new Vec2d(155, 200));
-        RectangleKeyButton startButton = new RectangleKeyButton(new Vec2d(400, 300),
+        RectangleKeyButton startButton = new RectangleKeyButton(new Vec2d(375, 325),
                                                                 new Vec2d(155, 50),
-                                                                Color.rgb(196, 189, 145),
-                                                                Color.rgb(204, 208, 132))
+                                                                Color.rgb(0, 0, 0),
+                                                                Color.rgb(0, 0, 0, 0.75))
         {
             @Override
             protected void action() {
                 currentLevel = 0;
-                restartVideo("Final/resources/re.mp4");
+                restartVideo("Final/resources/instruction.mp4");
             }
         };
 
         Text startText = new Text("Start",
                 Font.font(28),
-                new Vec2d(445, 335),
-                Color.rgb(0, 0, 0));
+                new Vec2d(420, 360),
+                Color.rgb(255, 255, 255));
 
-        RectangleKeyButton loadButton = new RectangleKeyButton(new Vec2d(400, 370),
+        RectangleKeyButton loadButton = new RectangleKeyButton(new Vec2d(375, 395),
                 new Vec2d(155, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
+                Color.rgb(0, 0, 0),
+                Color.rgb(0, 0, 0, 0.75))
         {
             @Override
             public void action() {
-                game.load();
                 load();
             }
         };
 
         Text loadText = new Text("Load",
                 Font.font(28),
-                new Vec2d(445, 405),
-                Color.rgb(0, 0, 0));
-
-        RectangleKeyButton instructionButton = new RectangleKeyButton(new Vec2d(400, 440),
-                new Vec2d(155, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
-        {
-            @Override
-            public void action() {
-                activateScreen("instruction");  // Jump to instruction screen
-            }
-        };
-
-        Text instructionText = new Text("instruction",
-                Font.font(28),
-                new Vec2d(405, 475),
-                Color.rgb(0, 0, 0));
-
-        Text titleText = new Text("Final",
-                Font.font(96),
-                new Vec2d(365, 200),
+                new Vec2d(420, 430),
                 Color.rgb(255, 255, 255));
+
+        Text titleText = new Text("Circle World",
+                Font.font(96),
+                new Vec2d(200, 150),
+                Color.rgb(0, 0, 0));
 
         startButton.addUIElement(startText);  // Add text to the button
         menuList.addButton(startButton);
         loadButton.addUIElement(loadText);
         menuList.addButton(loadButton);
-        instructionButton.addUIElement(instructionText);
-        menuList.addButton(instructionButton);
         titleScreen.addUIElement(menuList);
         titleScreen.addUIElement(titleText);  // Add text to the screen
 
@@ -195,45 +195,6 @@ public class App extends Application {
         titleScreen.setActive(false);
 
         return titleScreen;
-    }
-
-    /**
-     * Create an instruction screen. Player can choose 3 seeds in this screen.
-     * @return return the instruction screen.
-     */
-    protected Screen createInstructionScreen() {
-        Screen instructionScreen = new Screen("instruction",
-                DEFAULT_STAGE_SIZE,
-                Color.rgb(45, 45, 50)) {
-            @Override
-            public void onKeyPressed(KeyEvent e) {
-                if(e.getCode() == KeyCode.B) activateScreen("title");
-                super.onKeyPressed(e);
-            }
-        };
-
-        Text titleText = new Text("Instruction",
-                new Font(56),
-                new Vec2d(300, 100),
-                Color.rgb(255, 255, 255));
-
-        Text instructionText = new Text("Move: arrow keys\n\n" +
-                "Jump: c (In the first level, the character can double jump)\n\n" +
-                "Fire: z\n\n" +
-                "Dash: x (In the second level, the character can dash)",
-                new Font(24),
-                new Vec2d(140, 150),
-                Color.rgb(255, 255, 255));
-
-
-        instructionScreen.addUIElement(titleText);
-        instructionScreen.addUIElement(instructionText);
-
-        instructionScreen.onResize(currentStageSize);
-
-        instructionScreen.setActive(false);
-
-        return instructionScreen;
     }
 
     protected Screen createVideoScreen(String videoPath) {
@@ -254,15 +215,6 @@ public class App extends Application {
                 super.onKeyPressed(e);
                 restartGameScreen();
             }
-
-            @Override
-            public void onTick(long nanosSincePreviousTick) {
-                super.onTick(nanosSincePreviousTick);
-                if(video != null && video.isFinished()) {
-                    video.dispose();
-                    restartGameScreen();
-                }
-            }
         }
         VideoScreen videoScreen = new VideoScreen("video",
                 DEFAULT_STAGE_SIZE,
@@ -270,8 +222,8 @@ public class App extends Application {
 
         Text text = new Text("Press any key to continue...",
                 Font.font(28),
-                new Vec2d(10, 30),
-                Color.rgb(128, 209, 200, 0.75));
+                new Vec2d(10, 500),
+                Color.rgb(0, 0, 0));
 
         videoScreen.addUIElement(text);
 
@@ -287,7 +239,7 @@ public class App extends Application {
      * Create a game screen with a view port, multiple buttons and texts.
      * @return return the game screen.
      */
-    protected Screen createGameScreen(boolean createNewWorld) {
+    protected Screen createGameScreen(int level) {
         // Create all UIElement and game related objects
         Screen gameScreen = new Screen("game",
                 DEFAULT_STAGE_SIZE,
@@ -304,31 +256,42 @@ public class App extends Application {
                 if(e.getCode() == KeyCode.R) restartGame();
                 super.onKeyPressed(e);
             }
+
+            @Override
+            public void onStartup() {
+                super.onStartup();
+                game.onStartup();
+            }
+
+            @Override
+            public void onShutdown() {
+                super.onShutdown();
+                game.onShutdown();
+            }
         };
 
         // Create a new game world
-        if(createNewWorld) {
-            game.createGameWorld(currentLevel, worldSize, mapGridNum);
-        }
+        currentLevel = level;
+        game.createGameWorld(level, worldSize, mapGridNum);
 
         viewPort.setGameWorld(game.getGameWorld());
         gameScreen.addUIElement(viewPort);
 
-        RectangleMouseButton backButton = new RectangleMouseButton(new Vec2d(850, 20),
-                new Vec2d(100, 50),
-                Color.rgb(196, 189, 145),
-                Color.rgb(204, 208, 132))
-        {
-            public void onMouseClicked(MouseEvent e) {
-                if(!active) return;
-                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-                activateScreen("title");
-            }
-        };
-        Text backText = new Text("Back",
-                Font.font(28),
-                new Vec2d(868, 55),
-                Color.rgb(0, 0, 0));
+//        RectangleMouseButton backButton = new RectangleMouseButton(new Vec2d(850, 20),
+//                new Vec2d(100, 50),
+//                Color.rgb(196, 189, 145),
+//                Color.rgb(204, 208, 132))
+//        {
+//            public void onMouseClicked(MouseEvent e) {
+//                if(!active) return;
+//                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
+//                activateScreen("title");
+//            }
+//        };
+//        Text backText = new Text("Back",
+//                Font.font(28),
+//                new Vec2d(868, 55),
+//                Color.rgb(0, 0, 0));
 
 
         Image image = new Image("Final/sprites/gameOver.png", 765, 170, true, true);
@@ -355,8 +318,8 @@ public class App extends Application {
         restartPicture.setActive(false);
         resultText.setActive(false);
 
-        gameScreen.addUIElement(backButton);
-        gameScreen.addUIElement(backText);
+//        gameScreen.addUIElement(backButton);
+//        gameScreen.addUIElement(backText);
 
         gameScreen.addUIElement(restartPicture);
         gameScreen.addUIElement(resultText);
@@ -376,9 +339,6 @@ public class App extends Application {
         viewPort.setGameWorld(game.getGameWorld());
 
         restartPicture.setActive(false);
-//        restartButton.setActive(false);
-//        restartText.setActive(false);
-//        pressRestartText.setActive(false);
         resultText.setActive(false);
         viewPort.setActive(true);
     }
@@ -388,8 +348,8 @@ public class App extends Application {
      */
     protected void restartGameScreen() {
         if(screensName2Index.containsKey("game"))
-            screens.set(screensName2Index.get("game"), createGameScreen(true));  // Create new game screen to reset everything
-        else addScreen(createGameScreen(true));
+            screens.set(screensName2Index.get("game"), createGameScreen(currentLevel));  // Create new game screen to reset everything
+        else addScreen(createGameScreen(currentLevel));
         activateScreen("game");
     }
 
@@ -404,9 +364,24 @@ public class App extends Application {
      * Load the previously saved game.
      */
     protected void load() {
+        int level = 0;
+
+        try {
+            BufferedReader in = null;
+            in = new BufferedReader(new FileReader("Final/savings/saving.txt"));
+            StringBuffer sb;
+            if (in.ready()) {
+                sb = (new StringBuffer(in.readLine()));
+                level = Integer.parseInt(String.valueOf(sb));
+            }
+            in.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if(screensName2Index.containsKey("game"))
-            screens.set(screensName2Index.get("game"), createGameScreen(false));  // Create new game screen to reset everything
-        else addScreen(createGameScreen(false));
+            screens.set(screensName2Index.get("game"), createGameScreen(level));  // Create new game screen to reset everything
+        else addScreen(createGameScreen(level));
         activateScreen("game");
     }
 
@@ -419,9 +394,6 @@ public class App extends Application {
             resultText.setContent(result);
             resultText.setActive(true);
         } else restartPicture.setActive(true);
-//        restartButton.setActive(true);
-//        restartText.setActive(true);
-//        pressRestartText.setActive(true);
         viewPort.setActive(false);
     }
 
