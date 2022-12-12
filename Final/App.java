@@ -279,23 +279,6 @@ public class App extends Application {
         viewPort.setGameWorld(game.getGameWorld());
         gameScreen.addUIElement(viewPort);
 
-//        RectangleMouseButton backButton = new RectangleMouseButton(new Vec2d(850, 20),
-//                new Vec2d(100, 50),
-//                Color.rgb(196, 189, 145),
-//                Color.rgb(204, 208, 132))
-//        {
-//            public void onMouseClicked(MouseEvent e) {
-//                if(!active) return;
-//                if(!inBound(new Vec2d(e.getX(), e.getY()))) return;
-//                activateScreen("title");
-//            }
-//        };
-//        Text backText = new Text("Back",
-//                Font.font(28),
-//                new Vec2d(868, 55),
-//                Color.rgb(0, 0, 0));
-
-
         Image image = new Image("Final/sprites/gameOver.png", 765, 170, true, true);
         restartPicture = new Picture(new Vec2d(100, 150), new Vec2d(765, 170),image)
         {
@@ -303,8 +286,10 @@ public class App extends Application {
             public void onTick(long nanosSincePreviousTick) {
                 if(game.gameWorld == null) return;
                 if(game.gameWorld.isHasResult()) {
-                    if(!game.gameWorld.isWin()) restartShow("YOU DIED!", false);
-                    else if(currentLevel >= maxLevel) restartShow("YOU WIN!", true);
+                    if(!game.gameWorld.isWin()) restartShow();
+                    else if(currentLevel >= maxLevel) {
+                        restartCurtainCall("Final/resources/curtainCall.mp4");
+                    }
                     else {
                         currentLevel++;
                         restartGame();
@@ -320,9 +305,6 @@ public class App extends Application {
         restartPicture.setActive(false);
         resultText.setActive(false);
 
-//        gameScreen.addUIElement(backButton);
-//        gameScreen.addUIElement(backText);
-
         gameScreen.addUIElement(restartPicture);
         gameScreen.addUIElement(resultText);
 
@@ -331,6 +313,37 @@ public class App extends Application {
         gameScreen.setActive(false);
 
         return gameScreen;
+    }
+
+    protected Screen createCurtainCallScreen(String videoPath) {
+        class VideoScreen extends Screen {
+            protected Video video;
+
+            public void setVideo(Video video) {
+                this.video = video;
+            }
+
+            public VideoScreen(String name, Vec2d size, Color color) {
+                super(name, size, color);
+            }
+
+            @Override
+            public void onKeyPressed(KeyEvent e) {
+                super.onKeyPressed(e);
+                if(e.getCode() == KeyCode.B) activateScreen("title");
+            }
+        }
+        VideoScreen videoScreen = new VideoScreen("curtainCall",
+                DEFAULT_STAGE_SIZE,
+                Color.rgb(0, 0, 0, 0));
+
+
+        Video video = new Video(videoPath, new Vec2d(0, 0), DEFAULT_STAGE_SIZE);
+        video.setApp(this);
+        videoScreen.addUIElement(video);
+        videoScreen.setVideo(video);
+
+        return videoScreen;
     }
 
     protected void restartGame() {
@@ -362,6 +375,13 @@ public class App extends Application {
         activateScreen("video");
     }
 
+    protected void restartCurtainCall(String videoPath) {
+        if(screensName2Index.containsKey("curtainCall"))
+            screens.set(screensName2Index.get("curtainCall"), createCurtainCallScreen(videoPath));  // Create new game screen to reset everything
+        else addScreen(createCurtainCallScreen(videoPath));
+        activateScreen("curtainCall");
+    }
+
     /**
      * Load the previously saved game.
      */
@@ -389,13 +409,9 @@ public class App extends Application {
 
     /**
      * Game over, show result.
-     * @param result result of the game
      */
-    protected void restartShow(String result, boolean win) {
-        if(win) {
-            resultText.setContent(result);
-            resultText.setActive(true);
-        } else restartPicture.setActive(true);
+    protected void restartShow() {
+        restartPicture.setActive(true);
         viewPort.setActive(false);
     }
 
