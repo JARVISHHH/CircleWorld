@@ -12,8 +12,6 @@ import javafx.scene.transform.Affine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.sound.sampled.*;
-import java.lang.System;
 import java.util.*;
 
 public class GameWorld {

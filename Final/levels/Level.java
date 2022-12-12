@@ -132,7 +132,7 @@ public class Level {
         spikeObject.addComponent(spriteComponent);
 
         Vec2d[] originalPoints = {
-                new Vec2d(32, 32), new Vec2d(16, 0), new Vec2d(0, 32)
+                new Vec2d(32, 32), new Vec2d(16, 3), new Vec2d(0, 32)
         };
 
         Vec2d[] points = new Vec2d[3];
@@ -168,7 +168,7 @@ public class Level {
         spikeObject.addComponent(spriteComponent);
 
         Vec2d[] originalPoints = {
-                new Vec2d(32, 0), new Vec2d(0, 0), new Vec2d(16, 32)
+                new Vec2d(32, 0), new Vec2d(0, 0), new Vec2d(16, 29)
         };
 
         Vec2d[] points = new Vec2d[3];

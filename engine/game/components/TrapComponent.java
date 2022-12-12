@@ -14,7 +14,7 @@ public class TrapComponent extends Component{
     }
 
     protected void doTrap() {
-        gameObject.removeComponent(this);
+        gameObject.removeComponentQueue(this);
     }
 
     @Override

@@ -10,6 +10,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class SpriteComponent extends Component{
+    protected boolean show = true;
+
     protected String spriteTag;
     protected Vec2d position;
     protected Vec2d size;
@@ -36,6 +38,10 @@ public class SpriteComponent extends Component{
         setDrawable(true);
     }
 
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
     public void setSpriteTag(String spriteTag) {
         this.spriteTag = spriteTag;
     }
@@ -54,6 +60,7 @@ public class SpriteComponent extends Component{
 
     @Override
     public void onDraw(GraphicsContext g) {
+        if(!show) return;
         if(!getInfo) {
             wrapper = Resource.getWrapper(spriteTag);
             if (wrapper == null) return;
