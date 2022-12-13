@@ -30,7 +30,6 @@ public class Game {
         if(audioClip != null) {
             FloatControl gainControl =
                     (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-15.0f); // Reduce volume by 10 decibels.
             audioClip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }

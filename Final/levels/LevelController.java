@@ -9,6 +9,7 @@ public class LevelController {
         LevelController.h.put(0, Level0.class);
         LevelController.h.put(1, Level1.class);
         LevelController.h.put(2, Level2.class);
+        LevelController.h.put(3, Level3.class);
     }
 
     public static Class<? extends Level> getLevelClass(int levelNumber) {

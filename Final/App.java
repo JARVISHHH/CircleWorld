@@ -46,7 +46,7 @@ public class App extends Application {
     Vec2i mapGridNum = new Vec2i(32, 18);  // Total grids number
 
     int currentLevel = 0;
-    int maxLevel = 2;
+    int maxLevel = 3;
 
     // Ui elements in the game screen
     ViewPort viewPort;
@@ -102,7 +102,7 @@ public class App extends Application {
     }
 
     private void loadAudios() {
-        Sound.loadAudio("Final/resources/BGM.wav", "BackGround");
+        Sound.loadAudio("Final/resources/BGM2.wav", "BackGround");
         Sound.loadAudio("Final/resources/jump.wav", "Jump");
         Sound.loadAudio("Final/resources/projectile.wav", "projectile");
     }

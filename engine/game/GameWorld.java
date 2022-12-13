@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import java.util.*;
 
 public class GameWorld {
-    protected boolean debugMode = false;
+    protected boolean debugMode = true;
 
     protected Color color = Color.rgb(255, 255, 255);
     protected ViewPort viewPort;  // Which viewport it belongs to

@@ -191,9 +191,10 @@ public class Character {
         public CharacterMoveComponent() {
             super();
             tag = "Move";
+            this.maxVel = 15;
         }
 
-        double acceleration = 100;
+        double acceleration = 150;
 
         @Override
         public void onTick(long nanosSincePreviousTick) {

@@ -10,7 +10,7 @@ public class PhysicsComponent extends Component{
     Vec2d acc;
     Vec2d vel;
     Vec2d impulse, force;
-    double resistance = 30;
+    double resistance = 100;
     double restitution;
 
     public PhysicsComponent() {

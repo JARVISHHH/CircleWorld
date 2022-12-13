@@ -42,11 +42,12 @@ public class Level0 extends Level{
 
         GameObject fireGuide = createGuide(new Vec2d(210, 360),
                 spriteSize,
-                new Vec2d(spriteSize.x * 3.5, spriteSize.y),
+                new Vec2d(spriteSize.x * 6.5, spriteSize.y * 2),
                 1,
-                "Press z to fire",
+                "Press z to fire\n" +
+                "Try to destroy some walls",
                 Font.font(spriteSize.x / 2),
-                new Vec2d(5, 20),
+                new Vec2d(5, 25),
                 Color.color(0, 0, 0));
         gameWorld.addGameObject(fireGuide);
 

@@ -9,6 +9,7 @@ import engine.support.Vec2d;
 import engine.support.Vec2i;
 
 public class Level1 extends Level{
+
     public Level1() {
         levelNumber = "1";
     }
@@ -23,137 +24,22 @@ public class Level1 extends Level{
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
 
-        for(double x = 30 + spriteSize.x * 5; x < 840; x += spriteSize.x) {
-            GameObject spike = createUpwardSpike(new Vec2d(x, worldSize.y - spriteSize.y * 2), spriteSize, 1);
-            gameWorld.addGameObject(spike);
-        }
-
         GameObject save = createSave(new Vec2d(50, 360), spriteSize, 1);
         gameWorld.addGameObject(save);
 
-        GameObject plainTile1 = createPlainTile(new Vec2d(30, 450), spriteSize, 5);
+        GameObject plainTile1 = createPlainTile(new Vec2d(spriteSize.x, worldSize.y - spriteSize.y * 5), spriteSize, 4);
         gameWorld.addGameObject(plainTile1);
 
+        for(int i = 5; i < 10; i++) {
+            GameObject spike = createUpwardSpike(new Vec2d(spriteSize.x * i, worldSize.y - spriteSize.y * 3), spriteSize, 1);
+            gameWorld.addGameObject(spike);
+        }
 
-        GameObject plainTile2 = createPlainTile(new Vec2d(260, 390), spriteSize, 2);
-        gameWorld.addGameObject(plainTile2);
-
-        GameObject spike1 = createUpwardSpike(new Vec2d(290, 360), spriteSize, 1);
-        CollisionComponent spike1CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 10),  new Vec2d(spriteSize.x, spriteSize.y * 5)), false, false, false, false, false, true);
-        spike1CollisionComponent.setGroup(2);
-        spike1.addComponent(spike1CollisionComponent);
-        TrapComponent spike1Trap = new TrapComponent() {
-            @Override
-            protected void doTrap() {
-                MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 1000);
-                gameObject.addComponentQueue(movingComponent);
-                super.doTrap();
-            }
-        };
-        spike1Trap.setDetect(spike1CollisionComponent);
-        spike1.addComponent(spike1Trap);
-        gameWorld.addGameObject(spike1);
-
-        GameObject plainTile3 = createPlainTile(new Vec2d(360, 350), spriteSize, 2);
-        CollisionComponent plainTail3CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
-        plainTail3CollisionComponent.setGroup(2);
-        plainTile3.addComponent(plainTail3CollisionComponent);
-        TrapComponent plainTile3Trap = new TrapComponent() {
-            @Override
-            protected void doTrap() {
-                MovingComponent movingComponent = new MovingComponent(new Vec2d(1, 0), 300);
-                movingComponent.setDistance(spriteSize.x);
-                gameObject.addComponentQueue(movingComponent);
-                super.doTrap();
-            }
-        };
-        plainTile3Trap.setDetect(plainTail3CollisionComponent);
-        plainTile3.addComponent(plainTile3Trap);
-        gameWorld.addGameObject(plainTile3);
-
-        GameObject spike2 = createUpwardSpike(new Vec2d(390, 320), spriteSize, 1);
-        CollisionComponent spike2CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(spriteSize.x, spriteSize.y / 3 * 2), new Vec2d(spriteSize.x, spriteSize.y / 3)), false, false, false, false, false, true);
-        spike2.addComponent(spike2CollisionComponent);
-        TrapComponent spike2Trap = new TrapComponent() {
-            @Override
-            protected void doTrap() {
-                MovingComponent movingComponent = new MovingComponent(new Vec2d(1, 0), 100);
-                movingComponent.setDistance(spriteSize.x);
-                gameObject.addComponentQueue(movingComponent);
-                super.doTrap();
-            }
-        };
-        spike2Trap.setDetect(spike2CollisionComponent);
-        spike2.addComponent(spike2Trap);
-        gameWorld.addGameObject(spike2);
-
-        GameObject[] downSpikes4 = {createDownWardSpike(new Vec2d(500, spriteSize.y), spriteSize, 1), createDownWardSpike(new Vec2d(500 + spriteSize.x, spriteSize.y), spriteSize, 1)};
-        GameObject plainTile4 = createPlainTile(new Vec2d(500, 270), spriteSize, 2);
-        CollisionComponent plainTile4Collision = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), new Vec2d(spriteSize.x * 2, spriteSize.y)), false, false, false, false, false, true);
-        plainTile4.addComponent(plainTile4Collision);
-        TrapComponent plainTile4Trap = new TrapComponent() {
-            @Override
-            protected void doTrap() {
-                PhysicsComponent physicsComponent = (PhysicsComponent)gameObject.getComponent("Physics");
-                if(physicsComponent != null) physicsComponent.applyImpulse(new Vec2d(0, -20 * physicsComponent.getMass()));
-                for(GameObject spike: downSpikes4) {
-                    gameWorld.addGameObject(spike);
-                }
-                super.doTrap();
-            }
-        };
-        plainTile4Trap.setDetect(plainTile4Collision);
-        plainTile4.addComponent(plainTile4Trap);
-        gameWorld.addGameObject(plainTile4);
-
-        GameObject plainTile6 = createPlainTile(new Vec2d(650, 100), spriteSize, 2);
-        gameWorld.addGameObject(plainTile6);
-        GameObject spike3 = createUpwardSpike(new Vec2d(650, 100 - spriteSize.y), spriteSize, 1);
-        gameWorld.addGameObject(spike3);
-
-        GameObject plainTile7 = createPlainTile(new Vec2d(840, 100), new Vec2d(spriteSize.x, spriteSize.y * 10), 3);
-        gameWorld.addGameObject(plainTile7);
-
-        GameObject plainTile8 = createPlainTile(new Vec2d(840, spriteSize.y), new Vec2d(spriteSize.x, 100 - spriteSize.y), 1);
-        SpriteComponent plainTile8SpriteComponent = (SpriteComponent)plainTile8.getComponent("Sprite");
-        plainTile8SpriteComponent.setShow(false);
-        CollisionComponent plainTile8CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-3, 0), new Vec2d(3, 100 - spriteSize.y)), false, false, false, false, false, true);
-        plainTile8.addComponent(plainTile8CollisionComponent);
-        TrapComponent plainTile8Trap = new TrapComponent() {
-            @Override
-            protected void doTrap() {
-                SpriteComponent spriteComponent = (SpriteComponent)gameObject.getComponent("Sprite");
-                spriteComponent.setShow(true);
-                createRealFlag(spriteSize);
-                super.doTrap();
-            }
-        };
-        plainTile8Trap.setDetect(plainTile8CollisionComponent);
-        plainTile8.addComponent(plainTile8Trap);
-        gameWorld.addGameObject(plainTile8);
-
-        Character character = new Character(new Vec2d(50, 370), spriteSize);
-        GameObject characterObject = character.getCharacter();
-        ((JumpComponent)(characterObject.getComponent("Jump"))).setMaxJumpTime(2);
-        ((DashComponent)(characterObject.getComponent("Dash"))).setMaxDashTime(0);
-
-        GameObject border = createBorder(spriteSize, mapGridNum);
-
-        GameObject flag = createFlag(new Vec2d(900, 100 - spriteSize.y), spriteSize, 1);
-        gameWorld.addGameObject(flag);
-        gameWorld.addGameObject(border);
-        gameWorld.addGameObject(characterObject);
-        gameWorld.setCenterGameObject(characterObject);
-
-        return gameWorld;
-    }
-
-    private void createRealFlag(Vec2d spriteSize) {
-        for(int i = 0; i <= 2; i += 2) {
-            GameObject spike = createUpwardSpike(new Vec2d(390 + spriteSize.x * i, 200), spriteSize, 1);
+        for(int i = 10; i < 12; i++) {
+            GameObject spike = createUpwardSpike(new Vec2d(spriteSize.x * i, worldSize.y - spriteSize.y * 2), spriteSize, 1);
             CollisionComponent spikeCollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
             spike.addComponent(spikeCollisionComponent);
-            TrapComponent spikeTrap = new TrapComponent(){
+            TrapComponent spikeTrap = new TrapComponent() {
                 @Override
                 protected void doTrap() {
                     MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 300);
@@ -167,56 +53,145 @@ public class Level1 extends Level{
             gameWorld.addGameObject(spike);
         }
 
-        GameObject plainTile1 = createPlainTile(new Vec2d(390, 200), spriteSize, 3);
-        gameWorld.addGameObject(plainTile1);
-
-        GameObject plainTile2 = createPlainTile(new Vec2d(30, 150), spriteSize, 6);
+        GameObject plainTile2 = createPlainTile(new Vec2d(spriteSize.x * 5, worldSize.y - spriteSize.y * 2), new Vec2d(spriteSize.x * 7, spriteSize.y), 1);
         gameWorld.addGameObject(plainTile2);
 
-        for(int i = 0; i < 2; i++) {
-            GameObject spike = createUpwardSpike(new Vec2d(260 + spriteSize.x * i, 200), spriteSize, 1);
-            gameWorld.addGameObject(spike);
-        }
-
-        GameObject plainTile3 = new GameObject();
-        plainTile3.setTransformComponent(new TransformComponent(new Vec2d(260, 200), new Vec2d(spriteSize.x * 2, spriteSize.y)));
-        SpriteComponent spriteComponent = new SpriteComponent("tile1", new Vec2d(0, 0), new Vec2d(spriteSize.x * 2, spriteSize.y), new Vec2i(0, 0));
-        plainTile3.addComponent(spriteComponent);
-        CollisionComponent plainTile3CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y / 2), new Vec2d(spriteSize.x * 2, spriteSize.y / 2 * 3)), false, false, false,false, false, true);
-        plainTile3CollisionComponent.setGroup(2);
-        plainTile3.addComponent(plainTile3CollisionComponent);
-        TrapComponent plainTile3Trap = new TrapComponent() {
+        GameObject plainTile7 = createPlainTile(new Vec2d(spriteSize.x * 5, worldSize.y - spriteSize.y * 7 - spriteSize.y / 2), new Vec2d(spriteSize.x * 2, spriteSize.y), 1);
+        SpriteComponent plainTile7SpriteComponent = (SpriteComponent)plainTile7.getComponent("Sprite");
+        plainTile7SpriteComponent.setShow(false);
+        CollisionComponent plainTile7CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-3, -3), new Vec2d(spriteSize.x * 2 + 6, spriteSize.y + 6)), false, false, false, false, false, true);
+        plainTile7CollisionComponent.setGroup(2);
+        plainTile7.addComponent(plainTile7CollisionComponent);
+        TrapComponent plainTile7Trap = new TrapComponent() {
             @Override
             protected void doTrap() {
                 SpriteComponent spriteComponent = (SpriteComponent)gameObject.getComponent("Sprite");
-                spriteComponent.setShow(false);
+                spriteComponent.setShow(true);
                 super.doTrap();
             }
         };
-        plainTile3Trap.setDetect(plainTile3CollisionComponent);
-        plainTile3.addComponent(plainTile3Trap);
+        plainTile7Trap.setDetect(plainTile7CollisionComponent);
+        plainTile7.addComponent(plainTile7Trap);
+        gameWorld.addGameObject(plainTile7);
+
+        for(int i = 0; i < 2; i++) {
+            GameObject plainTile = createPlainTile(new Vec2d(spriteSize.x * 6, worldSize.y - spriteSize.y * (6 - i) - spriteSize.y / 2), spriteSize, 1);
+            SpriteComponent plainTileSpriteComponent = (SpriteComponent)plainTile.getComponent("Sprite");
+            plainTileSpriteComponent.setShow(false);
+            CollisionComponent plainTileCollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-3, -3), spriteSize.plus(6, 6)), false, false, false, false, false, true);
+            plainTileCollisionComponent.setGroup(i + 2);
+            plainTile.addComponent(plainTileCollisionComponent);
+            TrapComponent plainTileTrap = new TrapComponent() {
+                @Override
+                protected void doTrap() {
+                    SpriteComponent spriteComponent = (SpriteComponent)gameObject.getComponent("Sprite");
+                    spriteComponent.setShow(true);
+                    super.doTrap();
+                }
+            };
+            plainTileTrap.setDetect(plainTileCollisionComponent);
+            plainTile.addComponent(plainTileTrap);
+            gameWorld.addGameObject(plainTile);
+        }
+
+        for(int i = 0; i < 3; i++) {
+            GameObject spike = createUpwardSpike(new Vec2d(spriteSize.x * (12 + i), worldSize.y - spriteSize.y * 5), spriteSize, 1);
+            CollisionComponent spikeCollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
+            spike.addComponent(spikeCollisionComponent);
+            TrapComponent spikeTrap = new TrapComponent() {
+                @Override
+                protected void doTrap() {
+                    MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 300);
+                    movingComponent.setDistance(spriteSize.y);
+                    gameObject.addComponentQueue(movingComponent);
+                    super.doTrap();
+                }
+            };
+            spikeTrap.setDetect(spikeCollisionComponent);
+            spike.addComponent(spikeTrap);
+            gameWorld.addGameObject(spike);
+        }
+
+        GameObject plainTile3 = createPlainTile(new Vec2d(spriteSize.x * 12, worldSize.y - spriteSize.y * 5), spriteSize, 5);
         gameWorld.addGameObject(plainTile3);
 
-        GameObject[] downSpikes4 = {createDownWardSpike(new Vec2d(750, spriteSize.y), spriteSize, 1), createDownWardSpike(new Vec2d(750 + spriteSize.x, spriteSize.y), spriteSize, 1)};
-        GameObject plainTile4 = createPlainTile(new Vec2d(750, 400), spriteSize, 2);
-        CollisionComponent plainTile4Collision = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), new Vec2d(spriteSize.x * 2, spriteSize.y)), false, false, false, false, false, true);
-        plainTile4.addComponent(plainTile4Collision);
-        TrapComponent plainTile4Trap = new TrapComponent() {
+        for(int x = 17; x <= 23; x += 6) {
+            GameObject plain = createPlainTile(new Vec2d(spriteSize.x * x, worldSize.y - spriteSize.y * 6), new Vec2d(spriteSize.x, spriteSize.y * 6), 1);
+            gameWorld.addGameObject(plain);
+
+            GameObject spike = createUpwardSpike(new Vec2d(spriteSize.x * x, worldSize.y - spriteSize.y * 7), spriteSize, 1);
+            gameWorld.addGameObject(spike);
+        }
+
+        GameObject plainTile4 = createPlainTile(new Vec2d(spriteSize.x * 18, worldSize.y - spriteSize.y * 3), new Vec2d(spriteSize.x * 5, spriteSize.y * 2), 1);
+        gameWorld.addGameObject(plainTile4);
+
+        GameObject spike1 = createUpwardSpike(new Vec2d(spriteSize.x * 18, worldSize.y - spriteSize.y * 4), spriteSize, 1);
+        CollisionComponent spike1CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(spriteSize.x, 0), new Vec2d(spriteSize.x * 3, spriteSize.y)), false, false, false, false, false, true);
+        spike1CollisionComponent.setGroup(2);
+        spike1.addComponent(spike1CollisionComponent);
+        TrapComponent spike1Trap = new TrapComponent() {
             @Override
             protected void doTrap() {
-                PhysicsComponent physicsComponent = (PhysicsComponent)gameObject.getComponent("Physics");
-                if(physicsComponent != null) physicsComponent.applyImpulse(new Vec2d(0, -20 * physicsComponent.getMass()));
-                for(GameObject spike: downSpikes4) {
-                    gameWorld.addGameObject(spike);
-                }
+                MovingComponent movingComponent = new MovingComponent(new Vec2d(1, 0), 300);
+                movingComponent.setDistance(spriteSize.x * 4);
+                gameObject.addComponentQueue(movingComponent);
                 super.doTrap();
             }
         };
-        plainTile4Trap.setDetect(plainTile4Collision);
-        plainTile4.addComponent(plainTile4Trap);
-        gameWorld.addGameObject(plainTile4);
+        spike1Trap.setDetect(spike1CollisionComponent);
+        spike1.addComponent(spike1Trap);
+        gameWorld.addGameObject(spike1);
 
-        GameObject flag = createFlag(new Vec2d(30, 150 - spriteSize.y), spriteSize, 1);
+        GameObject spike2 = createUpwardSpike(new Vec2d(spriteSize.x * 22, worldSize.y - spriteSize.y * 4), spriteSize, 1);
+        CollisionComponent spike2CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-spriteSize.x * 3, 0), new Vec2d(spriteSize.x * 3, spriteSize.y)), false, false, false, false, false, true);
+        spike2CollisionComponent.setGroup(3);
+        spike2.addComponent(spike2CollisionComponent);
+        TrapComponent spike2Trap = new TrapComponent() {
+            @Override
+            protected void doTrap() {
+                MovingComponent movingComponent = new MovingComponent(new Vec2d(-1, 0), 300);
+                movingComponent.setDistance(spriteSize.x * 4);
+                gameObject.addComponentQueue(movingComponent);
+                super.doTrap();
+            }
+        };
+        spike2Trap.setDetect(spike2CollisionComponent);
+        spike2.addComponent(spike2Trap);
+        gameWorld.addGameObject(spike2);
+
+        GameObject plainTile5 = createPlainTile(new Vec2d(spriteSize.x * 25, worldSize.y - spriteSize.y * 7), new Vec2d(spriteSize.x * 3, spriteSize.y * 2), 1);
+        gameWorld.addGameObject(plainTile5);
+
+        for(int i = 25; i < 28; i++) {
+            GameObject spike = createUpwardSpike(new Vec2d(spriteSize.x * i, worldSize.y - spriteSize.y * 8), spriteSize, 1);
+            gameWorld.addGameObject(spike);
+        }
+
+        for(int i = 25; i < 28; i +=2 ) {
+            GameObject spike = createDownWardSpike(new Vec2d(spriteSize.x * i, worldSize.y - spriteSize.y * 5), spriteSize, 1);
+            gameWorld.addGameObject(spike);
+        }
+
+        GameObject plainTile6 = createPlainTile(new Vec2d(spriteSize.x * 24, worldSize.y - spriteSize.y * 2), new Vec2d(spriteSize.x * 7, spriteSize.y), 1);
+        gameWorld.addGameObject(plainTile6);
+
+        GameObject spike3 = createUpwardSpike(new Vec2d(spriteSize.x * 26, worldSize.y - spriteSize.y * 3), spriteSize, 1);
+        gameWorld.addGameObject(spike3);
+
+        Character character = new Character(new Vec2d(50, 370), spriteSize);
+        GameObject characterObject = character.getCharacter();
+        ((JumpComponent)(characterObject.getComponent("Jump"))).setMaxJumpTime(2);
+        ((DashComponent)(characterObject.getComponent("Dash"))).setMaxDashTime(0);
+
+        GameObject border = createBorder(spriteSize, mapGridNum);
+
+        GameObject flag = createFlag(new Vec2d(900, worldSize.y - spriteSize.y * 3), spriteSize, 1);
         gameWorld.addGameObject(flag);
+        gameWorld.addGameObject(border);
+        gameWorld.addGameObject(characterObject);
+        gameWorld.setCenterGameObject(characterObject);
+
+        return gameWorld;
     }
 }
