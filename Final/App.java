@@ -14,7 +14,6 @@ import engine.support.Vec2i;
 import engine.uikit.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
@@ -22,7 +21,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.image.Image;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 

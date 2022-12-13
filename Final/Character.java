@@ -17,9 +17,9 @@ public class Character {
     protected GameObject character = null;
     protected Vec2d characterSize;
 
-    public Character(Vec2d position,  Vec2d characterSize) {
-        this.characterSize = characterSize;
-        character = createCharacter(position, characterSize.smult(3.0 / 4.0));
+    public Character(Vec2d position,  Vec2d spriteSize) {
+        this.characterSize = spriteSize.smult(3.0 / 4.0);
+        character = createCharacter(position, characterSize);
     }
 
     public GameObject getCharacter() {
@@ -194,17 +194,20 @@ public class Character {
             this.maxVel = 15;
         }
 
-        double acceleration = 150;
+        double horizontalAcceleration = 150;
+        double verticalAcceleration = 0;
 
         @Override
         public void onTick(long nanosSincePreviousTick) {
+            ClimbComponent climbComponent = (ClimbComponent) gameObject.getComponent("Climb");
+            if(climbComponent != null && climbComponent.isClimbing()) return;
             double t = nanosSincePreviousTick / 1000000000.0;
             for(int k = 0; k < 2; k++) {
                 if(gameObject.keyPressing.containsKey(direction[k]) && gameObject.keyPressing.get(direction[k])) {
                     PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
                     moveDirection = new Vec2d(dx[k], dy[k]);
                     Vec2d force = moveDirection;
-                    Vec2d impulse = force.smult(physicsComponent.getMass() * acceleration * t);
+                    Vec2d impulse = new Vec2d(force.x * horizontalAcceleration, force.y * verticalAcceleration).smult(physicsComponent.getMass() * t);
                     if(physicsComponent.getVel().x * impulse.x > 0) {
                         if(physicsComponent.getVel().x + impulse.x / physicsComponent.getMass() > maxVel) {
                             impulse = new Vec2d((maxVel - physicsComponent.getVel().x) * physicsComponent.getMass(), 0);
@@ -253,17 +256,11 @@ public class Character {
         characterObject.addComponent(runRightAnimationComponent);
         characterObject.addComponent(runLeftAnimationComponent);
 
-        FireComponent fireComponent = new FireComponent(60);
-        fireComponent.setFireKey(KeyCode.Z);
-        for(int i = 0; i < 4; i++)
-            fireComponent.addSpriteIndex(new Vec2i(i, 0));
-        characterObject.addComponent(fireComponent);
-
         CollisionComponent jumpGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(jumpGroundDetect);
         JumpComponent jumpComponent = new JumpComponent();
         jumpComponent.setJumpKey(KeyCode.C);
-        jumpComponent.setGroundDetect(jumpGroundDetect);
+        jumpComponent.addDetect(jumpGroundDetect);
         characterObject.addComponent(jumpComponent);
 
         CollisionComponent dashGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);

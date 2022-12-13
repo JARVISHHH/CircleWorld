@@ -23,6 +23,14 @@ public class GravityComponent extends Component{
         this.noGravityTime = noGravityTime;
     }
 
+    public void addNoGravityTime(double noGravityTime) {
+        this.noGravityTime += noGravityTime;
+    }
+
+    public void minusNoGravityTime(double noGravityTime) {
+        this.noGravityTime  -= noGravityTime;
+    }
+
     public void setGroundDetect(CollisionComponent groundDetect) {
         this.groundDetect = groundDetect;
 

@@ -13,7 +13,7 @@ public class MoveComponent extends Component{
     protected Vec2d moveDirection = new Vec2d(1, 0);
 
     protected double dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
-    protected KeyCode direction[] = {KeyCode.LEFT, KeyCode.RIGHT,KeyCode.UP,KeyCode.DOWN};
+    protected KeyCode direction[] = {KeyCode.LEFT, KeyCode.RIGHT, KeyCode.UP, KeyCode.DOWN};
 
     public MoveComponent() {
         tag = "Move";
@@ -22,6 +22,13 @@ public class MoveComponent extends Component{
 
     public void setMoveRate(double moveRate) {
         this.moveRate = moveRate;
+    }
+
+    public boolean checkMove(long nanosSincePreviousTick) {
+        for(int k = 0; k < direction.length; k++)
+            if(gameObject.keyPressing.containsKey(direction[k]) && gameObject.keyPressing.get(direction[k]))
+                return true;
+        return false;
     }
 
     @Override

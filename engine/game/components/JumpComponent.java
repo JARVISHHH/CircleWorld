@@ -9,11 +9,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.sound.sampled.*;
+import java.util.ArrayList;
 
 public class JumpComponent extends Component{
 
     protected int maxJumpTime = 1;
     protected int leftJumpTime = maxJumpTime;
+    protected boolean jumped;
     protected boolean finishedJump = true;  // If current jump has been executed
     protected boolean getHighest = false;
 
@@ -29,8 +31,7 @@ public class JumpComponent extends Component{
 
     protected String audioTag = "Jump";
     protected Clip audioClip = null;
-
-    protected CollisionComponent groundDetect = null;
+    protected ArrayList<CollisionComponent> detects = new ArrayList<>();
 
     public JumpComponent() {
         tag = "Jump";
@@ -50,20 +51,29 @@ public class JumpComponent extends Component{
         this.jumpKey = jumpKey;
     }
 
-    public void setGroundDetect(CollisionComponent groundDetect) {
-        this.groundDetect = groundDetect;
+    public void addDetect(CollisionComponent detect) {
+        this.detects.add(detect);
+    }
 
+    public boolean checkJump() {
+        if(finishedJump && leftJumpTime > 0 && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey) || jumped) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void onTick(long nanosSincePreviousTick) {
-        if(groundDetect == null || groundDetect.movePosition.y >= 0) {
-            if(leftJumpTime - maxJumpTime == 0) {
-                setLeftJumpTime(maxJumpTime - 1);
+        jumped = false;
+
+        boolean touchGround = false;
+        for(CollisionComponent collisionComponent: detects) {
+            if(collisionComponent != null && !collisionComponent.movePosition.isZero()) {
+                setLeftJumpTime(maxJumpTime);
+                touchGround = true;
             }
-        } else {
-            setLeftJumpTime(maxJumpTime);
         }
+        if(!touchGround && leftJumpTime == maxJumpTime) leftJumpTime = maxJumpTime - 1;
 
         double t = nanosSincePreviousTick / 1000000000.0;
         PhysicsComponent physicsComponent = (PhysicsComponent)getGameObject().getComponent("Physics");
@@ -78,6 +88,7 @@ public class JumpComponent extends Component{
                 physicsComponent.vel = new Vec2d(physicsComponent.vel.x, 0);
                 physicsComponent.applyImpulse(force.smult(forceFactor * firstJumpImpulseFactor));
                 playSound();
+                jumped = true;
                 finishedJump = false;
                 leftJumpTime -= 1;
             } else {
@@ -126,7 +137,7 @@ public class JumpComponent extends Component{
         jumpComponent.setAttribute("currentImpulseFactor", String.valueOf(currentImpulseFactor));
         jumpComponent.setAttribute("jumpKey", String.valueOf(jumpKey));
 
-        jumpComponent.appendChild(groundDetect.writeXML(doc));
+//        jumpComponent.appendChild(groundDetect.writeXML(doc));
 
         return jumpComponent;
     }
@@ -142,17 +153,17 @@ public class JumpComponent extends Component{
         currentImpulseFactor = Double.parseDouble(e.getAttribute("currentImpulseFactor"));
         jumpKey = KeyCode.valueOf(e.getAttribute("jumpKey"));
 
-        NodeList nodeList = e.getChildNodes();
-        for(int i = 0; i < nodeList.getLength(); i++) {
-            if(e.getChildNodes().item(i).getNodeType() != Node.ELEMENT_NODE) continue;
-            Element element = (Element) e.getChildNodes().item(i);
-            if(element.getTagName().equals("CollisionComponent")) {
-                this.groundDetect = new CollisionComponent();
-                this.groundDetect.readXML(element);
-            }
-        }
-
-        if(groundDetect != null) gameObject.addComponent(groundDetect);
+//        NodeList nodeList = e.getChildNodes();
+//        for(int i = 0; i < nodeList.getLength(); i++) {
+//            if(e.getChildNodes().item(i).getNodeType() != Node.ELEMENT_NODE) continue;
+//            Element element = (Element) e.getChildNodes().item(i);
+//            if(element.getTagName().equals("CollisionComponent")) {
+//                this.groundDetect = new CollisionComponent();
+//                this.groundDetect.readXML(element);
+//            }
+//        }
+//
+//        if(groundDetect != null) gameObject.addComponent(groundDetect);
     }
 
     @Override

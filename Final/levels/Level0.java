@@ -7,6 +7,7 @@ import engine.game.collision.AABShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -119,6 +120,11 @@ public class Level0 extends Level{
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
+        FireComponent fireComponent = new FireComponent(60);
+        fireComponent.setFireKey(KeyCode.Z);
+        for(int i = 0; i < 4; i++)
+            fireComponent.addSpriteIndex(new Vec2i(i, 0));
+        characterObject.addComponent(fireComponent);
         ((JumpComponent)(characterObject.getComponent("Jump"))).setMaxJumpTime(2);
         ((DashComponent)(characterObject.getComponent("Dash"))).setMaxDashTime(0);
 

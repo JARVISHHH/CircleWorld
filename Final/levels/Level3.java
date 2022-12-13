@@ -3,6 +3,10 @@ package Final.levels;
 import Final.Character;
 import engine.game.GameObject;
 import engine.game.GameWorld;
+import engine.game.collision.AABShape;
+import engine.game.components.ClimbComponent;
+import engine.game.components.CollisionComponent;
+import engine.game.components.JumpComponent;
 import engine.support.Vec2d;
 import engine.support.Vec2i;
 
@@ -24,7 +28,7 @@ public class Level3 extends Level{
         GameObject save = createSave(new Vec2d(30, 355), spriteSize, 1);
         gameWorld.addGameObject(save);
 
-        for(double x = 145; x < 940; x += 30) {
+        for(double x = 205; x < 940; x += 30) {
             GameObject spike = createUpwardSpike(new Vec2d(x, 480), spriteSize, 1);
             gameWorld.addGameObject(spike);
         }
@@ -63,6 +67,13 @@ public class Level3 extends Level{
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(-1, 1), new Vec2d(character.getCharacterSize().x + 2, character.getCharacterSize().y - 2)), false, false, false, false, false, true);
+        characterObject.addComponent(collisionComponent);
+        ClimbComponent climbComponent = new ClimbComponent();
+        climbComponent.setDetect(collisionComponent);
+        characterObject.addComponent(climbComponent);
+        JumpComponent jumpComponent = (JumpComponent)characterObject.getComponent("Jump");
+        jumpComponent.addDetect(collisionComponent);
 
         GameObject border = createBorder(spriteSize, mapGridNum);
 
