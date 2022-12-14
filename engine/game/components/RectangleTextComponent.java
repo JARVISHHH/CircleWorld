@@ -7,6 +7,7 @@ import javafx.scene.text.Font;
 
 public class RectangleTextComponent extends Component{
     protected Color color;
+    protected Color backgroundColor = Color.rgb(255, 255, 255);
 
     protected Vec2d position;
     protected Vec2d size;
@@ -54,9 +55,11 @@ public class RectangleTextComponent extends Component{
     @Override
     public void onDraw(GraphicsContext g) {
         if(!show) return;
+        Vec2d screenPosition = gameObject.getTransformComponent().getPosition().plus(position);
+        g.setFill(backgroundColor);
+        g.fillRect(screenPosition.x, screenPosition.y, size.x, size.y);
         g.setLineWidth(2);
         g.setStroke(color);
-        Vec2d screenPosition = gameObject.getTransformComponent().getPosition().plus(position);
         g.strokeRect(screenPosition.x, screenPosition.y, size.x, size.y);
         g.setLineWidth(1);
         g.setFont(textFont);

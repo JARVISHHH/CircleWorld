@@ -29,12 +29,11 @@ public class Level2 extends Level{
             gameWorld.addGameObject(spike);
         }
 
-        GameObject save = createSave(new Vec2d(50, 360), spriteSize, 1);
+        GameObject save = createSave(new Vec2d(50, 300), spriteSize, 1);
         gameWorld.addGameObject(save);
 
         GameObject plainTile1 = createPlainTile(new Vec2d(30, 450), spriteSize, 5);
         gameWorld.addGameObject(plainTile1);
-
 
         GameObject plainTile2 = createPlainTile(new Vec2d(260, 390), spriteSize, 2);
         gameWorld.addGameObject(plainTile2);
@@ -54,6 +53,23 @@ public class Level2 extends Level{
         spike1Trap.setDetect(spike1CollisionComponent);
         spike1.addComponent(spike1Trap);
         gameWorld.addGameObject(spike1);
+
+        GameObject spike0 = createUpwardSpike(new Vec2d(390, 350), spriteSize, 1);
+        CollisionComponent spike0CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
+        spike0CollisionComponent.setGroup(3);
+        spike0.addComponent(spike0CollisionComponent);
+        TrapComponent spike0Trap = new TrapComponent(){
+            @Override
+            protected void doTrap() {
+                MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 300);
+                movingComponent.setDistance(spriteSize.y);
+                gameObject.addComponentQueue(movingComponent);
+                super.doTrap();
+            }
+        };
+        spike0Trap.setDetect(spike0CollisionComponent);
+        spike0.addComponent(spike0Trap);
+        gameWorld.addGameObject(spike0);
 
         GameObject plainTile3 = createPlainTile(new Vec2d(360, 350), spriteSize, 2);
         CollisionComponent plainTail3CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
@@ -176,7 +192,7 @@ public class Level2 extends Level{
         GameObject plainTile1 = createPlainTile(new Vec2d(390, 200), spriteSize, 3);
         gameWorld.addGameObject(plainTile1);
 
-        GameObject plainTile2 = createPlainTile(new Vec2d(30, 150), spriteSize, 6);
+        GameObject plainTile2 = createPlainTile(new Vec2d(30, 150), new Vec2d(spriteSize.x * 5.5, spriteSize.y * 4), 1);
         gameWorld.addGameObject(plainTile2);
 
         for(int i = 0; i < 2; i++) {

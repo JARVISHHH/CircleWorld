@@ -31,159 +31,6 @@ public class Character {
     }
 
     /**
-     * Component helps to show stand animation
-     */
-    static class StandAnimationComponent extends AnimationComponent {
-        public boolean active = false;
-        public StandAnimationComponent() {
-            super();
-            tag = "StandAnimation";
-        }
-        public StandAnimationComponent(String spriteTag, Vec2d position, Vec2d size) {
-            super(spriteTag, position, size);
-        }
-
-        @Override
-        public void onTick(long nanosSincePreviousTick) {
-            boolean moving = false;
-            int indices[] = {1, 3};
-            // Check the direction and if the character is moving
-            for(int i = 0; i < direction.length; i++) {
-                if(gameObject.keyPressing.containsKey(direction[i]) && gameObject.keyPressing.get(direction[i])) {
-//                    if(!moving) index = sprites.get(indices[i]);
-                    moving = true;
-                }
-            }
-            if(moving) {
-                active = false;
-            } else {
-                active = true;
-            }
-        }
-
-        @Override
-        public void onDraw(GraphicsContext g) {
-            if(active) super.onDraw(g);
-        }
-
-        @Override
-        public Element writeXML(Document doc) {
-            Element animationComponent = doc.createElement("StandAnimationComponent");
-
-            setXMLAttribute(animationComponent);
-            animationComponent.setAttribute("active", String.valueOf(active));
-
-            return animationComponent;
-        }
-
-        @Override
-        public void readXML(Element e) {
-            super.readXML(e);
-            active = Boolean.parseBoolean(e.getAttribute("active"));
-        }
-    }
-
-    /**
-     * Component helps to show run left animation
-     */
-    static class RunLeftAnimationComponent extends AnimationComponent {
-        public boolean active = false;
-
-        public RunLeftAnimationComponent(){
-            super();
-            tag = "RunLeftAnimation";
-        }
-
-        public RunLeftAnimationComponent(String spriteTag, Vec2d position, Vec2d size) {
-            super(spriteTag, position, size);
-        }
-
-        @Override
-        public void onTick(long nanosSincePreviousTick) {
-            if((gameObject.keyPressing.containsKey(KeyCode.LEFT) && gameObject.keyPressing.get(KeyCode.LEFT))) {
-                active = true;
-                super.onTick(nanosSincePreviousTick);
-            } else {
-                active = false;
-                sumTime = 0;
-            }
-        }
-
-        @Override
-        public void onDraw(GraphicsContext g) {
-            if(active) super.onDraw(g);
-        }
-
-        @Override
-        public Element writeXML(Document doc) {
-            Element animationComponent = doc.createElement("RunLeftAnimationComponent");
-
-            setXMLAttribute(animationComponent);
-            animationComponent.setAttribute("active", String.valueOf(active));
-
-            return animationComponent;
-        }
-
-        @Override
-        public void readXML(Element e) {
-            super.readXML(e);
-            active = Boolean.parseBoolean(e.getAttribute("active"));
-        }
-    }
-
-    /**
-     * Component helps to show run right animation
-     */
-    static class RunRightAnimationComponent extends AnimationComponent {
-        public boolean active = false;
-
-        public RunRightAnimationComponent() {
-            super();
-            tag = "RunRightAnimation";
-        }
-
-        public RunRightAnimationComponent(String spriteTag, Vec2d position, Vec2d size) {
-            super(spriteTag, position, size);
-        }
-
-        @Override
-        public void onTick(long nanosSincePreviousTick) {
-            boolean moving = false;
-            if (gameObject.keyPressing.containsKey(direction[0]) && gameObject.keyPressing.get(direction[0])) {
-                moving = true;
-            }
-            if(!moving && (gameObject.keyPressing.containsKey(KeyCode.RIGHT) && gameObject.keyPressing.get(KeyCode.RIGHT))) {
-                active = true;
-                super.onTick(nanosSincePreviousTick);
-            } else {
-                active = false;
-                sumTime = 0;
-            }
-        }
-
-        @Override
-        public void onDraw(GraphicsContext g) {
-            if(active) super.onDraw(g);
-        }
-
-        @Override
-        public Element writeXML(Document doc) {
-            Element animationComponent = doc.createElement("RunRightAnimationComponent");
-
-            setXMLAttribute(animationComponent);
-            animationComponent.setAttribute("active", String.valueOf(active));
-
-            return animationComponent;
-        }
-
-        @Override
-        public void readXML(Element e) {
-            super.readXML(e);
-            active = Boolean.parseBoolean(e.getAttribute("active"));
-        }
-    }
-
-    /**
      * Component that control how the character moves.
      */
     static class CharacterMoveComponent extends MoveComponent{
@@ -231,6 +78,30 @@ public class Character {
         }
     }
 
+    static class CharacterDashComponent extends DashComponent {
+
+        public String beforeSprite = "circle";
+        public String afterSprite = "tiredCircle";
+
+        @Override
+        public void doDash(double t) {
+            super.doDash(t);
+            SpriteComponent spriteComponent = (SpriteComponent) gameObject.getComponent("Sprite");
+            if(spriteComponent != null) {
+                spriteComponent.setSpriteTag(afterSprite);
+            }
+        }
+
+        @Override
+        public void refresh() {
+            super.refresh();
+            SpriteComponent spriteComponent = (SpriteComponent) gameObject.getComponent("Sprite");
+            if(spriteComponent != null) {
+                spriteComponent.setSpriteTag(beforeSprite);
+            }
+        }
+    };
+
     /**
      * Create a new character object.
      * @param position the original position of the game.
@@ -242,19 +113,9 @@ public class Character {
         GameObject characterObject = new GameObject();
 
         characterObject.setTransformComponent(new TransformComponent(position, characterSize));
-        StandAnimationComponent standAnimationComponent = new StandAnimationComponent("characterStand", new Vec2d(0, 0), characterSize);
-        for(int i = 0; i <= 0; i++)
-            standAnimationComponent.addSprite(new Vec2i(i, 0));
-        characterObject.addComponent(standAnimationComponent);
 
-        RunRightAnimationComponent runRightAnimationComponent = new RunRightAnimationComponent("characterRunX", new Vec2d(0, 0), characterSize);
-        for(int i = 0; i <= 0; i++)
-            runRightAnimationComponent.addSprite(new Vec2i(i, 0));
-        RunLeftAnimationComponent runLeftAnimationComponent = new RunLeftAnimationComponent("characterRun-X", new Vec2d(0, 0), characterSize);
-        for(int i = 0; i <= 0; i++)
-            runLeftAnimationComponent.addSprite(new Vec2i(i, 0));
-        characterObject.addComponent(runRightAnimationComponent);
-        characterObject.addComponent(runLeftAnimationComponent);
+        SpriteComponent spriteComponent = new SpriteComponent("circle", new Vec2d(0, 0), characterSize, new Vec2i(0, 0));
+        characterObject.addComponent(spriteComponent);
 
         CollisionComponent jumpGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(jumpGroundDetect);
@@ -265,7 +126,7 @@ public class Character {
 
         CollisionComponent dashGroundDetect = new CollisionComponent(new AABShape(new Vec2d(characterSize.x / 4, characterSize.y - 1), new Vec2d(characterSize.x / 2, 1)), false, false, false, false, false, true);
         characterObject.addComponent(dashGroundDetect);
-        DashComponent dashComponent = new DashComponent();
+        CharacterDashComponent dashComponent = new CharacterDashComponent();
         dashComponent.setDashKey(KeyCode.X);
         dashComponent.setGroundDetect(dashGroundDetect);
         characterObject.addComponent(dashComponent);

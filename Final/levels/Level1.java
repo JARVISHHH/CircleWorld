@@ -25,7 +25,7 @@ public class Level1 extends Level{
 
         Vec2d spriteSize = worldSize.pdiv(mapGridNum.x, mapGridNum.y);  // Size of each grid
 
-        GameObject save = createSave(new Vec2d(50, 360), spriteSize, 1);
+        GameObject save = createSave(new Vec2d(50, 250), spriteSize, 1);
         gameWorld.addGameObject(save);
 
         GameObject plainTile1 = createPlainTile(new Vec2d(spriteSize.x, worldSize.y - spriteSize.y * 5), spriteSize, 4);

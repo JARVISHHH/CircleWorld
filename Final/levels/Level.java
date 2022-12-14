@@ -3,6 +3,7 @@ package Final.levels;
 import engine.game.GameObject;
 import engine.game.GameWorld;
 import engine.game.collision.AABShape;
+import engine.game.collision.Collision;
 import engine.game.collision.PolygonShape;
 import engine.game.components.*;
 import engine.support.Vec2d;
@@ -366,5 +367,29 @@ public class Level {
         guideObject.addComponent(guideComponent);
 
         return guideObject;
+    }
+
+    public GameObject createRefresh(Vec2d position, Vec2d spriteSize, double factor) {
+        GameObject refreshObject = new GameObject();
+
+        refreshObject.setTransformComponent(new TransformComponent(position, spriteSize.smult(factor)));
+
+        SpriteComponent spriteComponent = new SpriteComponent("refresh", new Vec2d(0, 0), spriteSize, new Vec2i(0, 0));
+        refreshObject.addComponent(spriteComponent);
+
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, 0), spriteSize), true, true){
+            @Override
+            public void collide(Collision newCollision) {
+                if(newCollision.mtv == null) return;
+                DashComponent dashComponent = (DashComponent)newCollision.other.getGameObject().getComponent("Dash");
+                if(dashComponent == null) return;
+                if(dashComponent.getLeftDashTime() == dashComponent.getMaxDashTime()) return;
+                dashComponent.refresh();
+                gameObject.getGameWorld().removeGameObject(gameObject);
+            }
+        };
+        refreshObject.addComponent(collisionComponent);
+
+        return refreshObject;
     }
 }

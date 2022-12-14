@@ -52,10 +52,8 @@ public class App extends Application {
     Text resultText;
 
     private void loadImage() {
-        Resource.loadImage("Final/sprites/circle.png", "characterStand", new Vec2d(1052, 1052), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/circle.png", "characterRunX", new Vec2d(1052, 1052), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/circle.png", "characterRun-X", new Vec2d(1052, 1052), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/circle.png", "characterRunY", new Vec2d(1052, 1052), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/circle.png", "circle", new Vec2d(1052, 1052), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/tiredCircle.png", "tiredCircle", new Vec2d(1052, 1052), new Vec2i(1, 1));
 
         Resource.loadImage("Final/sprites/Tiles1.png", "tile1", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
@@ -70,6 +68,8 @@ public class App extends Application {
         Resource.loadImage("Final/sprites/save.png", "save", new Vec2d(541, 548), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/saved.png", "saved", new Vec2d(541, 548), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/guide.png", "guide", new Vec2d(1080, 1080), new Vec2i(1, 1));
+
+        Resource.loadImage("Final/sprites/refresh.png", "refresh", new Vec2d(1080, 1080), new Vec2i(1, 1));
     }
 
     /**
@@ -93,10 +93,8 @@ public class App extends Application {
         XMLProcessor.tag2component.put("PhysicsComponent", PhysicsComponent.class);
         XMLProcessor.tag2component.put("SpriteComponent", SpriteComponent.class);
         XMLProcessor.tag2component.put("TransformComponent", TransformComponent.class);
-        XMLProcessor.tag2component.put("StandAnimationComponent", Character.StandAnimationComponent.class);
-        XMLProcessor.tag2component.put("RunLeftAnimationComponent", Character.RunLeftAnimationComponent.class);
-        XMLProcessor.tag2component.put("RunRightAnimationComponent", Character.RunRightAnimationComponent.class);
         XMLProcessor.tag2component.put("CharacterMoveComponent", Character.CharacterMoveComponent.class);
+        XMLProcessor.tag2component.put("CharacterDashComponent", Character.CharacterDashComponent.class);
     }
 
     private void loadAudios() {
