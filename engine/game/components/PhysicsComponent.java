@@ -12,6 +12,7 @@ public class PhysicsComponent extends Component{
     Vec2d impulse, force;
     double resistance = 100;
     double restitution;
+    Vec2d fixVel = null;
 
     public PhysicsComponent() {
         tag = "Physics";
@@ -50,6 +51,10 @@ public class PhysicsComponent extends Component{
         acc = acc.plus(a);
     }
 
+    public void setFixVel(Vec2d fixVel) {
+        this.fixVel = fixVel;
+    }
+
     @Override
     public void onTick(long nanosSincePreviousTick) {
         double t = nanosSincePreviousTick / 1000000000.0;
@@ -61,11 +66,13 @@ public class PhysicsComponent extends Component{
         Vec2d impulseVel = impulse.smult(1 / mass);
         Vec2d accVel = acc.smult(t);
         vel = vel.plus(forceVel).plus(impulseVel).plus(accVel);
+        if(fixVel != null) vel = fixVel;
         Vec2d oldPos = getGameObject().getTransformComponent().getPosition();
         getGameObject().getTransformComponent().setPosition(oldPos.plus(vel.smult(t * 10)));
         acc = new Vec2d(0, 0);
         force = new Vec2d(0, 0);
         impulse = new Vec2d(0, 0);
+        fixVel = null;
         super.onTick(nanosSincePreviousTick);
     }
 

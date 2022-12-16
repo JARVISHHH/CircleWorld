@@ -28,12 +28,14 @@ public class ClimbComponent extends Component{
     @Override
     public void onTick(long nanosSincePreviousTick) {
         if(detect == null || detect.movePosition.x == 0) {
+            noClimbingTime = 0;
             climbing = false;
             return;
         }
 
         if(noClimbingTime > 0) {
             noClimbingTime -= nanosSincePreviousTick / 1000000000.0;
+            if(noClimbingTime < 0) noClimbingTime = 0;
             climbing = false;
             return;
         }
@@ -54,7 +56,7 @@ public class ClimbComponent extends Component{
             }
 
             if(!climbing) {
-                physicsComponent.vel = new Vec2d(0, 0);
+                physicsComponent.setFixVel(new Vec2d(0, 0));
                 if(jumpComponent != null) jumpComponent.setLeftJumpTime(jumpComponent.maxJumpTime);
                 climbing = true;
             }
@@ -70,6 +72,7 @@ public class ClimbComponent extends Component{
                 setTransformComponentPosition(new Vec2d(oldPosition.x, oldPosition.y + moveDirection.y * nanosSincePreviousTick / 1000000000.0 * maxClimbingVel));
             }
 
+//            gravityComponent.addNoGravityTime(nanosSincePreviousTick / 1000000000.0);
             if(physicsComponent.vel.y >= 0) gravityComponent.addNoGravityTime(nanosSincePreviousTick / 1000000000.0);
         } else climbing = false;
     }

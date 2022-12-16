@@ -140,9 +140,6 @@ public class Character {
         CharacterMoveComponent characterMoveComponent = new CharacterMoveComponent();
         characterObject.addComponent(characterMoveComponent);
 
-        PhysicsComponent physicsComponent = new PhysicsComponent(70, 0);
-        characterObject.addComponent(physicsComponent);
-
         CollisionComponent collisionComponent = new CollisionComponent(new CircleShape(characterSize.smult(1.0 / 2.0), characterSize.x / 2 - 2));
         collisionComponent.setGroup(0);
         characterObject.addComponent(collisionComponent);
@@ -150,6 +147,9 @@ public class Character {
         characterObject.addComponent(keyEventsComponent);
         HealthComponent healthComponent = new HealthComponent(60);
         characterObject.addComponent(healthComponent);
+
+        PhysicsComponent physicsComponent = new PhysicsComponent(70, 0);
+        characterObject.addComponent(physicsComponent);
 
         return characterObject;
     }

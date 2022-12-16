@@ -161,6 +161,8 @@ public class CollisionComponent extends Component{
         if(newCollision.mtv == null) return;
         Vec2d oldPosition = gameObject.getTransformComponent().position;
         if(isStatic) {
+            if(newCollision.other.isPassable || isPassable || newCollision.other.isDetect) return;
+
             // Damage
             AttackComponent attackComponent = (AttackComponent)this.gameObject.getComponent("Attack");
             if(attackComponent != null)
