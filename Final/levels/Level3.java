@@ -51,7 +51,7 @@ public class Level3 extends Level{
                 1,
                 "Press X to dash\n" +
                         "Try to control the dash direction\n" +
-                        "No more double jump and fire!",
+                        "No more double jump!",
                 Font.font(spriteSize.x / 2),
                 new Vec2d(5, 25),
                 Color.color(0, 0, 0));
@@ -79,10 +79,10 @@ public class Level3 extends Level{
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
-        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(-1, character.getCharacterSize().y / 3), new Vec2d(character.getCharacterSize().x + 2, character.getCharacterSize().y / 3)), false, false, false, false, false, true);
-        characterObject.addComponent(collisionComponent);
-        JumpComponent jumpComponent = (JumpComponent)characterObject.getComponent("Jump");
-        jumpComponent.addDetect(collisionComponent);
+//        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(-1, character.getCharacterSize().y / 3), new Vec2d(character.getCharacterSize().x + 2, character.getCharacterSize().y / 3)), false, false, false, false, false, true);
+//        characterObject.addComponent(collisionComponent);
+//        JumpComponent jumpComponent = (JumpComponent)characterObject.getComponent("Jump");
+//        jumpComponent.addDetect(collisionComponent);
 
         GameObject border = createBorder(spriteSize, mapGridNum);
 

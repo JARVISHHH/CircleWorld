@@ -41,16 +41,16 @@ public class Level0 extends Level{
                                        Color.color(0, 0, 0));
         gameWorld.addGameObject(jumpGuide);
 
-        GameObject fireGuide = createGuide(new Vec2d(210, 360),
-                spriteSize,
-                new Vec2d(spriteSize.x * 6.5, spriteSize.y * 2),
-                1,
-                "Press z to fire\n" +
-                "Try to destroy some walls",
-                Font.font(spriteSize.x / 2),
-                new Vec2d(5, 25),
-                Color.color(0, 0, 0));
-        gameWorld.addGameObject(fireGuide);
+//        GameObject fireGuide = createGuide(new Vec2d(210, 360),
+//                spriteSize,
+//                new Vec2d(spriteSize.x * 6.5, spriteSize.y * 2),
+//                1,
+//                "Press z to fire\n" +
+//                "Try to destroy some walls",
+//                Font.font(spriteSize.x / 2),
+//                new Vec2d(5, 25),
+//                Color.color(0, 0, 0));
+//        gameWorld.addGameObject(fireGuide);
 
         for(double y = 20; y < 260; y += 30) {
             GameObject wall = createIndestructibleWall(new Vec2d(700, y), spriteSize, 1);
@@ -60,10 +60,10 @@ public class Level0 extends Level{
         GameObject wall = createIndestructibleWall(new Vec2d(700, 380), spriteSize, 1);
         gameWorld.addGameObject(wall);
 
-        GameObject wall1 = createDestructibleWall(new Vec2d(700, 290), spriteSize, 1);
-        gameWorld.addGameObject(wall1);
-        GameObject wall2 = createDestructibleWall(new Vec2d(700, 320), spriteSize, 1);
-        gameWorld.addGameObject(wall2);
+//        GameObject wall1 = createDestructibleWall(new Vec2d(700, 290), spriteSize, 1);
+//        gameWorld.addGameObject(wall1);
+//        GameObject wall2 = createDestructibleWall(new Vec2d(700, 320), spriteSize, 1);
+//        gameWorld.addGameObject(wall2);
 
         GameObject wallSpike1 = createDownWardSpike(new Vec2d(700, 260), spriteSize, 1);
         gameWorld.addGameObject(wallSpike1);
@@ -120,17 +120,17 @@ public class Level0 extends Level{
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
-        FireComponent fireComponent = new FireComponent(60);
-        fireComponent.setFireKey(KeyCode.Z);
-        for(int i = 0; i < 4; i++)
-            fireComponent.addSpriteIndex(new Vec2i(i, 0));
-        characterObject.addComponent(fireComponent);
+//        FireComponent fireComponent = new FireComponent(60);
+//        fireComponent.setFireKey(KeyCode.Z);
+//        for(int i = 0; i < 4; i++)
+//            fireComponent.addSpriteIndex(new Vec2i(i, 0));
+//        characterObject.addComponent(fireComponent);
         ((JumpComponent)(characterObject.getComponent("Jump"))).setMaxJumpTime(2);
         ((DashComponent)(characterObject.getComponent("Dash"))).setMaxDashTime(0);
 
         GameObject border = createBorder(spriteSize, mapGridNum);
 
-        GameObject flag = createFlag(new Vec2d(900, 370), spriteSize, 1);
+        GameObject flag = createFlag(new Vec2d(900, 360), spriteSize, 1);
         gameWorld.addGameObject(flag);
         gameWorld.addGameObject(border);
         gameWorld.addGameObject(characterObject);

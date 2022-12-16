@@ -151,11 +151,11 @@ public class Level2 extends Level{
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
-        FireComponent fireComponent = new FireComponent(60);
-        fireComponent.setFireKey(KeyCode.Z);
-        for(int i = 0; i < 4; i++)
-            fireComponent.addSpriteIndex(new Vec2i(i, 0));
-        characterObject.addComponent(fireComponent);
+//        FireComponent fireComponent = new FireComponent(60);
+//        fireComponent.setFireKey(KeyCode.Z);
+//        for(int i = 0; i < 4; i++)
+//            fireComponent.addSpriteIndex(new Vec2i(i, 0));
+//        characterObject.addComponent(fireComponent);
         ((JumpComponent)(characterObject.getComponent("Jump"))).setMaxJumpTime(2);
         ((DashComponent)(characterObject.getComponent("Dash"))).setMaxDashTime(0);
 

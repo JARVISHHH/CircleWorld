@@ -210,7 +210,11 @@ public class Sound {
         int bitsPerSample = audioFormat.getSampleSizeInBits();
         int bytesPerSample = bitsPerSample / 8;
 
-        float[] samples = new float[bytes.length / bytesPerSample];
+        float[] samples;
+        if(bytes.length % bytesPerSample == 0)
+            samples = new float[bytes.length / bytesPerSample];
+        else
+            samples = new float[bytes.length / bytesPerSample + 1];
 
         for(int startIndex = 0; startIndex < bytes.length; startIndex += bytesPerSample)
             samples[startIndex / bytesPerSample] = bytes2float(bytes, startIndex, bytesPerSample);
@@ -244,19 +248,21 @@ public class Sound {
      * @return
      */
     private static float bytes2float(byte[] bytes, int i, int bytesPerSample) {
+        int res = 0;
         if(bytesPerSample == 1) {
-            return bytes[i];
+            res += bytes[i];
         } else if(bytesPerSample == 2) {
-            long res = bytes[i];
-            if(i + 1 < bytes.length) res |= (bytes[i + 1] << 8);
-            return res;
+            if(i + 1 < bytes.length) res += bytes[i + 1];
+            res = res << 8;
+            res += bytes[i];
         } else if(bytesPerSample == 3) {
-            long res = bytes[i];
-            if(i + 1 < bytes.length) res |= (bytes[i + 1] << 8);
-            if(i + 2 < bytes.length) res |= (bytes[i + 2] << 16);
-            return res;
+            if(i + 2 < bytes.length) res += bytes[i + 2];
+            res += res << 8;
+            if(i + 1 < bytes.length) res += bytes[i + 1];
+            res = res << 8;
+            res += bytes[i];
         }
-        return 1;
+        return res;
     }
 
     /**
@@ -269,14 +275,14 @@ public class Sound {
     private static void float2bytes(byte[] bytes, int i, float sample, int bytesPerSample) {
         long temp = (long) sample;
         if(bytesPerSample == 1) {
-            bytes[i] = (byte)temp;
+            bytes[i] = (byte)(temp & 0b11111111);
         } else if(bytesPerSample == 2) {
-            bytes[i] = (byte) temp;
-            if(i + 1 < bytes.length) bytes[i + 1] = (byte) (temp >>> 8L);
+            bytes[i] = (byte)(temp & 0b11111111);
+            bytes[i + 1] = (byte)((temp >> 8) & 0b11111111);
         } else if(bytesPerSample == 3) {
-            bytes[i] = (byte) temp;
-            if(i + 1 < bytes.length) bytes[i + 1] = (byte) (temp >>> 8L);
-            if(i + 2 < bytes.length) bytes[i + 2] = (byte) (temp >>> 16L);
+            if(i + 2 < bytes.length) bytes[i + 2] = (byte)(temp & 0b11111111);
+            if(i + 1 < bytes.length) bytes[i + 1] = (byte)((temp >> 8) & 0b11111111);
+            bytes[i] = (byte)((temp >> 16) & 0b11111111);
         }
     }
 }

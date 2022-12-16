@@ -44,7 +44,7 @@ public class App extends Application {
     Vec2i mapGridNum = new Vec2i(32, 18);  // Total grids number
 
     int currentLevel = 0;
-    int maxLevel = 3;
+    int maxLevel = 4;
 
     // Ui elements in the game screen
     ViewPort viewPort;
@@ -55,7 +55,7 @@ public class App extends Application {
         Resource.loadImage("Final/sprites/circle.png", "circle", new Vec2d(1052, 1052), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/tiredCircle.png", "tiredCircle", new Vec2d(1052, 1052), new Vec2i(1, 1));
 
-        Resource.loadImage("Final/sprites/Tiles1.png", "tile1", new Vec2d(1080, 1080), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/wall2.png", "tile1", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/Tiles2.png", "tile2", new Vec2d(64, 35), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/rocks.png", "rocks", new Vec2d(55, 160), new Vec2i(1, 2));
         Resource.loadImage("Final/sprites/Projectiles.png", "Projectiles", new Vec2d(64, 193), new Vec2i(4, 12));
@@ -64,7 +64,7 @@ public class App extends Application {
         Resource.loadImage("Final/sprites/wall2.png", "wall2", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/wall1.png", "wall1", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/wall3.png", "wall3", new Vec2d(1080, 1080), new Vec2i(1, 1));
-        Resource.loadImage("Final/sprites/flag.png", "flag", new Vec2d(181, 281), new Vec2i(1, 1));
+        Resource.loadImage("Final/sprites/flag.png", "flag", new Vec2d(1080, 1080), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/save.png", "save", new Vec2d(541, 548), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/saved.png", "saved", new Vec2d(541, 548), new Vec2i(1, 1));
         Resource.loadImage("Final/sprites/guide.png", "guide", new Vec2d(1080, 1080), new Vec2i(1, 1));
@@ -99,7 +99,7 @@ public class App extends Application {
 
     private void loadAudios() {
         Sound.loadAudio("Final/resources/BGM2.wav", "BackGround");
-        Sound.loadAudio("Final/resources/jump.wav", "Jump");
+        Sound.loadAudio("Final/resources/jump3.wav", "Jump");
         Sound.loadAudio("Final/resources/projectile.wav", "projectile");
     }
 

@@ -109,16 +109,16 @@ public class JumpComponent extends Component{
     }
 
     private void playSound() {
-        if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);;
+        if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, (float)0.4);
         if(audioClip != null) {
-            if(audioClip.isRunning()) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);
+            if(audioClip.isRunning()) audioClip = Sound.getReverbClip(audioTag, 20, (float)0.4);
             else audioClip.setFramePosition(0);
             audioClip.start();
         }
     }
 
     private void stopSound() {
-        if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, 0.4F);;
+        if(audioClip == null) audioClip = Sound.getReverbClip(audioTag, 20, (float)0.4);
         if(audioClip != null) {
             audioClip.stop();
             audioClip.setFramePosition(0);
