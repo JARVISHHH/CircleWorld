@@ -6,9 +6,12 @@ import javafx.scene.input.KeyCode;
 public class ClimbComponent extends Component{
     KeyCode climbKey = KeyCode.Z;
     protected CollisionComponent detect = null;
+    protected CollisionComponent groundDetect = null;
     protected boolean climbing = false;
     protected double noClimbingTime = 0;
     protected double maxClimbingVel = 100;
+    protected float maxHoldingTime = 12;
+    protected float lastHoldingTime = maxHoldingTime;
     protected double dx[] = {0, 0}, dy[] = {-1, 1};
     protected KeyCode direction[] = {KeyCode.UP, KeyCode.DOWN};
 
@@ -21,26 +24,42 @@ public class ClimbComponent extends Component{
         this.detect = detect;
     }
 
+    public void setGroundDetect(CollisionComponent groundDetect) {
+        this.groundDetect = groundDetect;
+    }
+
     public boolean isClimbing() {
         return climbing;
     }
 
+    public void setMaxHoldingTime(float maxHoldingTime) {
+        this.maxHoldingTime = maxHoldingTime;
+        this.lastHoldingTime = maxHoldingTime;
+    }
+
     @Override
     public void onTick(long nanosSincePreviousTick) {
+        if(groundDetect != null && groundDetect.movePosition.y < 0) {
+            lastHoldingTime = maxHoldingTime;
+        }
+
         if(detect == null || detect.movePosition.x == 0) {
             noClimbingTime = 0;
+            lastHoldingTime += nanosSincePreviousTick / 1000000000.0;
             climbing = false;
             return;
         }
 
-        if(noClimbingTime > 0) {
-            noClimbingTime -= nanosSincePreviousTick / 1000000000.0;
-            if(noClimbingTime < 0) noClimbingTime = 0;
-            climbing = false;
-            return;
-        }
+        if(gameObject.keyPressing.containsKey(climbKey) && gameObject.keyPressing.get(climbKey) && lastHoldingTime > 0) {
+            lastHoldingTime -= nanosSincePreviousTick / 1000000000.0;
 
-        if(gameObject.keyPressing.containsKey(climbKey) && gameObject.keyPressing.get(climbKey)) {
+            if(noClimbingTime > 0) {
+                noClimbingTime -= nanosSincePreviousTick / 1000000000.0;
+                if(noClimbingTime < 0) noClimbingTime = 0;
+                climbing = false;
+                return;
+            }
+
             PhysicsComponent physicsComponent = (PhysicsComponent) gameObject.getComponent("Physics");
             GravityComponent gravityComponent = (GravityComponent) gameObject.getComponent("Gravity");
             JumpComponent jumpComponent = (JumpComponent) gameObject.getComponent("Jump");
@@ -50,6 +69,7 @@ public class ClimbComponent extends Component{
             if(climbing) {
                 if(jumpComponent != null && jumpComponent.checkJump()) {
                     noClimbingTime += 0.2;
+                    lastHoldingTime -= 3;
                     climbing = false;
                     return;
                 }
@@ -70,9 +90,9 @@ public class ClimbComponent extends Component{
             if(!moveDirection.isZero()) {
                 Vec2d oldPosition = gameObject.getTransformComponent().getPosition();
                 setTransformComponentPosition(new Vec2d(oldPosition.x, oldPosition.y + moveDirection.y * nanosSincePreviousTick / 1000000000.0 * maxClimbingVel));
+                lastHoldingTime -= nanosSincePreviousTick / 1000000000.0;
             }
 
-//            gravityComponent.addNoGravityTime(nanosSincePreviousTick / 1000000000.0);
             if(physicsComponent.vel.y >= 0) gravityComponent.addNoGravityTime(nanosSincePreviousTick / 1000000000.0);
         } else climbing = false;
     }

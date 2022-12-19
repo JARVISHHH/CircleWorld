@@ -44,7 +44,7 @@ public class App extends Application {
     Vec2i mapGridNum = new Vec2i(32, 18);  // Total grids number
 
     int currentLevel = 0;
-    int maxLevel = 4;
+    int maxLevel = 5;
 
     // Ui elements in the game screen
     ViewPort viewPort;

@@ -141,6 +141,7 @@ public class Level {
             points[i] = new Vec2d(originalPoints[i].x / 32.0 * spriteSize.x * factor, originalPoints[i].y / 32.0 * spriteSize.y * factor);
         }
         CollisionComponent collisionComponent = new CollisionComponent(new PolygonShape(points), true, false, false);
+        collisionComponent.setGroup(2);
         spikeObject.addComponent(collisionComponent);
 
         AttackComponent attackComponent = new AttackComponent(60);
@@ -177,6 +178,7 @@ public class Level {
             points[i] = new Vec2d(originalPoints[i].x / 32.0 * spriteSize.x * factor, originalPoints[i].y / 32.0 * spriteSize.y * factor);
         }
         CollisionComponent collisionComponent = new CollisionComponent(new PolygonShape(points), true, false, false);
+        collisionComponent.setGroup(2);
         spikeObject.addComponent(collisionComponent);
 
         AttackComponent attackComponent = new AttackComponent(60);

@@ -73,7 +73,7 @@ public class Level0 extends Level{
 
         GameObject wallSpike2 = createUpwardSpike(new Vec2d(700, 350), spriteSize, 1);
         CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 2), new Vec2d(spriteSize.x, 2 * spriteSize.y)), false, false, false, false, false, true);
-        collisionComponent.setGroup(2);
+        collisionComponent.setGroup(3);
         wallSpike2.addComponent(collisionComponent);
         TrapComponent trapComponent = new TrapComponent(){
             @Override
@@ -81,7 +81,7 @@ public class Level0 extends Level{
                 MovingComponent movingComponent = new MovingComponent(new Vec2d(0, -1), 200);
                 gameObject.addComponentQueue(movingComponent);
                 CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 2), new Vec2d(spriteSize.x, 2 * spriteSize.y)), false, false, false, false, false, true);
-                collisionComponent.setGroup(3);
+                collisionComponent.setGroup(4);
                 wallSpike3.addComponentQueue(collisionComponent);
                 TrapComponent trapComponent1 = new TrapComponent() {
                     @Override

@@ -40,7 +40,7 @@ public class Level2 extends Level{
 
         GameObject spike1 = createUpwardSpike(new Vec2d(290, 360), spriteSize, 1);
         CollisionComponent spike1CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y * 10),  new Vec2d(spriteSize.x, spriteSize.y * 5)), false, false, false, false, false, true);
-        spike1CollisionComponent.setGroup(2);
+        spike1CollisionComponent.setGroup(3);
         spike1.addComponent(spike1CollisionComponent);
         TrapComponent spike1Trap = new TrapComponent() {
             @Override
@@ -56,7 +56,7 @@ public class Level2 extends Level{
 
         GameObject spike0 = createUpwardSpike(new Vec2d(390, 350), spriteSize, 1);
         CollisionComponent spike0CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
-        spike0CollisionComponent.setGroup(3);
+        spike0CollisionComponent.setGroup(4);
         spike0.addComponent(spike0CollisionComponent);
         TrapComponent spike0Trap = new TrapComponent(){
             @Override
@@ -73,7 +73,7 @@ public class Level2 extends Level{
 
         GameObject plainTile3 = createPlainTile(new Vec2d(360, 350), spriteSize, 2);
         CollisionComponent plainTail3CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y), spriteSize), false, false, false, false, false, true);
-        plainTail3CollisionComponent.setGroup(2);
+        plainTail3CollisionComponent.setGroup(3);
         plainTile3.addComponent(plainTail3CollisionComponent);
         TrapComponent plainTile3Trap = new TrapComponent() {
             @Override
@@ -205,7 +205,7 @@ public class Level2 extends Level{
         SpriteComponent spriteComponent = new SpriteComponent("tile1", new Vec2d(0, 0), new Vec2d(spriteSize.x * 2, spriteSize.y), new Vec2i(0, 0));
         plainTile3.addComponent(spriteComponent);
         CollisionComponent plainTile3CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(0, -spriteSize.y / 2), new Vec2d(spriteSize.x * 2, spriteSize.y / 2 * 3)), false, false, false,false, false, true);
-        plainTile3CollisionComponent.setGroup(2);
+        plainTile3CollisionComponent.setGroup(3);
         plainTile3.addComponent(plainTile3CollisionComponent);
         TrapComponent plainTile3Trap = new TrapComponent() {
             @Override

@@ -32,7 +32,7 @@ public class Level4 extends Level{
 
         GameObject climbGuide = createGuide(new Vec2d(100, worldSize.y - 4 * spriteSize.y - spriteSize.y),
                 spriteSize,
-                new Vec2d(spriteSize.x * 5.5, spriteSize.y * 2),
+                new Vec2d(spriteSize.x * 6.2, spriteSize.y * 2),
                 1,
                 "Press Z to climb the wall\n" +
                         "I will get tired!",
@@ -99,21 +99,22 @@ public class Level4 extends Level{
             gameWorld.addGameObject(spike);
         }
 
-        GameObject plainTile10 = createPlainTile(new Vec2d(spriteSize.x * 25, worldSize.y - 10 * spriteSize.y), spriteSize, 3);
+        GameObject plainTile10 = createPlainTile(new Vec2d(spriteSize.x * 24, worldSize.y - 9 * spriteSize.y), spriteSize, 4);
         gameWorld.addGameObject(plainTile10);
 
-        GameObject plainTile11 = createPlainTile(new Vec2d(spriteSize.x * 28, worldSize.y - 13 * spriteSize.y), new Vec2d(spriteSize.x, spriteSize.y * 2), 3);
+        GameObject plainTile11 = createPlainTile(new Vec2d(spriteSize.x * 27, worldSize.y - 13 * spriteSize.y), new Vec2d(spriteSize.x, spriteSize.y * 2), 4);
         gameWorld.addGameObject(plainTile11);
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
-        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(-1, character.getCharacterSize().y / 3), new Vec2d(character.getCharacterSize().x + 2, character.getCharacterSize().y / 3)), false, false, false, false, false, true);
+        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(-0.1, character.getCharacterSize().y / 5 * 2), new Vec2d(character.getCharacterSize().x + 0.2, character.getCharacterSize().y / 5)), false, false, false, false, false, true);
         characterObject.addComponent(collisionComponent);
         ClimbComponent climbComponent = new ClimbComponent();
         climbComponent.setDetect(collisionComponent);
         characterObject.addComponent(climbComponent);
         JumpComponent jumpComponent = (JumpComponent)characterObject.getComponent("Jump");
         jumpComponent.addDetect(collisionComponent);
+        climbComponent.setGroundDetect(jumpComponent.getDetect(0));
 
         GameObject border = createBorder(spriteSize, mapGridNum);
 

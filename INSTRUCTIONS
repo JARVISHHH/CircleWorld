@@ -1,6 +1,6 @@
 Move: arrow keys
-Jump: c (In the first level, the character can double jump)
-Dash: x (In the second level, the character can dash towards the direction players are pressing, or towards default directions)
-Fire: z
+Jump: c
+Dash: x
+Climb: z
 
-Please do not use the save and load button for now.
+There will be guidance at the beginning of each level.

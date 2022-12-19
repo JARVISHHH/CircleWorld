@@ -54,6 +54,10 @@ public class JumpComponent extends Component{
     public void addDetect(CollisionComponent detect) {
         this.detects.add(detect);
     }
+    public CollisionComponent getDetect(int index) {
+        if(detects.size() < index) return detects.get(index);
+        return null;
+    }
 
     public boolean checkJump() {
         if(finishedJump && leftJumpTime > 0 && gameObject.keyPressing.containsKey(jumpKey) && gameObject.keyPressing.get(jumpKey) || jumped) {

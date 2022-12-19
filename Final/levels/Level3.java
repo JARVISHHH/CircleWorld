@@ -37,7 +37,7 @@ public class Level3 extends Level{
 
         GameObject plainTile1 = createPlainTile(new Vec2d(30, 500), spriteSize, 2);
         GameObject plainTile2 = createPlainTile(new Vec2d(145, 390), new Vec2d(spriteSize.x, 2 * spriteSize.y), 2);
-        GameObject plainTile3 = createPlainTile(new Vec2d(260, 200), new Vec2d(spriteSize.x, 4 * spriteSize.y), 2);
+        GameObject plainTile3 = createPlainTile(new Vec2d(260, 240), new Vec2d(spriteSize.x, 4 * spriteSize.y), 2);
         GameObject plainTile4 = createPlainTile(new Vec2d(500, 150), new Vec2d(spriteSize.x, 5 * spriteSize.y), 2);
 
         gameWorld.addGameObject(plainTile1);
@@ -79,10 +79,6 @@ public class Level3 extends Level{
 
         Character character = new Character(new Vec2d(50, 370), spriteSize);
         GameObject characterObject = character.getCharacter();
-//        CollisionComponent collisionComponent = new CollisionComponent(new AABShape(new Vec2d(-1, character.getCharacterSize().y / 3), new Vec2d(character.getCharacterSize().x + 2, character.getCharacterSize().y / 3)), false, false, false, false, false, true);
-//        characterObject.addComponent(collisionComponent);
-//        JumpComponent jumpComponent = (JumpComponent)characterObject.getComponent("Jump");
-//        jumpComponent.addDetect(collisionComponent);
 
         GameObject border = createBorder(spriteSize, mapGridNum);
 

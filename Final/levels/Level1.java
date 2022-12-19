@@ -61,7 +61,7 @@ public class Level1 extends Level{
         SpriteComponent plainTile7SpriteComponent = (SpriteComponent)plainTile7.getComponent("Sprite");
         plainTile7SpriteComponent.setShow(false);
         CollisionComponent plainTile7CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-3, -3), new Vec2d(spriteSize.x * 2 + 6, spriteSize.y + 6)), false, false, false, false, false, true);
-        plainTile7CollisionComponent.setGroup(2);
+        plainTile7CollisionComponent.setGroup(3);
         plainTile7.addComponent(plainTile7CollisionComponent);
         TrapComponent plainTile7Trap = new TrapComponent() {
             @Override
@@ -80,7 +80,7 @@ public class Level1 extends Level{
             SpriteComponent plainTileSpriteComponent = (SpriteComponent)plainTile.getComponent("Sprite");
             plainTileSpriteComponent.setShow(false);
             CollisionComponent plainTileCollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-3, -3), spriteSize.plus(6, 6)), false, false, false, false, false, true);
-            plainTileCollisionComponent.setGroup(i + 2);
+            plainTileCollisionComponent.setGroup(i + 3);
             plainTile.addComponent(plainTileCollisionComponent);
             TrapComponent plainTileTrap = new TrapComponent() {
                 @Override
@@ -129,7 +129,7 @@ public class Level1 extends Level{
 
         GameObject spike1 = createUpwardSpike(new Vec2d(spriteSize.x * 18, worldSize.y - spriteSize.y * 4), spriteSize, 1);
         CollisionComponent spike1CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(spriteSize.x, 0), new Vec2d(spriteSize.x * 3, spriteSize.y)), false, false, false, false, false, true);
-        spike1CollisionComponent.setGroup(2);
+        spike1CollisionComponent.setGroup(3);
         spike1.addComponent(spike1CollisionComponent);
         TrapComponent spike1Trap = new TrapComponent() {
             @Override
@@ -146,7 +146,7 @@ public class Level1 extends Level{
 
         GameObject spike2 = createUpwardSpike(new Vec2d(spriteSize.x * 22, worldSize.y - spriteSize.y * 4), spriteSize, 1);
         CollisionComponent spike2CollisionComponent = new CollisionComponent(new AABShape(new Vec2d(-spriteSize.x * 3, 0), new Vec2d(spriteSize.x * 3, spriteSize.y)), false, false, false, false, false, true);
-        spike2CollisionComponent.setGroup(3);
+        spike2CollisionComponent.setGroup(4);
         spike2.addComponent(spike2CollisionComponent);
         TrapComponent spike2Trap = new TrapComponent() {
             @Override

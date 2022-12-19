@@ -10,7 +10,8 @@ public class DashComponent extends Component{
     protected int maxDashTime = 1;
     protected int leftDashTime = maxDashTime;
     protected boolean finishedDash = true;
-    protected double dashImpulseFactor = 3;
+    protected double verticalImpulseFactor = 2.5;
+    protected double horizontalImpulseFactor = 5;
 
     KeyCode dashKey = KeyCode.X;
 
@@ -73,7 +74,7 @@ public class DashComponent extends Component{
         else direction = direction.normalize();
 
         physicsComponent.vel = new Vec2d(0, 0);
-        physicsComponent.applyImpulse(direction.smult(forceFactor * dashImpulseFactor));
+        physicsComponent.applyImpulse(new Vec2d(direction.x * forceFactor * horizontalImpulseFactor, direction.y * forceFactor * verticalImpulseFactor));
         GravityComponent gravityComponent = (GravityComponent) getGameObject().getComponent("Gravity");
         if(gravityComponent != null) gravityComponent.setNoGravityTime(0.2);
         playSound();
