@@ -1,21 +1,27 @@
-# Final
-### Banner ID: B01808391
+# Circle World
 
-### CS Login: yyu95
+Hello! Circle World is a 2D platformer game implemented with Java. 
 
-------
+## How to run
 
-### Already uploaded demo onto Slack: Yes
+The engine and game are implemented under Java 1.8. You can download Java [here](https://www.oracle.com/java/technologies/downloads/#java8). 
 
-------
+You can ran `Final/Main.java` to run the game.
 
-### All checkpoints
+## How to play
 
-| deliverables                             | Location in code or steps to view in game                    |
-| ---------------------------------------- | ------------------------------------------------------------ |
-| sound feature<br />- reverb <br />- echo | Code: `engine/game/Sound.java`. <br />For normal sound, there is back ground music. <br />For reverb, the jump sound (press C) is reverbed. |
-| cutscene: video support                  | Code: `engine/uikit/Video.java`. <br />There is a starting scene and a ending scene. |
-| level systems                            | Code: `Final/levels`.<br />After reaching the goal, the character will be moved to next level automatically. |
-| dash skill                               | Code: `engine/game/components/DashComponent.java`.<br />In the second level, players can press x to dash. |
-| trap component                           | Code: `engine/game/components/TrapComponent.java`            |
-| levels                                   | Code: `Final/levels`.<br />There are 6 levels for now.       |
+Use the arrow keys to choose and move.
+
+Hit the save square in the air to save the game.
+
+Press ESC to quit the game.
+
+All other information will be provided within the game. 
+
+Enjoy your time playing the game!
+
+## Credits
+
+Thank you to the professor and all TAs from Brown CSCI1950 Fall2022.
+
+BGM: Peaceful Hike (Qingce Daytime) 山风拂萝衣 (轻策昼间) - 陈致逸(Yu-Peng Chen)/HOYO-Mix

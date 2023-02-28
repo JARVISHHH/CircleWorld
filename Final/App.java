@@ -98,9 +98,8 @@ public class App extends Application {
     }
 
     private void loadAudios() {
-        Sound.loadAudio("Final/resources/BGM2.wav", "BackGround");
-        Sound.loadAudio("Final/resources/jump3.wav", "Jump");
-        Sound.loadAudio("Final/resources/projectile.wav", "projectile");
+        Sound.loadAudio("Final/resources/BGM.wav", "BackGround");
+        Sound.loadAudio("Final/resources/jump.wav", "Jump");
     }
 
     @Override
