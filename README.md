@@ -22,6 +22,6 @@ Enjoy your time playing the game!
 
 ## Credits
 
-Thank you to the professor and all TAs from Brown CSCI1950 Fall2022.
+Thank you to the professor and all TAs from Brown CSCI1950N Fall2022.
 
 BGM: Peaceful Hike (Qingce Daytime) 山风拂萝衣 (轻策昼间) - 陈致逸(Yu-Peng Chen)/HOYO-Mix
